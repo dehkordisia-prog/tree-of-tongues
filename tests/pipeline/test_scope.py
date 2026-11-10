@@ -200,5 +200,7 @@ def test_glottocodes_exist_in_real_languoids_and_fields_match(scope, languages):
     for e in languages:
         for c in e.get("candidates", []):
             assert rows[c["glottocode"]]["name"] == c["glottolog_name"], (e["rank"], c["glottocode"])
+            assert c["wikidata_qid"] == rows[c["glottocode"]]["wikidata_qid"], (e["rank"], c["glottocode"])
     for f in scope["families"]:
         assert rows[f["glottocode"]]["level"] == "family", f["glottocode"]
+        assert f["wikidata_qid"] == rows[f["glottocode"]]["wikidata_qid"], f["glottocode"]

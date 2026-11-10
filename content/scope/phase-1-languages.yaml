@@ -151,7 +151,8 @@ languages:
     glottolog_name: Arabic
     level: family
     iso639_3: null
-    wikidata_qid: Q13955
+    wikidata_qid: null
+    qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
     role: 'family: Arabic as a whole, ISO ara'
   inspector_note: Arabic speakers share one written standard but speak regional varieties that can differ as much as separate
     languages do.
@@ -488,8 +489,7 @@ languages:
   glottolog_name: Javanese
   level: language
   iso639_3: jav
-  wikidata_qid: null
-  qid_note: Not typed here. The pipeline fills it by ISO 639-3 match (another data-curator instance is implementing that).
+  wikidata_qid: Q33549
   family_path: Austronesian
   method: exact name match
   confidence: high
@@ -540,7 +540,8 @@ languages:
     glottolog_name: Arabic
     level: family
     iso639_3: null
-    wikidata_qid: Q13955
+    wikidata_qid: null
+    qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
     role: 'family: Arabic as a whole'
   inspector_note: Arabic speakers share one written standard but speak regional varieties that can differ as much as separate
     languages do.
@@ -624,7 +625,8 @@ languages:
     glottolog_name: Farsic-Caucasian Tat
     level: family
     iso639_3: null
-    wikidata_qid: Q9168
+    wikidata_qid: null
+    qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
     role: 'family: Farsic-Caucasian Tat; also contains Caucasian Tat. Wikidata Q9168 (Persian) and ISO fas attach here, but
       it is not Persian'
   - glottocode: fars1255
@@ -799,7 +801,8 @@ languages:
     glottolog_name: Tagalog-Filipino
     level: family
     iso639_3: null
-    wikidata_qid: Q34057
+    wikidata_qid: null
+    qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
     role: 'family: Tagalog-Filipino, Q34057'
   inspector_note: Filipino is the national standard built on Tagalog, so many linguists see one language with two names.
   notes: Exact name match. Glottolog has Filipino and Tagalog as separate languages under Tagalog-Filipino (taga1269). Lumping
@@ -955,7 +958,8 @@ languages:
     glottolog_name: Arabic
     level: family
     iso639_3: null
-    wikidata_qid: Q13955
+    wikidata_qid: null
+    qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
     role: 'family: Arabic as a whole'
   inspector_note: Arabic speakers share one written standard but speak regional varieties that can differ as much as separate
     languages do.
@@ -1010,8 +1014,7 @@ languages:
   glottolog_name: Sundanese
   level: language
   iso639_3: sun
-  wikidata_qid: null
-  qid_note: Not typed here. The pipeline fills it by ISO 639-3 match (another data-curator instance is implementing that).
+  wikidata_qid: Q34002
   alternate_names:
   - Sundanese
   family_path: Austronesian
@@ -1052,7 +1055,8 @@ languages:
     glottolog_name: Arabic
     level: family
     iso639_3: null
-    wikidata_qid: Q13955
+    wikidata_qid: null
+    qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
     role: 'family: Arabic as a whole'
   inspector_note: Arabic speakers share one written standard but speak regional varieties that can differ as much as separate
     languages do.
@@ -1098,7 +1102,8 @@ languages:
     glottolog_name: Arabic
     level: family
     iso639_3: null
-    wikidata_qid: Q13955
+    wikidata_qid: null
+    qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
     role: 'family: Arabic as a whole'
   inspector_note: Arabic speakers share one written standard but speak regional varieties that can differ as much as separate
     languages do.
@@ -1230,7 +1235,8 @@ languages:
     glottolog_name: Arabic
     level: family
     iso639_3: null
-    wikidata_qid: Q13955
+    wikidata_qid: null
+    qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
     role: 'family: Arabic as a whole'
   inspector_note: ISO merged North and South Levantine into one code in 2023, and Glottolog also treats Levantine Arabic as
     one language.
@@ -1267,8 +1273,7 @@ languages:
   glottolog_name: Tagalog
   level: language
   iso639_3: tgl
-  wikidata_qid: null
-  qid_note: Not typed here. The pipeline fills it by ISO 639-3 match (another data-curator instance is implementing that).
+  wikidata_qid: Q34057
   family_path: Austronesian
   method: exact name match; lumping unresolved; node recommended by linguist-reviewer (Q1)
   confidence: contested
@@ -1281,13 +1286,14 @@ languages:
     glottolog_name: Tagalog
     level: language
     iso639_3: tgl
-    wikidata_qid: null
+    wikidata_qid: Q34057
     role: language-level node, exact name, ISO tgl
   - glottocode: taga1269
     glottolog_name: Tagalog-Filipino
     level: family
     iso639_3: null
-    wikidata_qid: Q34057
+    wikidata_qid: null
+    qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
     role: 'family: Tagalog-Filipino, Q34057'
   inspector_note: Filipino is the national standard built on Tagalog, so many linguists see one language with two names.
   notes: Exact name match. See rank 36.
@@ -1337,7 +1343,8 @@ languages:
     glottolog_name: Arabic
     level: family
     iso639_3: null
-    wikidata_qid: Q13955
+    wikidata_qid: null
+    qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
     role: 'family: Arabic as a whole'
   inspector_note: Arabic speakers share one written standard but speak regional varieties that can differ as much as separate
     languages do.
@@ -1460,7 +1467,7 @@ languages:
     glottolog_name: Central Malay
     level: language
     iso639_3: zlm
-    wikidata_qid: null
+    wikidata_qid: Q12636082
     role: Central Malay, ISO zlm
   - glottocode: stan1327
     glottolog_name: Standard Malay-Indonesian
@@ -1481,8 +1488,6 @@ languages:
   level: language
   iso639_3: khm
   wikidata_qid: Q9205
-  qid_note: The QID in the build is shared with the family khme1253 (Khmeric). The pipeline resolves the duplicate by ISO
-    639-3 match.
   alternate_names:
   - Central Khmer
   family_path: Austroasiatic
@@ -1585,7 +1590,8 @@ languages:
     glottolog_name: Arabic
     level: family
     iso639_3: null
-    wikidata_qid: Q13955
+    wikidata_qid: null
+    qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
     role: 'family: Arabic as a whole'
   inspector_note: Iraqi Arabic splits into gilit and qeltu varieties; this entry covers the gilit group.
   notes: 'Glottolog name is "Gilit Mesopotamian Arabic": narrower than the chart''s Mesopotamian Arabic. Qeltu varieties are
@@ -1640,7 +1646,8 @@ languages:
     glottolog_name: Kurdish
     level: family
     iso639_3: kur
-    wikidata_qid: Q36368
+    wikidata_qid: null
+    qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
     role: Kurdish, ISO kur; Glottolog marks it as a family
   inspector_note: Kurmanji, Sorani and Southern Kurdish share a name and identity but differ in grammar and script, so some
     count one language and some three.
@@ -1680,7 +1687,8 @@ languages:
     glottolog_name: Arabic
     level: family
     iso639_3: null
-    wikidata_qid: Q13955
+    wikidata_qid: null
+    qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
     role: 'family: Arabic as a whole'
   inspector_note: Arabic speakers share one written standard but speak regional varieties that can differ as much as separate
     languages do.
@@ -1746,9 +1754,7 @@ languages:
   glottolog_name: Pedi
   level: language
   iso639_3: nso
-  wikidata_qid: null
-  qid_note: Not typed here. The pipeline fills it by ISO 639-3 match (another data-curator instance is implementing that).
-    Q33890 sits on the family node nort3233, not on this language.
+  wikidata_qid: Q33890
   alternate_names:
   - Pedi
   - Sepedi
@@ -2018,7 +2024,8 @@ languages:
     glottolog_name: Arabic
     level: family
     iso639_3: null
-    wikidata_qid: Q13955
+    wikidata_qid: null
+    qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
     role: 'family: Arabic as a whole'
   inspector_note: ISO merged North and South Levantine into one code in 2023, and Glottolog also treats Levantine Arabic as
     one language.
@@ -2065,7 +2072,8 @@ languages:
     glottolog_name: Arabic
     level: family
     iso639_3: null
-    wikidata_qid: Q13955
+    wikidata_qid: null
+    qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
     role: 'family: Arabic as a whole'
   inspector_note: Arabic speakers share one written standard but speak regional varieties that can differ as much as separate
     languages do.
@@ -2111,7 +2119,8 @@ languages:
     glottolog_name: Arabic
     level: family
     iso639_3: null
-    wikidata_qid: Q13955
+    wikidata_qid: null
+    qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
     role: 'family: Arabic as a whole'
   inspector_note: Arabic speakers share one written standard but speak regional varieties that can differ as much as separate
     languages do.
@@ -2331,7 +2340,8 @@ families:
 - glottocode: khme1253
   name: Khmeric
   parent_glottocode: aust1305
-  wikidata_qid: Q9205
+  wikidata_qid: null
+  qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
   depth: 1
   top_level: Austroasiatic
 - glottocode: mala1545
@@ -2583,7 +2593,8 @@ families:
 - glottocode: fula1264
   name: Fula
   parent_glottocode: peul1234
-  wikidata_qid: Q33454
+  wikidata_qid: null
+  qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
   depth: 3
   top_level: Atlantic-Congo
 - glottocode: gree1276
@@ -2697,7 +2708,8 @@ families:
 - glottocode: azer1255
   name: Central Oghuz
   parent_glottocode: nucl1769
-  wikidata_qid: Q9292
+  wikidata_qid: null
+  qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
   depth: 4
   top_level: Turkic
 - glottocode: bada1263
@@ -2739,7 +2751,8 @@ families:
 - glottocode: glob1245
   name: Global Javanese
   parent_glottocode: mode1251
-  wikidata_qid: Q33549
+  wikidata_qid: null
+  qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
   depth: 4
   top_level: Austronesian
 - glottocode: igbo1259
@@ -2895,7 +2908,8 @@ families:
 - glottocode: arab1395
   name: Arabic
   parent_glottocode: arab1394
-  wikidata_qid: Q13955
+  wikidata_qid: null
+  qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
   depth: 5
   top_level: Afro-Asiatic
 - glottocode: cent2317
@@ -3009,13 +3023,15 @@ families:
 - glottocode: pash1269
   name: Pashto
   parent_glottocode: iran1269
-  wikidata_qid: Q58680
+  wikidata_qid: null
+  qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
   depth: 5
   top_level: Indo-European
 - glottocode: sing1270
   name: Greater Riau-Johoric
   parent_glottocode: nucl1806
-  wikidata_qid: Q12636082
+  wikidata_qid: null
+  qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
   depth: 5
   top_level: Austronesian
 - glottocode: sinh1245
@@ -3051,7 +3067,8 @@ families:
 - glottocode: taga1269
   name: Tagalog-Filipino
   parent_glottocode: taga1280
-  wikidata_qid: Q34057
+  wikidata_qid: null
+  qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
   depth: 5
   top_level: Austronesian
 - glottocode: tami1293
@@ -3069,7 +3086,8 @@ families:
 - glottocode: uzbe1247
   name: Uzbek
   parent_glottocode: uygh1240
-  wikidata_qid: Q9264
+  wikidata_qid: null
+  qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
   depth: 5
   top_level: Turkic
 - glottocode: wenm1239
@@ -3315,7 +3333,8 @@ families:
 - glottocode: mand1435
   name: Manding
   parent_glottocode: mand1434
-  wikidata_qid: Q35772
+  wikidata_qid: null
+  qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
   depth: 7
   top_level: Mande
 - glottocode: mara1416
@@ -3429,7 +3448,8 @@ families:
 - glottocode: fars1254
   name: Farsic-Caucasian Tat
   parent_glottocode: mode1259
-  wikidata_qid: Q9168
+  wikidata_qid: null
+  qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
   depth: 8
   top_level: Indo-European
 - glottocode: gaud1237
@@ -3489,7 +3509,8 @@ families:
 - glottocode: macr1269
   name: Macro-Oriya
   parent_glottocode: oriy1254
-  wikidata_qid: Q7102899
+  wikidata_qid: null
+  qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
   depth: 8
   top_level: Indo-European
 - glottocode: magh1239
@@ -3651,7 +3672,8 @@ families:
 - glottocode: kurd1259
   name: Kurdish
   parent_glottocode: laki1246
-  wikidata_qid: Q36368
+  wikidata_qid: null
+  qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
   depth: 9
   top_level: Indo-European
 - glottocode: laot1235
@@ -3879,7 +3901,8 @@ families:
 - glottocode: nort3233
   name: Northern Sotho
   parent_glottocode: soth1248
-  wikidata_qid: Q33890
+  wikidata_qid: null
+  qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
   depth: 11
   top_level: Atlantic-Congo
 - glottocode: rwan1241
@@ -3897,7 +3920,8 @@ families:
 - glottocode: swah1254
   name: Swahili (G.40)
   parent_glottocode: saba1282
-  wikidata_qid: Q7838
+  wikidata_qid: null
+  qid_note: Wikidata attaches this language item to the family; the atlas keeps it off the family (see pipeline/README.md)
   depth: 11
   top_level: Atlantic-Congo
 - glottocode: taji1250
