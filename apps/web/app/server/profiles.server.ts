@@ -1,7 +1,8 @@
 // Build-time only (Node): reads content/languages/{glottocode}.md and content/sources.bib and builds
 // the profile JSON (src/data/profile/profile.ts). Served to the app as virtual modules by the
 // profiles plugin in vite.config.ts: one small index, and one lazily loaded chunk per profile.
-// A profile that cites a key missing from sources.bib throws, which fails the build.
+// A profile that cites a key missing from sources.bib, or has a malformed language mark, throws,
+// which fails the build.
 
 import fs from "node:fs";
 import path from "node:path";

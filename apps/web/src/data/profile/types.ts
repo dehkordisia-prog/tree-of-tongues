@@ -11,8 +11,10 @@ export type Inline =
   | { t: "cite"; key: string; loc: string | null; n: number }
   /** A TODO(verify) marker in the source text: the claim around it is not verified yet. */
   | { t: "unverified" }
-  /** Arabic-script text, rendered with lang="fa" dir="rtl" (see markdown.ts, splitText). */
+  /** Unmarked Arabic-script text, rendered with lang="fa" dir="rtl" (see markdown.ts, splitText). */
   | { t: "fa"; v: string }
+  /** A language mark, [text]{lang=xx dir=..}: a checked BCP 47 tag and a resolved direction. */
+  | { t: "lang"; lang: string; dir: "rtl" | "ltr"; c: Inline[] }
   /** A phonetic [..] or phonemic /../ transcription, rendered with lang="und-fonipa". */
   | { t: "ipa"; v: string }
   | { t: "br" };

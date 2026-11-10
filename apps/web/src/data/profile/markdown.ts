@@ -5,8 +5,18 @@
 //   [@key], [@key, locator], [@a; @b], [@key, s.v. x; s.v. y]   citations (Pandoc style)
 //   TODO(verify)                                               an unverified claim
 //   [ipa] that is not a link or a citation, and /ipa/          transcriptions
-//   runs of Arabic script                                      Persian spans (lang="fa", dir="rtl")
+//   [text]{lang=xx}, [text]{lang=xx dir=rtl}                   language marks (below)
+//   unmarked runs of Arabic script                             Persian spans (lang="fa", dir="rtl")
 // HTML comments are dropped. Anything else is kept as text (React escapes it).
+//
+// Language marks are Pandoc bracketed spans: "[ديوان لغات الترك]{lang=ar}", "[тоҷикӣ]{lang=tg-Cyrl}".
+// The text in the brackets gets that BCP 47 tag and renders as <bdi lang dir>. The {...} must follow
+// the ] directly and holds lang= (required) and dir=rtl|ltr (optional). Without dir, the direction
+// comes from the tag's script subtag (Arab, Aran, Hebr, Syrc, Thaa are rtl, any other is ltr), else
+// from the first letter of the text (Arabic, Hebrew, Syriac or Thaana script is rtl), else ltr.
+// A mark always wins: the automatic Arabic-script rule never applies inside one. The text may hold
+// emphasis, links and citations. A malformed tag, a key other than lang and dir, an empty mark or
+// "[@key]{...}" fails the build. Write \[ or \{ for a literal bracket or brace.
 
 import type { Block, Inline } from "./types.ts";
 
@@ -20,13 +30,58 @@ const ARABIC_RUN = new RegExp(`[${ARABIC}](?:[${ARABIC}\\u200c\\u200f \\t]*[${AR
 // Phonemic transcription between slashes, standing alone: " /æ e o/ " but not "s/he" or "1/11/1928".
 const SLASH_IPA = /(^|[\s(])(\/[^\s/][^/\n]{0,40}?\/)(?=$|[\s),.;:!?])/g;
 const TODO = "TODO(verify)";
+
+// Language marks: the attribute block after "[text]", and a simple BCP 47 shape (RFC 5646 without
+// the grandfathered tags): language and extlangs, script, region, variants, extensions, private use.
+const ATTRS = /^\{\s*([A-Za-z]+=[^\s{}]*(?:\s+[A-Za-z]+=[^\s{}]*)*)\s*\}/;
+export const BCP47 =
+  /^(?:[a-z]{2,3}(?:-[a-z]{3}){0,3}|[a-z]{4,8})(?:-[a-z]{4})?(?:-(?:[a-z]{2}|\d{3}))?(?:-(?:[a-z\d]{5,8}|\d[a-z\d]{3}))*(?:-[a-wyz\d](?:-[a-z\d]{2,8})+)*(?:-x(?:-[a-z\d]{1,8})+)?$/i;
+const RTL_SCRIPTS = new Set(["arab", "aran", "hebr", "syrc", "thaa"]);
+// Letters of those scripts: Hebrew, Arabic, Syriac, Thaana and their supplements and presentation forms.
+const RTL_LETTER = new RegExp(
+  "[\u0590-\u05FF\u0600-\u06FF\u0700-\u074F\u0750-\u077F\u0780-\u07BF\u0860-\u086F\u08A0-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]",
+);
+const LETTER = /\p{L}/u;
+
+/** Direction of a language mark: the tag's script subtag, else the first letter of its text. */
+export function markDirection(tag: string, text: string): "rtl" | "ltr" {
+  const script = tag
+    .split("-")
+    .slice(1)
+    .find((p) => /^[a-z]{4}$/i.test(p));
+  if (script) return RTL_SCRIPTS.has(script.toLowerCase()) ? "rtl" : "ltr";
+  for (const ch of text) if (LETTER.test(ch)) return RTL_LETTER.test(ch) ? "rtl" : "ltr";
+  return "ltr";
+}
+
+/** The body of "{lang=xx dir=rtl}" to a checked tag and direction. Throws MarkdownError. */
+function parseAttrs(body: string, where: string): { lang: string; dir: "rtl" | "ltr" | null } {
+  let lang: string | null = null;
+  let dir: "rtl" | "ltr" | null = null;
+  for (const pair of body.trim().split(/\s+/)) {
+    const eq = pair.indexOf("=");
+    const k = pair.slice(0, eq);
+    const v = pair.slice(eq + 1);
+    if (k === "lang") {
+      if (!BCP47.test(v)) throw new MarkdownError(`${where}invalid BCP 47 tag "${v}" in {${body}}`);
+      lang = v;
+    } else if (k === "dir") {
+      if (v !== "rtl" && v !== "ltr") throw new MarkdownError(`${where}dir must be rtl or ltr in {${body}}`);
+      dir = v;
+    } else throw new MarkdownError(`${where}unknown attribute "${k}" in {${body}} (only lang and dir)`);
+  }
+  if (!lang) throw new MarkdownError(`${where}language mark without lang= in {${body}}`);
+  return { lang, dir };
+}
 const CITE_KEY = /^@([A-Za-z0-9_:-]+)\s*(?:,\s*([\s\S]*))?$/;
 
-/** Text leaf: split out Arabic-script runs and slash transcriptions. */
-export function splitText(s: string): Inline[] {
+/** Text leaf: split out Arabic-script runs (when `auto`) and slash transcriptions. */
+export function splitText(s: string, auto = true): Inline[] {
   const marks: { start: number; end: number; node: Inline }[] = [];
-  for (const m of s.matchAll(ARABIC_RUN)) {
-    marks.push({ start: m.index, end: m.index + m[0].length, node: { t: "fa", v: m[0] } });
+  if (auto) {
+    for (const m of s.matchAll(ARABIC_RUN)) {
+      marks.push({ start: m.index, end: m.index + m[0].length, node: { t: "fa", v: m[0] } });
+    }
   }
   for (const m of s.matchAll(SLASH_IPA)) {
     const start = m.index + m[1]!.length;
@@ -86,11 +141,17 @@ function isWordChar(c: string | undefined): boolean {
   return !!c && /[\p{L}\p{N}]/u.test(c);
 }
 
-export function parseInline(src: string, where = ""): Inline[] {
+export interface InlineOptions {
+  /** Inside a language mark: no automatic Arabic-script spans. */
+  marked?: boolean;
+}
+
+export function parseInline(src: string, where = "", opts: InlineOptions = {}): Inline[] {
   const out: Inline[] = [];
   let buf = "";
+  const sub = (s: string, o: InlineOptions = opts) => parseInline(s, where, o);
   const flush = () => {
-    if (buf) out.push(...splitText(buf));
+    if (buf) out.push(...splitText(buf, !opts.marked));
     buf = "";
   };
   let i = 0;
@@ -103,7 +164,7 @@ export function parseInline(src: string, where = ""): Inline[] {
       if (src[i] === ":") i++; // "TODO(verify): what is open" reads as "[Unverified] what is open"
       continue;
     }
-    if (c === "\\" && i + 1 < src.length && /[\\`*_[\]()#+\-.!|>]/.test(src[i + 1]!)) {
+    if (c === "\\" && i + 1 < src.length && /[\\`*_[\]{}()#+\-.!|>]/.test(src[i + 1]!)) {
       buf += src[i + 1];
       i += 2;
       continue;
@@ -121,6 +182,18 @@ export function parseInline(src: string, where = ""): Inline[] {
       const j = closeOf(src, i, "[", "]");
       if (j > i) {
         const inner = src.slice(i + 1, j);
+        const attrs = src[j + 1] === "{" ? ATTRS.exec(src.slice(j + 1)) : null;
+        if (attrs) {
+          if (/^\s*@/.test(inner))
+            throw new MarkdownError(`${where}a citation cannot carry a language mark: "[${inner}]${attrs[0]}"`);
+          if (!inner.trim()) throw new MarkdownError(`${where}empty language mark "[]${attrs[0]}"`);
+          const { lang, dir } = parseAttrs(attrs[1]!, where);
+          const c = sub(inner, { marked: true });
+          flush();
+          out.push({ t: "lang", lang, dir: dir ?? markDirection(lang, plainText(c)), c });
+          i = j + 1 + attrs[0].length;
+          continue;
+        }
         if (/^\s*@/.test(inner)) {
           flush();
           out.push(...parseCitations(inner, where));
@@ -131,7 +204,7 @@ export function parseInline(src: string, where = ""): Inline[] {
           const k = closeOf(src, j + 1, "(", ")");
           if (k > j) {
             flush();
-            out.push({ t: "link", href: src.slice(j + 2, k).trim(), c: parseInline(inner, where) });
+            out.push({ t: "link", href: src.slice(j + 2, k).trim(), c: sub(inner) });
             i = k + 1;
             continue;
           }
@@ -149,7 +222,7 @@ export function parseInline(src: string, where = ""): Inline[] {
         const j = src.indexOf("**", i + 2);
         if (j > i + 2) {
           flush();
-          out.push({ t: "strong", c: parseInline(src.slice(i + 2, j), where) });
+          out.push({ t: "strong", c: sub(src.slice(i + 2, j)) });
           i = j + 2;
           continue;
         }
@@ -166,7 +239,7 @@ export function parseInline(src: string, where = ""): Inline[] {
         }
         if (j > i + 1) {
           flush();
-          out.push({ t: "em", c: parseInline(src.slice(i + 1, j), where) });
+          out.push({ t: "em", c: sub(src.slice(i + 1, j)) });
           i = j + 1;
           continue;
         }
@@ -210,7 +283,7 @@ export function plainText(nodes: Inline[]): string {
     .map((n) =>
       typeof n === "string"
         ? n
-        : n.t === "em" || n.t === "strong" || n.t === "link"
+        : n.t === "em" || n.t === "strong" || n.t === "link" || n.t === "lang"
           ? plainText(n.c)
           : n.t === "code" || n.t === "fa" || n.t === "ipa"
             ? n.v

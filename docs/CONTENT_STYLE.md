@@ -21,6 +21,9 @@
 - Persian UI copy: Persian punctuation (، ؛ ؟ « »), no space before a mark and one after, ZWNJ in compounds (می‌شود), Persian digits (۱۲۳).
 - Turkish UI copy: standard Turkish spelling (TDK).
 
+### Language marks
+Mark every non-English phrase in a profile with its BCP 47 tag: `[ديوان لغات الترك]{lang=ar}`, `[тоҷикӣ]{lang=tg-Cyrl}`, `[cuneiform text]{lang=peo-Xpeo}`. Direction follows the script (Arabic, Hebrew, Syriac and Thaana are right to left); add `dir=rtl` or `dir=ltr` only to override it. Unmarked Arabic-script text is assumed to be Persian, so mark Arabic, Ottoman and Old Turkic in Arabic script explicitly; a malformed tag fails the build.
+
 ## Badges
 - Recording: a real person; variety and consent noted.
 - Reconstruction: a scholarly reconstruction; always shows evidence and confidence.

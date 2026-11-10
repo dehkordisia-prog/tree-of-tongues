@@ -46,7 +46,7 @@ function eachInline(blocks: Block[], fn: (n: Inline) => void) {
   const walk = (nodes: Inline[]) => {
     for (const n of nodes) {
       fn(n);
-      if (typeof n !== "string" && (n.t === "em" || n.t === "strong" || n.t === "link")) walk(n.c);
+      if (typeof n !== "string" && (n.t === "em" || n.t === "strong" || n.t === "link" || n.t === "lang")) walk(n.c);
     }
   };
   for (const b of blocks) {

@@ -3,7 +3,8 @@
 //
 //   - Citations are numbered chips with the shared popover (author, title, year, link, access).
 //   - TODO(verify) arrives as an Unverified chip that links to the explanation above the tabs.
-//   - Arabic-script spans get lang="fa" dir="rtl" in <bdi>; transcriptions get lang="und-fonipa".
+//   - Language marks [text]{lang=xx} become <bdi lang dir>; unmarked Arabic-script runs get
+//     lang="fa" dir="rtl" in <bdi>; transcriptions get lang="und-fonipa".
 //   - The prose is English for now, so its container says lang="en" dir="ltr" in every interface.
 
 import type { ParseKeys } from "i18next";
@@ -223,6 +224,13 @@ export function Inlines({ nodes }: { nodes: Inline[] }) {
             return (
               <bdi key={i} lang="fa" dir={directionOf("fa")}>
                 {n.v}
+              </bdi>
+            );
+          case "lang":
+            // <bdi>: inline, isolated from the surrounding bidi run, and valid inside em, a, li and td.
+            return (
+              <bdi key={i} lang={n.lang} dir={n.dir}>
+                <Inlines nodes={n.c} />
               </bdi>
             );
           case "ipa":
