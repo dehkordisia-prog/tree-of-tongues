@@ -56,6 +56,9 @@ What to look at:
 ## Provisional decisions (made overnight, please confirm or overrule)
 - D-017: themes use CSS `light-dark()`; very old browsers fall back to default colors.
 - D-018: Tongues Serif fixes its optical-size axis at 36. First-paint fonts rose from about 80 KB to 132 KB; Lighthouse still passes.
+- D-019: borders policy for every map: disputed and breakaway areas hatched, never filled, never attributed to a state; "Borders are approximate..." always visible. Two open points inside it for you: self-declared names (show "Donetsk People's Republic" or a geographic name?) and whether Kosovo and Israel, which Natural Earth types as Disputed without a claim note, should get the dashed outline.
+- D-020: a small shim lets deck.gl 9.4 run on MapLibre 6.
+- D-021: PixiJS for the tree, provisionally and unmeasured (see Blocked).
 
 ## Questions for you
 1. **How should the app model Persian?** (Most important; it shapes the Persian profile in Phase 1.)
@@ -69,4 +72,11 @@ What to look at:
 5. The palette's "Niger-Congo" token: Glottolog calls the family Atlantic-Congo (atla1278). The spikes map the token to atla1278; the UI name gets settled with linguist-reviewer in Phase 1.
 
 ## Blocked
-Nothing yet.
+1. **Renderer benchmark (D-006): needs you.** `scripts/bench.mjs` opens a visible Chromium with the GPU for each of 10 runs (tree in PixiJS and deck.gl, normal and stress, plus the map; desktop and a 4x-throttled phone proxy). Claude Code stopped it before the first run finished because memory ran critically low. I must not restart it unattended. To run it, close other apps and run:
+   ```powershell
+   pnpm build
+   node scripts/build-territory-index.mjs
+   node scripts/bench.mjs docs/reports/2026-11-10-overnight/bench
+   ```
+   Results land in `docs/reports/2026-11-10-overnight/bench/bench.md`. Until then D-021 picks PixiJS provisionally, from text quality and size only.
+   The results record the machine's CPU, RAM and GPU, so numbers from different computers stay comparable.
