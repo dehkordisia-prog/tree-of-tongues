@@ -10,16 +10,23 @@
 # so "ISO match" means the ISO 639-3 code that the ISO standard gives the chart's language name, looked up in the xrefs table.
 #
 # How to read an entry
-#   glottocode            the decided Glottolog node, or null while the choice is contested.
-#   confidence            high, medium, low or contested. contested means linguist-reviewer must choose; data-curator did not.
+#   display_name          the name the UI shows (D-004). chart_name is the name as printed; alternate_names are search aliases.
+#   glottocode            the Glottolog node for the default view. For contested entries it is the language-level node
+#                         recommended by linguist-reviewer (rule Q1). Null only for rank 91 (Deccan).
+#   confidence            high, medium, low or contested. contested means scholars disagree about lumping or classification;
+#                         the node is still set. node_confidence says how sure the node identity is.
+#   lumper_group          (contested only) the Lumper/Splitter group (see lumper_groups), or none.
+#   inspector_note        (contested only) one plain-English line for the Inspector's "Why linguists disagree".
 #   mechanical_candidate  (contested only) the node an exact-name or ISO match would pick. Not a decision. Null if none fits.
 #   candidates            (contested only) every plausible node with its level, ISO code and Wikidata QID.
+#   retired_iso / qid_note  a retired ISO code kept for traceability; why a QID is null or shared (the pipeline fills it).
 #   family_path           top-level Glottolog family (D-002), not the chart's grouping. The chart is a labeled alternative lens only.
 #   families              family-level nodes above every entry and candidate, for the tree.
 
 languages:
 - rank: 1
   chart_name: English
+  display_name: English
   glottocode: stan1293
   glottolog_name: English
   level: language
@@ -31,14 +38,17 @@ languages:
   notes: null
 - rank: 2
   chart_name: Mandarin Chinese
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Mandarin Chinese
+  glottocode: mand1415
+  glottolog_name: Mandarin Chinese
+  level: language
+  iso639_3: cmn
+  wikidata_qid: Q9192
   family_path: Sino-Tibetan
-  method: exact name match; lumping unresolved
+  method: exact name match; lumping unresolved; node recommended by linguist-reviewer (Q1)
   confidence: contested
+  node_confidence: high
+  lumper_group: chinese
   mechanical_candidate: mand1415
   contested_reason: Chinese as one language versus separate languages
   candidates:
@@ -54,20 +64,24 @@ languages:
     iso639_3: null
     wikidata_qid: null
     role: 'family: Sinitic, all Chinese varieties'
-  notes: The chart lists eight Sinitic varieties as separate languages and ranks them separately. Glottolog also has them
-    as separate languages under Sinitic (sini1245), but many sources call all of them dialects of one language, Chinese (ISO
-    macrolanguage zho). Whether the atlas shows Chinese as one language, a family or separate languages is the Lumper/Splitter
-    question for the reviewer.
+  inspector_note: Chinese varieties share one writing tradition but are often not mutually intelligible when spoken, so some
+    linguists count one language and others count many.
+  notes: The chart lists eight Sinitic varieties as separate languages. Glottolog also has them as separate languages under
+    Sinitic (sini1245); many sources call them dialects of one language, Chinese (ISO macrolanguage zho). Node set by the
+    linguist-reviewer rule (Q1); lumping is a UI choice (lumper_group chinese).
 - rank: 3
   chart_name: Hindi
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Hindi
+  glottocode: hind1269
+  glottolog_name: Hindi
+  level: language
+  iso639_3: hin
+  wikidata_qid: Q1568
   family_path: Indo-European
-  method: exact name match; lumping unresolved
+  method: exact name match; lumping unresolved; node recommended by linguist-reviewer (Q1)
   confidence: contested
+  node_confidence: high
+  lumper_group: hindustani
   mechanical_candidate: hind1269
   contested_reason: Hindi and Urdu as one language (Hindustani) or two
   candidates:
@@ -83,10 +97,13 @@ languages:
     iso639_3: null
     wikidata_qid: Q11051
     role: 'family: Hindustani, parent of Hindi and Urdu, Q11051'
-  notes: Exact name match. Glottolog has Hindi and Urdu as separate languages under the family Hindustani (hind1270). The
-    chart ranks them separately (ranks 3 and 11). The reviewer decides.
+  inspector_note: Everyday Hindi and Urdu are largely mutually intelligible; they differ in script, formal vocabulary and
+    national identity.
+  notes: Exact name match. Glottolog has Hindi and Urdu as separate languages under Hindustani (hind1270). Lumping is a UI
+    choice (lumper_group hindustani).
 - rank: 4
   chart_name: Spanish
+  display_name: Spanish
   glottocode: stan1288
   glottolog_name: Spanish
   level: language
@@ -98,6 +115,7 @@ languages:
   notes: null
 - rank: 5
   chart_name: French
+  display_name: French
   glottocode: stan1290
   glottolog_name: French
   level: language
@@ -109,14 +127,17 @@ languages:
   notes: null
 - rank: 6
   chart_name: Standard Arabic
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Standard Arabic
+  glottocode: stan1318
+  glottolog_name: Standard Arabic
+  level: language
+  iso639_3: arb
+  wikidata_qid: Q122602987
   family_path: Afro-Asiatic
-  method: exact name match (stan1318); lumping unresolved
+  method: exact name match (stan1318); lumping unresolved; node recommended by linguist-reviewer (Q1)
   confidence: contested
+  node_confidence: high
+  lumper_group: arabic
   mechanical_candidate: stan1318
   contested_reason: macrolanguage versus family; Standard Arabic versus spoken varieties
   candidates:
@@ -132,12 +153,13 @@ languages:
     iso639_3: null
     wikidata_qid: Q13955
     role: 'family: Arabic as a whole, ISO ara'
-  notes: The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
-    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
-    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
-    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer.
+  inspector_note: Arabic speakers share one written standard but speak regional varieties that can differ as much as separate
+    languages do.
+  notes: Glottolog lists Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395).
+    Lumping is a UI choice (lumper_group arabic).
 - rank: 7
   chart_name: Bengali
+  display_name: Bengali
   glottocode: beng1280
   glottolog_name: Bengali
   level: language
@@ -149,6 +171,7 @@ languages:
   notes: null
 - rank: 8
   chart_name: Russian
+  display_name: Russian
   glottocode: russ1263
   glottolog_name: Russian
   level: language
@@ -160,6 +183,7 @@ languages:
   notes: null
 - rank: 9
   chart_name: Portuguese
+  display_name: Portuguese
   glottocode: port1283
   glottolog_name: Portuguese
   level: language
@@ -171,14 +195,19 @@ languages:
   notes: null
 - rank: 10
   chart_name: Indonesian
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Indonesian
+  glottocode: indo1316
+  glottolog_name: Standard Indonesian
+  level: language
+  iso639_3: ind
+  wikidata_qid: Q110620923
+  alternate_names:
+  - Standard Indonesian
   family_path: Austronesian
-  method: 'manual: ISO ind inferred from the chart name; lumping unresolved'
+  method: 'manual: ISO ind inferred from the chart name; lumping unresolved; node recommended by linguist-reviewer (Q1)'
   confidence: contested
+  node_confidence: high
+  lumper_group: malay
   mechanical_candidate: indo1316
   contested_reason: Malay and Indonesian as one language or two
   candidates:
@@ -193,26 +222,32 @@ languages:
     level: dialect
     iso639_3: null
     wikidata_qid: Q9240
-    role: 'dialect: Bahasa Indonesia, also ISO ind, Q9240'
+    role: 'dialect: Bahasa Indonesia, Q9240; Glottolog gives it no ISO code'
+    note: ind via Wikidata Q9240 only
   - glottocode: stan1327
     glottolog_name: Standard Malay-Indonesian
     level: family
     iso639_3: null
     wikidata_qid: Q110621927
     role: 'family: Standard Malay-Indonesian'
-  notes: Chart name "Indonesian" is not a Glottolog name; Glottolog has Standard Indonesian (indo1316). Two Glottolog nodes
-    carry ISO ind (the language and its dialect Bahasa Indonesia). Together with Malay (rank 67) this is the Malay and Indonesian
-    question.
+  inspector_note: Indonesian and Malaysian Malay grew from one standard and stay largely mutually intelligible, but each country
+    codifies its own norm.
+  notes: Chart name "Indonesian" is not a Glottolog name; Glottolog has Standard Indonesian (indo1316, ISO ind). Its dialect
+    Bahasa Indonesia (stin1234) has no ISO code in Glottolog; ind reaches it via Wikidata Q9240 only. With Malay (rank 67)
+    this is the Malay and Indonesian question (lumper_group malay).
 - rank: 11
   chart_name: Urdu
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Urdu
+  glottocode: urdu1245
+  glottolog_name: Urdu
+  level: language
+  iso639_3: urd
+  wikidata_qid: Q1617
   family_path: Indo-European
-  method: exact name match; lumping unresolved
+  method: exact name match; lumping unresolved; node recommended by linguist-reviewer (Q1)
   confidence: contested
+  node_confidence: high
+  lumper_group: hindustani
   mechanical_candidate: urdu1245
   contested_reason: Hindi and Urdu as one language (Hindustani) or two
   candidates:
@@ -228,21 +263,27 @@ languages:
     iso639_3: null
     wikidata_qid: Q11051
     role: 'family: Hindustani, parent of Hindi and Urdu, Q11051'
+  inspector_note: Everyday Hindi and Urdu are largely mutually intelligible; they differ in script, formal vocabulary and
+    national identity.
   notes: Exact name match. See rank 3.
 - rank: 12
   chart_name: Standard German
+  display_name: Standard German
   glottocode: stan1295
   glottolog_name: German
   level: language
   iso639_3: deu
   wikidata_qid: Q188
+  alternate_names:
+  - German
   family_path: Indo-European
   method: ISO match (chart name "Standard German" is not a Glottolog name; ISO 639-3 deu is German)
-  confidence: medium
+  confidence: high
   notes: Glottolog has one language "German" (stan1295) whose name does not say "Standard". Bavarian (rank 80) is a separate
     Glottolog language, so the two chart entries do not overlap here.
 - rank: 13
   chart_name: Japanese
+  display_name: Japanese
   glottocode: nucl1643
   glottolog_name: Japanese
   level: language
@@ -254,6 +295,7 @@ languages:
   notes: null
 - rank: 14
   chart_name: Swahili
+  display_name: Swahili
   glottocode: swah1253
   glottolog_name: Swahili
   level: language
@@ -262,9 +304,11 @@ languages:
   family_path: Atlantic-Congo
   method: exact name match
   confidence: high
-  notes: null
+  notes: ISO swa is a macrolanguage (swh plus Congo Swahili) and the chart's code is unknown; no remap. ISO unverified at
+    SIL.
 - rank: 15
   chart_name: Marathi
+  display_name: Marathi
   glottocode: mara1378
   glottolog_name: Marathi
   level: language
@@ -276,6 +320,7 @@ languages:
   notes: null
 - rank: 16
   chart_name: Telugu
+  display_name: Telugu
   glottocode: telu1262
   glottolog_name: Telugu
   level: language
@@ -287,14 +332,20 @@ languages:
   notes: null
 - rank: 17
   chart_name: Western Punjabi
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Western Punjabi
+  glottocode: west2386
+  glottolog_name: Western Panjabi
+  level: language
+  iso639_3: pnb
+  wikidata_qid: Q1334774
+  alternate_names:
+  - Western Panjabi
   family_path: Indo-European
-  method: 'manual: spelling variant of an exact match (Punjabi and Panjabi); lumping unresolved'
+  method: 'manual: spelling variant of an exact match (Punjabi and Panjabi); lumping unresolved; node recommended by linguist-reviewer
+    (Q1)'
   confidence: contested
+  node_confidence: high
+  lumper_group: punjabi
   mechanical_candidate: west2386
   contested_reason: Lahnda as one language versus Western Panjabi, Saraiki and Hindko as separate languages; Punjabi as one
     language
@@ -311,20 +362,24 @@ languages:
     iso639_3: null
     wikidata_qid: Q2656685
     role: 'family: Greater Panjabic (Lahnda), Q2656685'
-  notes: Chart "Western Punjabi" matches ISO pnb. Glottolog name is "Western Panjabi" (spelling). Glottolog does not carry
-    the ISO macrolanguage Lahnda (lah) as a node; the nearest is the family Greater Panjabic lahn1241, which also holds Saraiki
-    (rank 65, separate on the chart) and Hindko. Many sources treat Western and Eastern Punjabi as one language. The reviewer
-    decides.
+  inspector_note: Punjabi in Pakistan and India is often called one language, but it is written in two scripts and ISO codes
+    the western varieties separately.
+  notes: 'Chart "Western Punjabi" matches ISO pnb. Glottolog name is "Western Panjabi" (spelling). Glottolog does not carry
+    the ISO macrolanguage lah as a node; lahn1241 (Greater Panjabic) is broader: it covers both Punjabis plus Saraiki, Hindko
+    and Pahari-Potwari. Lumping Western and Eastern Punjabi is the atlas''s own grouping (lumper_group punjabi).'
 - rank: 18
   chart_name: Wu Chinese
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Wu Chinese
+  glottocode: wuch1236
+  glottolog_name: Wu Chinese
+  level: language
+  iso639_3: wuu
+  wikidata_qid: Q34290
   family_path: Sino-Tibetan
-  method: exact name match; lumping unresolved
+  method: exact name match; lumping unresolved; node recommended by linguist-reviewer (Q1)
   confidence: contested
+  node_confidence: high
+  lumper_group: chinese
   mechanical_candidate: wuch1236
   contested_reason: Chinese as one language versus separate languages
   candidates:
@@ -340,12 +395,14 @@ languages:
     iso639_3: null
     wikidata_qid: null
     role: 'family: Sinitic, all Chinese varieties'
-  notes: The chart lists eight Sinitic varieties as separate languages and ranks them separately. Glottolog also has them
-    as separate languages under Sinitic (sini1245), but many sources call all of them dialects of one language, Chinese (ISO
-    macrolanguage zho). Whether the atlas shows Chinese as one language, a family or separate languages is the Lumper/Splitter
-    question for the reviewer.
+  inspector_note: Chinese varieties share one writing tradition but are often not mutually intelligible when spoken, so some
+    linguists count one language and others count many.
+  notes: The chart lists eight Sinitic varieties as separate languages. Glottolog also has them as separate languages under
+    Sinitic (sini1245); many sources call them dialects of one language, Chinese (ISO macrolanguage zho). Node set by the
+    linguist-reviewer rule (Q1); lumping is a UI choice (lumper_group chinese).
 - rank: 19
   chart_name: Tamil
+  display_name: Tamil
   glottocode: tami1289
   glottolog_name: Tamil
   level: language
@@ -357,6 +414,7 @@ languages:
   notes: null
 - rank: 20
   chart_name: Turkish
+  display_name: Turkish
   glottocode: nucl1301
   glottolog_name: Turkish
   level: language
@@ -368,6 +426,7 @@ languages:
   notes: null
 - rank: 21
   chart_name: Korean
+  display_name: Korean
   glottocode: kore1280
   glottolog_name: Korean
   level: language
@@ -379,6 +438,7 @@ languages:
   notes: null
 - rank: 22
   chart_name: Vietnamese
+  display_name: Vietnamese
   glottocode: viet1252
   glottolog_name: Vietnamese
   level: language
@@ -390,14 +450,17 @@ languages:
   notes: null
 - rank: 23
   chart_name: Yue Chinese
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Yue Chinese
+  glottocode: yuec1235
+  glottolog_name: Yue Chinese
+  level: language
+  iso639_3: yue
+  wikidata_qid: Q7033959
   family_path: Sino-Tibetan
-  method: exact name match; lumping unresolved
+  method: exact name match; lumping unresolved; node recommended by linguist-reviewer (Q1)
   confidence: contested
+  node_confidence: high
+  lumper_group: chinese
   mechanical_candidate: yuec1235
   contested_reason: Chinese as one language versus separate languages
   candidates:
@@ -413,23 +476,27 @@ languages:
     iso639_3: null
     wikidata_qid: null
     role: 'family: Sinitic, all Chinese varieties'
-  notes: The chart lists eight Sinitic varieties as separate languages and ranks them separately. Glottolog also has them
-    as separate languages under Sinitic (sini1245), but many sources call all of them dialects of one language, Chinese (ISO
-    macrolanguage zho). Whether the atlas shows Chinese as one language, a family or separate languages is the Lumper/Splitter
-    question for the reviewer.
+  inspector_note: Chinese varieties share one writing tradition but are often not mutually intelligible when spoken, so some
+    linguists count one language and others count many.
+  notes: The chart lists eight Sinitic varieties as separate languages. Glottolog also has them as separate languages under
+    Sinitic (sini1245); many sources call them dialects of one language, Chinese (ISO macrolanguage zho). Node set by the
+    linguist-reviewer rule (Q1); lumping is a UI choice (lumper_group chinese).
 - rank: 24
   chart_name: Javanese
+  display_name: Javanese
   glottocode: java1254
   glottolog_name: Javanese
   level: language
   iso639_3: jav
   wikidata_qid: null
+  qid_note: Not typed here. The pipeline fills it by ISO 639-3 match (another data-curator instance is implementing that).
   family_path: Austronesian
   method: exact name match
   confidence: high
   notes: null
 - rank: 25
   chart_name: Italian
+  display_name: Italian
   glottocode: ital1282
   glottolog_name: Italian
   level: language
@@ -441,14 +508,19 @@ languages:
   notes: null
 - rank: 26
   chart_name: Egyptian Spoken Arabic
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Egyptian Arabic
+  glottocode: egyp1253
+  glottolog_name: Egyptian Arabic
+  level: language
+  iso639_3: arz
+  wikidata_qid: Q29919
+  alternate_names:
+  - Egyptian Spoken Arabic
   family_path: Afro-Asiatic
-  method: 'manual: ISO arz inferred from the chart name; chart prints no codes'
+  method: 'manual: ISO arz inferred from the chart name; chart prints no codes; node recommended by linguist-reviewer (Q1)'
   confidence: contested
+  node_confidence: high
+  lumper_group: arabic
   mechanical_candidate: egyp1253
   contested_reason: language-versus-dialect cut and lumping of Arabic
   candidates:
@@ -470,12 +542,13 @@ languages:
     iso639_3: null
     wikidata_qid: Q13955
     role: 'family: Arabic as a whole'
-  notes: The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
-    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
-    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
-    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer.
+  inspector_note: Arabic speakers share one written standard but speak regional varieties that can differ as much as separate
+    languages do.
+  notes: Glottolog lists Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395).
+    Lumping is a UI choice (lumper_group arabic).
 - rank: 27
   chart_name: Hausa
+  display_name: Hausa
   glottocode: haus1257
   glottolog_name: Hausa
   level: language
@@ -487,6 +560,7 @@ languages:
   notes: null
 - rank: 28
   chart_name: Thai
+  display_name: Thai
   glottocode: thai1261
   glottolog_name: Thai
   level: language
@@ -498,6 +572,7 @@ languages:
   notes: null
 - rank: 29
   chart_name: Gujarati
+  display_name: Gujarati
   glottocode: guja1252
   glottolog_name: Gujarati
   level: language
@@ -509,6 +584,7 @@ languages:
   notes: null
 - rank: 30
   chart_name: Kannada
+  display_name: Kannada
   glottocode: nucl1305
   glottolog_name: Kannada
   level: language
@@ -520,30 +596,37 @@ languages:
   notes: null
 - rank: 31
   chart_name: Iranian Persian
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Iranian Persian
+  glottocode: west2369
+  glottolog_name: Western Farsi  # lint-allow: Glottolog's own name or search alias, quoted as source data
+  level: language
+  iso639_3: pes
+  wikidata_qid: Q3513637
+  alternate_names:
+  - Western Farsi  # lint-allow: Glottolog's own name or search alias, quoted as source data
+  - Farsi  # lint-allow: Glottolog's own name or search alias, quoted as source data
   family_path: Indo-European
-  method: 'manual: several candidate nodes; no choice made'
+  method: 'manual: several candidate nodes; no choice made; node recommended by linguist-reviewer (Q1)'
   confidence: contested
+  node_confidence: high
+  lumper_group: persian
   mechanical_candidate: null
   contested_reason: Persian as one language, a macrolanguage or a family; Wikidata and ISO disagree about which Glottolog
     node is Persian
   candidates:
   - glottocode: west2369
-    glottolog_name: Western Farsi  # lint-allow: Glottolog's own name for this node, quoted as source data
+    glottolog_name: Western Farsi  # lint-allow: Glottolog's own name or search alias, quoted as source data
     level: language
     iso639_3: pes
     wikidata_qid: Q3513637
-    role: language-level node, ISO pes, Glottolog name as in glottolog_name
+    role: language-level node, ISO pes; Glottolog name quoted as source data
   - glottocode: fars1254
     glottolog_name: Farsic-Caucasian Tat
     level: family
     iso639_3: null
     wikidata_qid: Q9168
-    role: 'family: Glottolog "Farsic-Caucasian Tat", English name "Persian", Wikidata Q9168, ISO fas'
+    role: 'family: Farsic-Caucasian Tat; also contains Caucasian Tat. Wikidata Q9168 (Persian) and ISO fas attach here, but
+      it is not Persian'
   - glottocode: fars1255
     glottolog_name: Farsic
     level: family
@@ -555,23 +638,23 @@ languages:
     level: language
     iso639_3: prs
     wikidata_qid: Q178440
-    role: 'sibling language: Dari, ISO prs'
+    role: 'language: Dari, ISO prs; direct child of Eastern Farsic east2745'
   - glottocode: taji1245
     glottolog_name: Tajik
     level: language
     iso639_3: tgk
     wikidata_qid: Q9260
-    role: 'sibling language: Tajik, ISO tgk'
-  notes: 'Known issue, described and not resolved. Chart name is "Iranian Persian" (ISO pes in the ISO standard). Glottolog
-    5.3: ISO pes maps to west2369 (a language; Glottolog name in the candidate above; under the family Farsic fars1255). Wikidata Q9168 (Persian) is
-    attached through P1394 to fars1254, a Glottolog family named "Farsic-Caucasian Tat" whose English name in the build is
-    "Persian" and whose endonym is the Persian-script form of Farsi. Wikidata Q3513637 maps to west2369. Dari (dari1249) and
-    Tajik (taji1245) are separate Glottolog languages under Eastern Farsic (east2745), whose name lists include "Persian"
-    and "Farsi" as aliases. A rule-based ISO match would pick west2369; it is not chosen here (D-004: the UI says "Persian";
-    "Farsi" is a search alias only). The reviewer decides between west2369, a Persian grouping built from several nodes, or
-    fars1254.'
+    role: 'language: Tajik, ISO tgk; under Tajikic taji1250, under east2745'
+  inspector_note: Persian in Iran, Afghanistan and Tajikistan is often called one language with three standards; ISO groups
+    only the first two, and Tajik is written in Cyrillic.
+  notes: 'Chart name is "Iranian Persian" (ISO pes). Glottolog 5.3: pes maps to west2369 (language; its Glottolog name is
+    in glottolog_name, under Farsic fars1255). fars1254 is "Farsic-Caucasian Tat"; it also contains Caucasian Tat and is not
+    Persian, although Wikidata Q9168 (Persian) and ISO fas attach to it. Dari (dari1249) is a direct child of Eastern Farsic
+    (east2745); Tajik (taji1245) sits under Tajikic (taji1250), which is under east2745. Display name "Iranian Persian" follows
+    D-004. The Persian grouping is the atlas''s own and awaits an owner decision.'
 - rank: 32
   chart_name: Bhojpuri
+  display_name: Bhojpuri
   glottocode: bhoj1244
   glottolog_name: Bhojpuri
   level: language
@@ -583,14 +666,21 @@ languages:
   notes: null
 - rank: 33
   chart_name: Southern Min Chinese
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Southern Min Chinese
+  glottocode: minn1241
+  glottolog_name: Min Nan Chinese
+  level: language
+  iso639_3: nan
+  wikidata_qid: Q36495
+  alternate_names:
+  - Min Nan Chinese
+  - Hokkien
+  - Taiwanese
   family_path: Sino-Tibetan
-  method: 'manual: ISO nan inferred from the chart name; chart prints no codes'
+  method: 'manual: ISO nan inferred from the chart name; chart prints no codes; node recommended by linguist-reviewer (Q1)'
   confidence: contested
+  node_confidence: high
+  lumper_group: chinese
   mechanical_candidate: minn1241
   contested_reason: Chinese as one language versus separate languages; Southern Min naming
   candidates:
@@ -612,21 +702,24 @@ languages:
     iso639_3: null
     wikidata_qid: Q56504
     role: 'family: Min'
-  notes: The chart lists eight Sinitic varieties as separate languages and ranks them separately. Glottolog also has them
-    as separate languages under Sinitic (sini1245), but many sources call all of them dialects of one language, Chinese (ISO
-    macrolanguage zho). Whether the atlas shows Chinese as one language, a family or separate languages is the Lumper/Splitter
-    question for the reviewer. Chart name "Southern Min Chinese" is not a Glottolog name; Glottolog has Southern Min (sout3424,
-    family) and Min Nan Chinese (minn1241, language).
+  inspector_note: Glottolog calls this Min Nan Chinese; many speakers call their variety Hokkien or Taiwanese.
+  notes: The chart lists eight Sinitic varieties as separate languages. Glottolog also has them as separate languages under
+    Sinitic (sini1245); many sources call them dialects of one language, Chinese (ISO macrolanguage zho). Node set by the
+    linguist-reviewer rule (Q1); lumping is a UI choice (lumper_group chinese). Chart name "Southern Min Chinese" is not a
+    Glottolog name; Glottolog has Southern Min (sout3424, family) and Min Nan Chinese (minn1241, language).
 - rank: 34
   chart_name: Hakka Chinese
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Hakka Chinese
+  glottocode: hakk1236
+  glottolog_name: Hakka Chinese
+  level: language
+  iso639_3: hak
+  wikidata_qid: Q33375
   family_path: Sino-Tibetan
-  method: exact name match; lumping unresolved
+  method: exact name match; lumping unresolved; node recommended by linguist-reviewer (Q1)
   confidence: contested
+  node_confidence: high
+  lumper_group: chinese
   mechanical_candidate: hakk1236
   contested_reason: Chinese as one language versus separate languages
   candidates:
@@ -642,20 +735,24 @@ languages:
     iso639_3: null
     wikidata_qid: null
     role: 'family: Sinitic, all Chinese varieties'
-  notes: The chart lists eight Sinitic varieties as separate languages and ranks them separately. Glottolog also has them
-    as separate languages under Sinitic (sini1245), but many sources call all of them dialects of one language, Chinese (ISO
-    macrolanguage zho). Whether the atlas shows Chinese as one language, a family or separate languages is the Lumper/Splitter
-    question for the reviewer.
+  inspector_note: Chinese varieties share one writing tradition but are often not mutually intelligible when spoken, so some
+    linguists count one language and others count many.
+  notes: The chart lists eight Sinitic varieties as separate languages. Glottolog also has them as separate languages under
+    Sinitic (sini1245); many sources call them dialects of one language, Chinese (ISO macrolanguage zho). Node set by the
+    linguist-reviewer rule (Q1); lumping is a UI choice (lumper_group chinese).
 - rank: 35
   chart_name: Jinyu Chinese
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Jinyu Chinese
+  glottocode: jiny1235
+  glottolog_name: Jinyu Chinese
+  level: language
+  iso639_3: cjy
+  wikidata_qid: Q56479
   family_path: Sino-Tibetan
-  method: exact name match; lumping unresolved
+  method: exact name match; lumping unresolved; node recommended by linguist-reviewer (Q1)
   confidence: contested
+  node_confidence: high
+  lumper_group: chinese
   mechanical_candidate: jiny1235
   contested_reason: Chinese as one language versus separate languages
   candidates:
@@ -671,20 +768,24 @@ languages:
     iso639_3: null
     wikidata_qid: null
     role: 'family: Sinitic, all Chinese varieties'
-  notes: The chart lists eight Sinitic varieties as separate languages and ranks them separately. Glottolog also has them
-    as separate languages under Sinitic (sini1245), but many sources call all of them dialects of one language, Chinese (ISO
-    macrolanguage zho). Whether the atlas shows Chinese as one language, a family or separate languages is the Lumper/Splitter
-    question for the reviewer.
+  inspector_note: Some classifications treat Jin as part of Mandarin; Glottolog and ISO list it separately.
+  notes: 'The chart lists eight Sinitic varieties as separate languages. Glottolog also has them as separate languages under
+    Sinitic (sini1245); many sources call them dialects of one language, Chinese (ISO macrolanguage zho). Node set by the
+    linguist-reviewer rule (Q1); lumping is a UI choice (lumper_group chinese). TODO(verify): the claim that some classifications
+    treat Jin as part of Mandarin.'
 - rank: 36
   chart_name: Filipino
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Filipino
+  glottocode: fili1244
+  glottolog_name: Filipino
+  level: language
+  iso639_3: fil
+  wikidata_qid: Q33298
   family_path: Austronesian
-  method: exact name match; lumping unresolved
+  method: exact name match; lumping unresolved; node recommended by linguist-reviewer (Q1)
   confidence: contested
+  node_confidence: high
+  lumper_group: filipino
   mechanical_candidate: fili1244
   contested_reason: Filipino and Tagalog as one language or two
   candidates:
@@ -700,10 +801,12 @@ languages:
     iso639_3: null
     wikidata_qid: Q34057
     role: 'family: Tagalog-Filipino, Q34057'
-  notes: Exact name match. Glottolog has Filipino and Tagalog as separate languages under Tagalog-Filipino (taga1269). The
-    chart ranks them separately (ranks 36 and 59). The reviewer decides.
+  inspector_note: Filipino is the national standard built on Tagalog, so many linguists see one language with two names.
+  notes: Exact name match. Glottolog has Filipino and Tagalog as separate languages under Tagalog-Filipino (taga1269). Lumping
+    is a UI choice (lumper_group filipino).
 - rank: 37
   chart_name: Burmese
+  display_name: Burmese
   glottocode: nucl1310
   glottolog_name: Burmese
   level: language
@@ -715,6 +818,7 @@ languages:
   notes: null
 - rank: 38
   chart_name: Polish
+  display_name: Polish
   glottocode: poli1260
   glottolog_name: Polish
   level: language
@@ -726,6 +830,7 @@ languages:
   notes: null
 - rank: 39
   chart_name: Yoruba
+  display_name: Yoruba
   glottocode: yoru1245
   glottolog_name: Yoruba
   level: language
@@ -737,6 +842,7 @@ languages:
   notes: null
 - rank: 40
   chart_name: Odia
+  display_name: Odia
   glottocode: oriy1255
   glottolog_name: Odia
   level: language
@@ -748,6 +854,7 @@ languages:
   notes: null
 - rank: 41
   chart_name: Malayalam
+  display_name: Malayalam
   glottocode: mala1464
   glottolog_name: Malayalam
   level: language
@@ -759,14 +866,17 @@ languages:
   notes: null
 - rank: 42
   chart_name: Xiang Chinese
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Xiang Chinese
+  glottocode: xian1251
+  glottolog_name: Xiang Chinese
+  level: language
+  iso639_3: hsn
+  wikidata_qid: Q13220
   family_path: Sino-Tibetan
-  method: exact name match; lumping unresolved
+  method: exact name match; lumping unresolved; node recommended by linguist-reviewer (Q1)
   confidence: contested
+  node_confidence: high
+  lumper_group: chinese
   mechanical_candidate: xian1251
   contested_reason: Chinese as one language versus separate languages
   candidates:
@@ -782,12 +892,14 @@ languages:
     iso639_3: null
     wikidata_qid: null
     role: 'family: Sinitic, all Chinese varieties'
-  notes: The chart lists eight Sinitic varieties as separate languages and ranks them separately. Glottolog also has them
-    as separate languages under Sinitic (sini1245), but many sources call all of them dialects of one language, Chinese (ISO
-    macrolanguage zho). Whether the atlas shows Chinese as one language, a family or separate languages is the Lumper/Splitter
-    question for the reviewer.
+  inspector_note: Chinese varieties share one writing tradition but are often not mutually intelligible when spoken, so some
+    linguists count one language and others count many.
+  notes: The chart lists eight Sinitic varieties as separate languages. Glottolog also has them as separate languages under
+    Sinitic (sini1245); many sources call them dialects of one language, Chinese (ISO macrolanguage zho). Node set by the
+    linguist-reviewer rule (Q1); lumping is a UI choice (lumper_group chinese).
 - rank: 43
   chart_name: Maithili
+  display_name: Maithili
   glottocode: mait1250
   glottolog_name: Maithili
   level: language
@@ -799,6 +911,7 @@ languages:
   notes: null
 - rank: 44
   chart_name: Ukrainian
+  display_name: Ukrainian
   glottocode: ukra1253
   glottolog_name: Ukrainian
   level: language
@@ -810,14 +923,19 @@ languages:
   notes: null
 - rank: 45
   chart_name: Moroccan Spoken Arabic
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Moroccan Arabic
+  glottocode: moro1292
+  glottolog_name: Moroccan Arabic
+  level: language
+  iso639_3: ary
+  wikidata_qid: Q56426
+  alternate_names:
+  - Moroccan Spoken Arabic
   family_path: Afro-Asiatic
-  method: 'manual: ISO ary inferred from the chart name; chart prints no codes'
+  method: 'manual: ISO ary inferred from the chart name; chart prints no codes; node recommended by linguist-reviewer (Q1)'
   confidence: contested
+  node_confidence: high
+  lumper_group: arabic
   mechanical_candidate: moro1292
   contested_reason: language-versus-dialect cut and lumping of Arabic
   candidates:
@@ -839,20 +957,26 @@ languages:
     iso639_3: null
     wikidata_qid: Q13955
     role: 'family: Arabic as a whole'
-  notes: The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
-    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
-    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
-    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer.
+  inspector_note: Arabic speakers share one written standard but speak regional varieties that can differ as much as separate
+    languages do.
+  notes: Glottolog lists Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395).
+    Lumping is a UI choice (lumper_group arabic).
 - rank: 46
   chart_name: Eastern Punjabi
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
+  display_name: Eastern Punjabi
+  glottocode: panj1256
+  glottolog_name: Eastern Panjabi
+  level: language
+  iso639_3: pan
   wikidata_qid: null
+  qid_note: Not typed here. The pipeline fills it by ISO 639-3 match (another data-curator instance is implementing that).
+  alternate_names:
+  - Eastern Panjabi
   family_path: Indo-European
-  method: 'manual: spelling variant of an exact match; lumping unresolved'
+  method: 'manual: spelling variant of an exact match; lumping unresolved; node recommended by linguist-reviewer (Q1)'
   confidence: contested
+  node_confidence: high
+  lumper_group: punjabi
   mechanical_candidate: panj1256
   contested_reason: Punjabi as one language versus Eastern and Western Punjabi
   candidates:
@@ -874,30 +998,41 @@ languages:
     iso639_3: null
     wikidata_qid: Q2656685
     role: 'family: Greater Panjabic'
-  notes: Chart "Eastern Punjabi" matches ISO pan. Glottolog name is "Eastern Panjabi". The chart treats it as separate from
-    Western Punjabi (rank 17); the ISO standard has a single Punjabi (pan). The reviewer decides whether the atlas shows Punjabi
-    as one language.
+  inspector_note: Punjabi in Pakistan and India is often called one language, but it is written in two scripts and ISO codes
+    the western varieties separately.
+  notes: Chart "Eastern Punjabi" matches ISO pan. Glottolog name is "Eastern Panjabi". ISO has pan (Eastern) and pnb (Western,
+    inside macrolanguage lah). ISO unverified at SIL (site returned 403). Lumping is the atlas's own grouping (lumper_group
+    punjabi).
 - rank: 47
   chart_name: Sunda
+  display_name: Sunda
   glottocode: sund1252
   glottolog_name: Sundanese
   level: language
   iso639_3: sun
   wikidata_qid: null
+  qid_note: Not typed here. The pipeline fills it by ISO 639-3 match (another data-curator instance is implementing that).
+  alternate_names:
+  - Sundanese
   family_path: Austronesian
   method: ISO match (sun); chart name Sunda is the short form of Sundanese
-  confidence: medium
+  confidence: high
   notes: Glottolog name is Sundanese. Wikidata QID is null in the build.
 - rank: 48
   chart_name: Algerian Spoken Arabic
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Algerian Arabic
+  glottocode: alge1239
+  glottolog_name: Algerian Arabic
+  level: language
+  iso639_3: arq
+  wikidata_qid: Q56499
+  alternate_names:
+  - Algerian Spoken Arabic
   family_path: Afro-Asiatic
-  method: 'manual: ISO arq inferred from the chart name; chart prints no codes'
+  method: 'manual: ISO arq inferred from the chart name; chart prints no codes; node recommended by linguist-reviewer (Q1)'
   confidence: contested
+  node_confidence: high
+  lumper_group: arabic
   mechanical_candidate: alge1239
   contested_reason: language-versus-dialect cut and lumping of Arabic
   candidates:
@@ -919,20 +1054,25 @@ languages:
     iso639_3: null
     wikidata_qid: Q13955
     role: 'family: Arabic as a whole'
-  notes: The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
-    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
-    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
-    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer.
+  inspector_note: Arabic speakers share one written standard but speak regional varieties that can differ as much as separate
+    languages do.
+  notes: Glottolog lists Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395).
+    Lumping is a UI choice (lumper_group arabic).
 - rank: 49
   chart_name: Sudanese Spoken Arabic
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Sudanese Arabic
+  glottocode: suda1236
+  glottolog_name: Sudanese Arabic
+  level: language
+  iso639_3: apd
+  wikidata_qid: Q56573
+  alternate_names:
+  - Sudanese Spoken Arabic
   family_path: Afro-Asiatic
-  method: 'manual: ISO apd inferred from the chart name; chart prints no codes'
+  method: 'manual: ISO apd inferred from the chart name; chart prints no codes; node recommended by linguist-reviewer (Q1)'
   confidence: contested
+  node_confidence: high
+  lumper_group: arabic
   mechanical_candidate: suda1236
   contested_reason: language-versus-dialect cut and lumping of Arabic
   candidates:
@@ -942,32 +1082,41 @@ languages:
     iso639_3: apd
     wikidata_qid: Q56573
     role: language-level node by ISO apd
+  - glottocode: east2897
+    glottolog_name: East Sudanic Arabic
+    level: family
+    iso639_3: null
+    wikidata_qid: null
+    role: immediate parent in Glottolog
   - glottocode: egyp1254
     glottolog_name: Egypto-Sudanic Arabic
     level: family
     iso639_3: null
     wikidata_qid: Q135994328
-    role: parent grouping in Glottolog
+    role: ancestor_grouping in Glottolog (higher than the immediate parent)
   - glottocode: arab1395
     glottolog_name: Arabic
     level: family
     iso639_3: null
     wikidata_qid: Q13955
     role: 'family: Arabic as a whole'
-  notes: The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
-    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
-    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
-    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer.
+  inspector_note: Arabic speakers share one written standard but speak regional varieties that can differ as much as separate
+    languages do.
+  notes: Glottolog lists Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395).
+    Lumping is a UI choice (lumper_group arabic).
 - rank: 50
   chart_name: Nigerian Pidgin
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Nigerian Pidgin
+  glottocode: nige1257
+  glottolog_name: Nigerian Pidgin
+  level: language
+  iso639_3: pcm
+  wikidata_qid: Q33655
   family_path: Indo-European
-  method: exact name match; classification unresolved
+  method: exact name match; classification unresolved; node recommended by linguist-reviewer (Q1)
   confidence: contested
+  node_confidence: high
+  lumper_group: none
   mechanical_candidate: nige1257
   contested_reason: pidgin or creole versus English dialect; where it sits in the tree
   candidates:
@@ -983,11 +1132,13 @@ languages:
     iso639_3: null
     wikidata_qid: null
     role: 'family: Nigerian-Ghanaian Krio'
+  inspector_note: Glottolog places English-based creoles under English; other scholars treat creoles as new languages outside
+    any family tree.
   notes: Exact name match. Glottolog files Nigerian Pidgin under West African Creole English inside Macro-English, so it falls
-    under Indo-European, Germanic. Whether a pidgin or creole belongs on the family tree at all, and under which family, is
-    contested. The chart groups it with Indo-European.
+    under Indo-European, Germanic.
 - rank: 51
   chart_name: Zulu
+  display_name: Zulu
   glottocode: zulu1248
   glottolog_name: Zulu
   level: language
@@ -999,6 +1150,7 @@ languages:
   notes: null
 - rank: 52
   chart_name: Igbo
+  display_name: Igbo
   glottocode: nucl1417
   glottolog_name: Igbo
   level: language
@@ -1010,6 +1162,7 @@ languages:
   notes: null
 - rank: 53
   chart_name: Amharic
+  display_name: Amharic
   glottocode: amha1245
   glottolog_name: Amharic
   level: language
@@ -1021,6 +1174,7 @@ languages:
   notes: null
 - rank: 54
   chart_name: Northern Uzbek
+  display_name: Northern Uzbek
   glottocode: nort2690
   glottolog_name: Northern Uzbek
   level: language
@@ -1032,6 +1186,7 @@ languages:
   notes: null
 - rank: 55
   chart_name: Sindhi
+  display_name: Sindhi
   glottocode: sind1272
   glottolog_name: Sindhi
   level: language
@@ -1043,14 +1198,19 @@ languages:
   notes: null
 - rank: 56
   chart_name: North Levantine Spoken Arabic
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Levantine Arabic
+  glottocode: nort3139
+  glottolog_name: Levantine Arabic
+  level: language
+  iso639_3: apc
+  wikidata_qid: Q56593
+  alternate_names:
+  - North Levantine Spoken Arabic
   family_path: Afro-Asiatic
-  method: 'manual: ISO apc inferred from the chart name; chart prints no codes'
+  method: 'manual: ISO apc inferred from the chart name; chart prints no codes; node recommended by linguist-reviewer (Q1)'
   confidence: contested
+  node_confidence: high
+  lumper_group: arabic
   mechanical_candidate: nort3139
   contested_reason: chart splits Levantine Arabic in two; Glottolog has one language
   candidates:
@@ -1072,13 +1232,13 @@ languages:
     iso639_3: null
     wikidata_qid: Q13955
     role: 'family: Arabic as a whole'
-  notes: The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
-    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
-    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
-    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer. Chart ranks 56 (North Levantine)
-    and 98 (South Levantine) both fall on Glottolog nort3139 or its dialect sout3123.
+  inspector_note: ISO merged North and South Levantine into one code in 2023, and Glottolog also treats Levantine Arabic as
+    one language.
+  notes: Chart name "North Levantine Spoken Arabic" uses the old reference name of apc (North Levantine Arabic). Chart ranks
+    56 and 98 both fall on Glottolog nort3139 or its dialect sout3123. Lumping is a UI choice (lumper_group arabic).
 - rank: 57
   chart_name: Nepali
+  display_name: Nepali
   glottocode: nepa1254
   glottolog_name: Nepali
   level: language
@@ -1090,6 +1250,7 @@ languages:
   notes: null
 - rank: 58
   chart_name: Romanian
+  display_name: Romanian
   glottocode: roma1327
   glottolog_name: Romanian
   level: language
@@ -1101,14 +1262,18 @@ languages:
   notes: null
 - rank: 59
   chart_name: Tagalog
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
+  display_name: Tagalog
+  glottocode: taga1270
+  glottolog_name: Tagalog
+  level: language
+  iso639_3: tgl
   wikidata_qid: null
+  qid_note: Not typed here. The pipeline fills it by ISO 639-3 match (another data-curator instance is implementing that).
   family_path: Austronesian
-  method: exact name match; lumping unresolved
+  method: exact name match; lumping unresolved; node recommended by linguist-reviewer (Q1)
   confidence: contested
+  node_confidence: high
+  lumper_group: filipino
   mechanical_candidate: taga1270
   contested_reason: Filipino and Tagalog as one language or two
   candidates:
@@ -1124,9 +1289,11 @@ languages:
     iso639_3: null
     wikidata_qid: Q34057
     role: 'family: Tagalog-Filipino, Q34057'
-  notes: Exact name match. See rank 36. The Wikidata QID for taga1270 is null in the build.
+  inspector_note: Filipino is the national standard built on Tagalog, so many linguists see one language with two names.
+  notes: Exact name match. See rank 36.
 - rank: 60
   chart_name: Dutch
+  display_name: Dutch
   glottocode: dutc1256
   glottolog_name: Dutch
   level: language
@@ -1138,14 +1305,19 @@ languages:
   notes: null
 - rank: 61
   chart_name: Sa'idi Spoken Arabic
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Saidi Arabic
+  glottocode: said1239
+  glottolog_name: Saidi Arabic
+  level: language
+  iso639_3: aec
+  wikidata_qid: Q56592
+  alternate_names:
+  - Sa'idi Spoken Arabic
   family_path: Afro-Asiatic
-  method: 'manual: ISO aec inferred from the chart name; chart prints no codes'
+  method: 'manual: ISO aec inferred from the chart name; chart prints no codes; node recommended by linguist-reviewer (Q1)'
   confidence: contested
+  node_confidence: high
+  lumper_group: arabic
   mechanical_candidate: said1239
   contested_reason: language-versus-dialect cut and lumping of Arabic
   candidates:
@@ -1167,20 +1339,23 @@ languages:
     iso639_3: null
     wikidata_qid: Q13955
     role: 'family: Arabic as a whole'
-  notes: The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
-    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
-    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
-    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer.
+  inspector_note: Arabic speakers share one written standard but speak regional varieties that can differ as much as separate
+    languages do.
+  notes: Glottolog lists Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395).
+    Lumping is a UI choice (lumper_group arabic).
 - rank: 62
   chart_name: Gan Chinese
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Gan Chinese
+  glottocode: ganc1239
+  glottolog_name: Gan Chinese
+  level: language
+  iso639_3: gan
+  wikidata_qid: Q33475
   family_path: Sino-Tibetan
-  method: exact name match; lumping unresolved
+  method: exact name match; lumping unresolved; node recommended by linguist-reviewer (Q1)
   confidence: contested
+  node_confidence: high
+  lumper_group: chinese
   mechanical_candidate: ganc1239
   contested_reason: Chinese as one language versus separate languages
   candidates:
@@ -1196,12 +1371,14 @@ languages:
     iso639_3: null
     wikidata_qid: null
     role: 'family: Sinitic, all Chinese varieties'
-  notes: The chart lists eight Sinitic varieties as separate languages and ranks them separately. Glottolog also has them
-    as separate languages under Sinitic (sini1245), but many sources call all of them dialects of one language, Chinese (ISO
-    macrolanguage zho). Whether the atlas shows Chinese as one language, a family or separate languages is the Lumper/Splitter
-    question for the reviewer.
+  inspector_note: Chinese varieties share one writing tradition but are often not mutually intelligible when spoken, so some
+    linguists count one language and others count many.
+  notes: The chart lists eight Sinitic varieties as separate languages. Glottolog also has them as separate languages under
+    Sinitic (sini1245); many sources call them dialects of one language, Chinese (ISO macrolanguage zho). Node set by the
+    linguist-reviewer rule (Q1); lumping is a UI choice (lumper_group chinese).
 - rank: 63
   chart_name: Northern Pashto
+  display_name: Northern Pashto
   glottocode: nort2646
   glottolog_name: Northern Pashto
   level: language
@@ -1213,6 +1390,7 @@ languages:
   notes: null
 - rank: 64
   chart_name: Magahi
+  display_name: Magahi
   glottocode: maga1260
   glottolog_name: Magahi
   level: language
@@ -1224,6 +1402,7 @@ languages:
   notes: null
 - rank: 65
   chart_name: Saraiki
+  display_name: Saraiki
   glottocode: sera1259
   glottolog_name: Saraiki
   level: language
@@ -1235,6 +1414,7 @@ languages:
   notes: null
 - rank: 66
   chart_name: Xhosa
+  display_name: Xhosa
   glottocode: xhos1239
   glottolog_name: Xhosa
   level: language
@@ -1246,14 +1426,19 @@ languages:
   notes: null
 - rank: 67
   chart_name: Malay
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Malay
+  glottocode: stan1306
+  glottolog_name: Standard Malay
+  level: language
+  iso639_3: zsm
+  wikidata_qid: Q123474569
+  alternate_names:
+  - Standard Malay
   family_path: Austronesian
-  method: 'manual: no unique candidate'
+  method: 'manual: no unique candidate; node recommended by linguist-reviewer (Q1)'
   confidence: contested
+  node_confidence: low
+  lumper_group: malay
   mechanical_candidate: null
   contested_reason: Malay and Indonesian as one language or two; which Malay
   candidates:
@@ -1268,7 +1453,9 @@ languages:
     level: language
     iso639_3: mly
     wikidata_qid: Q9237
-    role: '"Malay (individual language)", ISO mly; Glottolog parks it under Bookkeeping, outside the tree'
+    role: 'retired: "Malay (individual language)"; Glottolog parks it under Bookkeeping, outside the tree. Not a candidate
+      for the atlas'
+    retired_iso: mly (retired 2008-02-18; ISO change request 2007-183 split it into zsm, hji, pmy, zlm)
   - glottocode: mala1479
     glottolog_name: Central Malay
     level: language
@@ -1281,22 +1468,31 @@ languages:
     iso639_3: null
     wikidata_qid: Q110621927
     role: 'family: Standard Malay-Indonesian'
-  notes: No exact name match for "Malay" among Glottolog language names. Several Malay nodes exist (see candidates) and the
-    chart does not say which code it uses. The reviewer decides. The mechanical candidate is null because no node fits uniquely.
+  inspector_note: Indonesian and Malaysian Malay grew from one standard and stay largely mutually intelligible, but each country
+    codifies its own norm.
+  notes: No exact name match for "Malay" among Glottolog language names, and the chart prints no code. Standard Malay (stan1306,
+    ISO zsm) is the recommended node at low confidence; Central Malay (mala1479, ISO zlm) is the alternative. The retired
+    code mly is kept as a candidate only for traceability.
 - rank: 68
   chart_name: Khmer
+  display_name: Khmer
   glottocode: cent1989
   glottolog_name: Central Khmer
   level: language
   iso639_3: khm
   wikidata_qid: Q9205
+  qid_note: The QID in the build is shared with the family khme1253 (Khmeric). The pipeline resolves the duplicate by ISO
+    639-3 match.
+  alternate_names:
+  - Central Khmer
   family_path: Austroasiatic
   method: ISO match (khm)
-  confidence: medium
+  confidence: high
   notes: Glottolog name is Central Khmer. Wikidata Q9205 (Khmer) is also claimed by the family khme1253 Khmeric, so the QID
     is shared; kept here because it is the language-level node with ISO khm.
 - rank: 69
   chart_name: Afrikaans
+  display_name: Afrikaans
   glottocode: afri1274
   glottolog_name: Afrikaans
   level: language
@@ -1308,6 +1504,7 @@ languages:
   notes: null
 - rank: 70
   chart_name: Sinhala
+  display_name: Sinhala
   glottocode: sinh1246
   glottolog_name: Sinhala
   level: language
@@ -1319,6 +1516,7 @@ languages:
   notes: null
 - rank: 71
   chart_name: Somali
+  display_name: Somali
   glottocode: soma1255
   glottolog_name: Somali
   level: language
@@ -1330,6 +1528,7 @@ languages:
   notes: null
 - rank: 72
   chart_name: Chhattisgarhi
+  display_name: Chhattisgarhi
   glottocode: chha1249
   glottolog_name: Chhattisgarhi
   level: language
@@ -1341,6 +1540,7 @@ languages:
   notes: null
 - rank: 73
   chart_name: Cebuano
+  display_name: Cebuano
   glottocode: cebu1242
   glottolog_name: Cebuano
   level: language
@@ -1352,14 +1552,20 @@ languages:
   notes: null
 - rank: 74
   chart_name: Mesopotamian Spoken Arabic
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Mesopotamian Arabic
+  glottocode: meso1252
+  glottolog_name: Gilit Mesopotamian Arabic
+  level: language
+  iso639_3: acm
+  wikidata_qid: Q115978649
+  alternate_names:
+  - Mesopotamian Spoken Arabic
+  - Gilit Mesopotamian Arabic
   family_path: Afro-Asiatic
-  method: 'manual: ISO acm inferred from the chart name; chart prints no codes'
+  method: 'manual: ISO acm inferred from the chart name; chart prints no codes; node recommended by linguist-reviewer (Q1)'
   confidence: contested
+  node_confidence: medium
+  lumper_group: arabic
   mechanical_candidate: meso1252
   contested_reason: language-versus-dialect cut and lumping of Arabic
   candidates:
@@ -1381,13 +1587,12 @@ languages:
     iso639_3: null
     wikidata_qid: Q13955
     role: 'family: Arabic as a whole'
-  notes: 'The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
-    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
-    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
-    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer. Glottolog name is "Gilit
-    Mesopotamian Arabic": it may cover only the Gilit group, not all Mesopotamian Arabic.'
+  inspector_note: Iraqi Arabic splits into gilit and qeltu varieties; this entry covers the gilit group.
+  notes: 'Glottolog name is "Gilit Mesopotamian Arabic": narrower than the chart''s Mesopotamian Arabic. Qeltu varieties are
+    ISO ayp and separate. Display name follows the ISO style name. Lumping is a UI choice (lumper_group arabic).'
 - rank: 75
   chart_name: Assamese
+  display_name: Assamese
   glottocode: assa1263
   glottolog_name: Assamese
   level: language
@@ -1399,6 +1604,7 @@ languages:
   notes: null
 - rank: 76
   chart_name: Northeastern Thai
+  display_name: Northeastern Thai
   glottocode: nort2741
   glottolog_name: Northeastern Thai
   level: language
@@ -1410,14 +1616,17 @@ languages:
   notes: null
 - rank: 77
   chart_name: Northern Kurdish
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Northern Kurdish
+  glottocode: nort2641
+  glottolog_name: Northern Kurdish
+  level: language
+  iso639_3: kmr
+  wikidata_qid: Q36163
   family_path: Indo-European
-  method: exact name match; lumping unresolved
+  method: exact name match; lumping unresolved; node recommended by linguist-reviewer (Q1)
   confidence: contested
+  node_confidence: high
+  lumper_group: kurdish
   mechanical_candidate: nort2641
   contested_reason: Kurdish as one language versus Northern, Central and Southern Kurdish
   candidates:
@@ -1433,19 +1642,25 @@ languages:
     iso639_3: kur
     wikidata_qid: Q36368
     role: Kurdish, ISO kur; Glottolog marks it as a family
-  notes: Exact name match. Glottolog has Kurdish (kurd1259, ISO kur) as a family node under Laki-Kurdish (laki1246), with
-    Northern Kurdish as a language below it in the build. Many sources treat Northern, Central and Southern Kurdish as one
-    language. The reviewer decides.
+  inspector_note: Kurmanji, Sorani and Southern Kurdish share a name and identity but differ in grammar and script, so some
+    count one language and some three.
+  notes: Exact name match. Glottolog has Kurdish (kurd1259, ISO kur) as a family under Laki-Kurdish (laki1246), with Northern,
+    Central and Southern Kurdish as languages below it. Lumping is a UI choice (lumper_group kurdish).
 - rank: 78
   chart_name: Hijazi Spoken Arabic
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Hijazi Arabic
+  glottocode: hija1235
+  glottolog_name: Hijazi Arabic
+  level: language
+  iso639_3: acw
+  wikidata_qid: Q56608
+  alternate_names:
+  - Hijazi Spoken Arabic
   family_path: Afro-Asiatic
-  method: 'manual: ISO acw inferred from the chart name; chart prints no codes'
+  method: 'manual: ISO acw inferred from the chart name; chart prints no codes; node recommended by linguist-reviewer (Q1)'
   confidence: contested
+  node_confidence: high
+  lumper_group: arabic
   mechanical_candidate: hija1235
   contested_reason: language-versus-dialect cut and lumping of Arabic
   candidates:
@@ -1467,24 +1682,28 @@ languages:
     iso639_3: null
     wikidata_qid: Q13955
     role: 'family: Arabic as a whole'
-  notes: The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
-    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
-    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
-    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer.
+  inspector_note: Arabic speakers share one written standard but speak regional varieties that can differ as much as separate
+    languages do.
+  notes: Glottolog lists Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395).
+    Lumping is a UI choice (lumper_group arabic).
 - rank: 79
   chart_name: Nigerian Fulfulde
+  display_name: Nigerian Fulfulde
   glottocode: nige1253
   glottolog_name: Hausa States Fulfulde
   level: language
   iso639_3: fuv
   wikidata_qid: Q36129
+  alternate_names:
+  - Hausa States Fulfulde
   family_path: Atlantic-Congo
   method: ISO match (fuv, Nigerian Fulfulde)
-  confidence: medium
+  confidence: high
   notes: Glottolog name is Hausa States Fulfulde (nige1253), under Eastern Fula. Glottolog has no language called Nigerian
     Fulfulde.
 - rank: 80
   chart_name: Bavarian
+  display_name: Bavarian
   glottocode: bava1246
   glottolog_name: Bavarian
   level: language
@@ -1496,17 +1715,21 @@ languages:
   notes: null
 - rank: 81
   chart_name: Bamanankan
+  display_name: Bamanankan
   glottocode: bamb1269
   glottolog_name: Bambara
   level: language
   iso639_3: bam
   wikidata_qid: Q33243
+  alternate_names:
+  - Bambara
   family_path: Mande
   method: ISO match (bam); chart uses the endonym Bamanankan
-  confidence: medium
+  confidence: high
   notes: Glottolog name is Bambara.
 - rank: 82
   chart_name: South Azerbaijani
+  display_name: South Azerbaijani
   glottocode: sout2697
   glottolog_name: South Azerbaijani
   level: language
@@ -1518,29 +1741,39 @@ languages:
   notes: null
 - rank: 83
   chart_name: Northern Sotho
+  display_name: Northern Sotho
   glottocode: pedi1238
   glottolog_name: Pedi
   level: language
   iso639_3: nso
   wikidata_qid: null
+  qid_note: Not typed here. The pipeline fills it by ISO 639-3 match (another data-curator instance is implementing that).
+    Q33890 sits on the family node nort3233, not on this language.
+  alternate_names:
+  - Pedi
+  - Sepedi
   family_path: Atlantic-Congo
   method: 'manual: exact name "Northern Sotho" hits only the family nort3233; the language-level node with ISO nso is Pedi'
   confidence: medium
   notes: 'Glottolog: Northern Sotho (nort3233, family, Q33890) > Sepedic (sepe1241) > Pedi (pedi1238, nso). Wikidata Q33890
-    sits on the family. The reviewer may prefer the family node.'
+    sits on the family. The reviewer may prefer the family node. Display name stays Northern Sotho; Pedi and Sepedi are alternates.'
 - rank: 84
   chart_name: Setswana
+  display_name: Setswana
   glottocode: tswa1253
   glottolog_name: Tswana
   level: language
   iso639_3: tsn
   wikidata_qid: Q34137
+  alternate_names:
+  - Tswana
   family_path: Atlantic-Congo
   method: ISO match (tsn); chart uses the endonym Setswana
-  confidence: medium
+  confidence: high
   notes: Glottolog name is Tswana.
 - rank: 85
   chart_name: Southern Sotho
+  display_name: Southern Sotho
   glottocode: sout2807
   glottolog_name: Southern Sotho
   level: language
@@ -1552,6 +1785,7 @@ languages:
   notes: null
 - rank: 86
   chart_name: Czech
+  display_name: Czech
   glottocode: czec1258
   glottolog_name: Czech
   level: language
@@ -1563,18 +1797,22 @@ languages:
   notes: null
 - rank: 87
   chart_name: Greek
+  display_name: Greek
   glottocode: mode1248
   glottolog_name: Modern Greek
   level: language
   iso639_3: ell
   wikidata_qid: Q36510
+  alternate_names:
+  - Modern Greek
   family_path: Indo-European
   method: 'manual: exact name "Greek" hits only the family gree1276; the language-level node with ISO ell is Modern Greek'
-  confidence: medium
+  confidence: high
   notes: Chart Greek is read as the modern language. Glottolog Greek (gree1276, Q9129) is a family that also holds Ancient
     Greek and others.
 - rank: 88
   chart_name: Chittagonian
+  display_name: Chittagonian
   glottocode: chit1275
   glottolog_name: Chittagonian
   level: language
@@ -1586,6 +1824,7 @@ languages:
   notes: null
 - rank: 89
   chart_name: Kazakh
+  display_name: Kazakh
   glottocode: kaza1248
   glottolog_name: Kazakh
   level: language
@@ -1597,6 +1836,7 @@ languages:
   notes: null
 - rank: 90
   chart_name: Swedish
+  display_name: Swedish
   glottocode: swed1254
   glottolog_name: Swedish
   level: language
@@ -1608,6 +1848,7 @@ languages:
   notes: null
 - rank: 91
   chart_name: Deccan
+  display_name: Deccan
   glottocode: null
   glottolog_name: null
   level: null
@@ -1631,10 +1872,23 @@ languages:
     iso639_3: mar
     wikidata_qid: Q1571
     role: 'parent language: Marathi'
+  - glottocode: dakh1243
+    glottolog_name: Dakhini
+    level: dialect
+    iso639_3: null
+    wikidata_qid: null
+    role: 'dialect: Dakhini, under Hindustani > Hindi (hind1269)'
+  node_confidence: low
+  lumper_group: none
+  inspector_note: The name Deccan has been used for both a Marathi dialect and Dakhini, a variety of Hindustani, and sources
+    mix the two.
   notes: The chart ranks Deccan as a language. Glottolog 5.3 has only Deccan Marathi (decc1239), a dialect of Marathi, with
-    ISO dcc attached. A dialect may not get its own language page. The reviewer decides.
+    ISO dcc. Glottolog's comment on decc1239 says the dcc entry "is spurious either as the Marathi variety or as Dakkhini
+    Urdu". Dakhini (dakh1243) is a dialect under Hindustani > Hindi (hind1269). Left undecided; a dialect may not get its
+    own language page.
 - rank: 92
   chart_name: Hungarian
+  display_name: Hungarian
   glottocode: hung1274
   glottolog_name: Hungarian
   level: language
@@ -1646,17 +1900,21 @@ languages:
   notes: null
 - rank: 93
   chart_name: Jula
+  display_name: Jula
   glottocode: dyul1238
   glottolog_name: Dyula
   level: language
   iso639_3: dyu
   wikidata_qid: Q32706
+  alternate_names:
+  - Dyula
   family_path: Mande
   method: ISO match (dyu); chart spelling Jula is a variant of Dyula
-  confidence: medium
+  confidence: high
   notes: Glottolog name is Dyula (East Manding).
 - rank: 94
   chart_name: Sadri
+  display_name: Sadri
   glottocode: sadr1248
   glottolog_name: Sadri
   level: language
@@ -1668,6 +1926,7 @@ languages:
   notes: null
 - rank: 95
   chart_name: Kinyarwanda
+  display_name: Kinyarwanda
   glottocode: kiny1244
   glottolog_name: Kinyarwanda
   level: language
@@ -1679,14 +1938,20 @@ languages:
   notes: null
 - rank: 96
   chart_name: Cameroonian Pidgin
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Cameroonian Pidgin
+  glottocode: came1254
+  glottolog_name: Cameroon Pidgin
+  level: language
+  iso639_3: wes
+  wikidata_qid: Q35541
+  alternate_names:
+  - Cameroon Pidgin
   family_path: Indo-European
-  method: 'manual: name variant (Cameroonian and Cameroon); classification unresolved'
+  method: 'manual: name variant (Cameroonian and Cameroon); classification unresolved; node recommended by linguist-reviewer
+    (Q1)'
   confidence: contested
+  node_confidence: high
+  lumper_group: none
   mechanical_candidate: came1254
   contested_reason: pidgin or creole versus English dialect; where it sits in the tree
   candidates:
@@ -1702,10 +1967,12 @@ languages:
     iso639_3: null
     wikidata_qid: null
     role: 'family: Coastal Nigerian Krio'
-  notes: Chart "Cameroonian Pidgin"; Glottolog name is "Cameroon Pidgin". Same classification question as Nigerian Pidgin
-    (rank 50). The reviewer decides.
+  inspector_note: Glottolog places English-based creoles under English; other scholars treat creoles as new languages outside
+    any family tree.
+  notes: Chart "Cameroonian Pidgin"; Glottolog name is "Cameroon Pidgin". Same classification question as rank 50.
 - rank: 97
   chart_name: Sylheti
+  display_name: Sylheti
   glottocode: sylh1242
   glottolog_name: Sylheti
   level: language
@@ -1717,23 +1984,30 @@ languages:
   notes: null
 - rank: 98
   chart_name: South Levantine Spoken Arabic
-  glottocode: null
-  glottolog_name: null
-  level: null
+  display_name: South Levantine Arabic
+  glottocode: sout3123
+  glottolog_name: South Levantine Arabic
+  level: dialect
   iso639_3: null
-  wikidata_qid: null
+  wikidata_qid: Q55633582
+  retired_iso: ajp (merged into apc, 2023-01-20)
+  alternate_names:
+  - South Levantine Spoken Arabic
   family_path: Afro-Asiatic
-  method: 'manual: ISO ajp inferred from the chart name; chart prints no codes'
+  method: 'manual: ISO ajp inferred from the chart name; chart prints no codes; node recommended by linguist-reviewer (Q1)'
   confidence: contested
+  node_confidence: high
+  lumper_group: arabic
   mechanical_candidate: sout3123
   contested_reason: chart splits Levantine Arabic in two; Glottolog has one language with a South Levantine dialect
   candidates:
   - glottocode: sout3123
     glottolog_name: South Levantine Arabic
     level: dialect
-    iso639_3: ajp
+    iso639_3: null
     wikidata_qid: Q55633582
-    role: dialect-level node, ISO ajp (South Levantine Arabic)
+    role: dialect-level node (Glottolog still attaches ISO ajp, which ISO retired); page nort3139#sout3123
+    retired_iso: ajp (merged into apc, 2023-01-20)
   - glottocode: nort3139
     glottolog_name: Levantine Arabic
     level: language
@@ -1746,21 +2020,26 @@ languages:
     iso639_3: null
     wikidata_qid: Q13955
     role: 'family: Arabic as a whole'
-  notes: The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
-    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
-    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
-    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer. This is a dialect in Glottolog,
-    so it may not get its own language page.
+  inspector_note: ISO merged North and South Levantine into one code in 2023, and Glottolog also treats Levantine Arabic as
+    one language.
+  notes: Glottolog lists Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395).
+    Lumping is a UI choice (lumper_group arabic). This is a dialect in Glottolog (page nort3139#sout3123), so it has no page
+    of its own. ISO ajp is retired.
 - rank: 99
   chart_name: Tunisian Spoken Arabic
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Tunisian Arabic
+  glottocode: tuni1259
+  glottolog_name: Tunisian Arabic
+  level: language
+  iso639_3: aeb
+  wikidata_qid: Q56240
+  alternate_names:
+  - Tunisian Spoken Arabic
   family_path: Afro-Asiatic
-  method: 'manual: ISO aeb inferred from the chart name; chart prints no codes'
+  method: 'manual: ISO aeb inferred from the chart name; chart prints no codes; node recommended by linguist-reviewer (Q1)'
   confidence: contested
+  node_confidence: high
+  lumper_group: arabic
   mechanical_candidate: tuni1259
   contested_reason: language-versus-dialect cut and lumping of Arabic
   candidates:
@@ -1770,32 +2049,43 @@ languages:
     iso639_3: aeb
     wikidata_qid: Q56240
     role: language-level node by ISO aeb
+  - glottocode: malt1259
+    glottolog_name: Malta-Tunisian Arabic
+    level: family
+    iso639_3: null
+    wikidata_qid: null
+    role: immediate parent in Glottolog
   - glottocode: magh1239
     glottolog_name: Maghrebi
     level: family
     iso639_3: null
     wikidata_qid: null
-    role: parent grouping in Glottolog
+    role: ancestor_grouping in Glottolog (higher than the immediate parent)
   - glottocode: arab1395
     glottolog_name: Arabic
     level: family
     iso639_3: null
     wikidata_qid: Q13955
     role: 'family: Arabic as a whole'
-  notes: The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
-    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
-    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
-    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer.
+  inspector_note: Arabic speakers share one written standard but speak regional varieties that can differ as much as separate
+    languages do.
+  notes: Glottolog lists Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395).
+    Lumping is a UI choice (lumper_group arabic).
 - rank: 100
   chart_name: Sanaani Spoken Arabic
-  glottocode: null
-  glottolog_name: null
-  level: null
-  iso639_3: null
-  wikidata_qid: null
+  display_name: Sanaani Arabic
+  glottocode: sana1295
+  glottolog_name: Sanaani Arabic
+  level: language
+  iso639_3: ayn
+  wikidata_qid: Q56578
+  alternate_names:
+  - Sanaani Spoken Arabic
   family_path: Afro-Asiatic
-  method: 'manual: ISO ayn inferred from the chart name; chart prints no codes'
+  method: 'manual: ISO ayn inferred from the chart name; chart prints no codes; node recommended by linguist-reviewer (Q1)'
   confidence: contested
+  node_confidence: high
+  lumper_group: arabic
   mechanical_candidate: sana1295
   contested_reason: language-versus-dialect cut and lumping of Arabic
   candidates:
@@ -1805,22 +2095,111 @@ languages:
     iso639_3: ayn
     wikidata_qid: Q56578
     role: language-level node by ISO ayn
+  - glottocode: jude1277
+    glottolog_name: Judeo-Muslim Sanaani Arabic
+    level: family
+    iso639_3: null
+    wikidata_qid: null
+    role: immediate parent in Glottolog
   - glottocode: arab1393
     glottolog_name: Arabian Peninsula Arabic
     level: family
     iso639_3: null
     wikidata_qid: Q15043573
-    role: parent grouping in Glottolog
+    role: ancestor_grouping in Glottolog (higher than the immediate parent)
   - glottocode: arab1395
     glottolog_name: Arabic
     level: family
     iso639_3: null
     wikidata_qid: Q13955
     role: 'family: Arabic as a whole'
-  notes: The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
-    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
-    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
-    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer.
+  inspector_note: Arabic speakers share one written standard but speak regional varieties that can differ as much as separate
+    languages do.
+  notes: Glottolog lists Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395).
+    Lumping is a UI choice (lumper_group arabic).
+
+lumper_groups:
+  chinese:
+    label: 'Atlas grouping: the chart''s eight Sinitic varieties as one Chinese; the Glottolog ancestor is the node Sinitic'
+    glottolog_ancestor: sini1245
+    members:
+    - mand1415
+    - wuch1236
+    - yuec1235
+    - minn1241
+    - hakk1236
+    - jiny1235
+    - xian1251
+    - ganc1239
+  arabic:
+    label: 'Glottolog node: Arabic (arab1395)'
+    glottolog_ancestor: arab1395
+    members:
+    - stan1318
+    - egyp1253
+    - moro1292
+    - alge1239
+    - suda1236
+    - nort3139
+    - said1239
+    - meso1252
+    - hija1235
+    - sout3123
+    - tuni1259
+    - sana1295
+  hindustani:
+    label: 'Glottolog node: Hindustani (hind1270). The lumped view excludes Fiji Hindi and Andaman Creole Hindi, which sit
+      under the same node'
+    glottolog_ancestor: hind1270
+    members:
+    - hind1269
+    - urdu1245
+  punjabi:
+    label: 'Atlas grouping: Western and Eastern Punjabi as one Punjabi; the Glottolog ancestor lahn1241 is broader (it also
+      holds Saraiki, Hindko and Pahari-Potwari)'
+    glottolog_ancestor: lahn1241
+    members:
+    - west2386
+    - panj1256
+  malay:
+    label: 'Glottolog node: Standard Malay-Indonesian (stan1327). Do not label this group with ISO msa'
+    glottolog_ancestor: stan1327
+    members:
+    - indo1316
+    - stan1306
+  filipino:
+    label: 'Glottolog node: Tagalog-Filipino (taga1269)'
+    glottolog_ancestor: taga1269
+    members:
+    - fili1244
+    - taga1270
+  kurdish:
+    label: 'Glottolog node: Kurdish (kurd1259)'
+    glottolog_ancestor: kurd1259
+    members:
+    - nort2641
+    - cent1972
+    - sout2640
+  persian:
+    label: 'Atlas grouping: Persian as one pluricentric language (Iran, Afghanistan, Tajikistan). ISO fas covers only pes
+      and prs; the Glottolog ancestor Farsic (fars1255) is broader'
+    glottolog_ancestor: fars1255
+    owner_decision: pending
+    members:
+    - west2369
+    - dari1249
+    - taji1245
+
+owner_decisions:
+- id: persian_grouping
+  status: pending
+  question: Does the atlas show Persian as one pluricentric language (Iran, Afghanistan, Tajikistan) in the lumped view, and
+    is Tajik in it? Applies to lumper_groups.persian.
+- id: farsic_family_labels
+  status: pending
+  question: Which English display labels do the Glottolog family nodes Farsic (fars1255), Eastern Farsic (east2745) and Farsic-Caucasian
+    Tat (fars1254) get? D-004 forbids the ASCII spelling as a UI name, and fars1254 also contains Caucasian Tat, so it cannot
+    simply be called Persian. No labels are invented here.
 
 families:
 - glottocode: afro1255

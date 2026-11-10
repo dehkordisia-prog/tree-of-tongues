@@ -20,6 +20,19 @@ REAL_LANGUOIDS = ROOT / "data" / "build" / "languoids.parquet"
 GLOTTOCODE = re.compile(r"^[a-z]{4}\d{4}$")
 CONFIDENCE = {"high", "medium", "low", "contested"}
 LEVELS = {"family", "language", "dialect"}
+LUMPER_GROUPS = {
+    "arabic",
+    "chinese",
+    "persian",
+    "punjabi",
+    "hindustani",
+    "malay",
+    "filipino",
+    "kurdish",
+    "none",
+}
+NODE_CONFIDENCE = {"high", "medium", "low"}
+UNDECIDED_RANKS = {91}  # Deccan: the only entry whose glottocode stays null
 
 
 @pytest.fixture(scope="module")
@@ -78,15 +91,59 @@ def test_every_entry_has_the_required_fields(languages):
 
 def test_mapped_entries_have_glottolog_fields_and_contested_ones_have_candidates(languages):
     for e in languages:
+        assert e["display_name"], e["rank"]
         if e["glottocode"]:
             assert e["glottolog_name"] and e["level"] in LEVELS, e["rank"]
-            assert e["confidence"] in {"high", "medium", "low"}, e["rank"]
+            assert e["confidence"] in CONFIDENCE, e["rank"]
         else:
+            assert e["rank"] in UNDECIDED_RANKS, e["rank"]
             assert e["confidence"] == "contested", e["rank"]
+        if e["confidence"] == "contested":
             assert e["contested_reason"], e["rank"]
             assert len(e["candidates"]) >= 2, e["rank"]
             for c in e["candidates"]:
                 assert c["role"] and c["level"] in LEVELS, e["rank"]
+            if e["glottocode"]:
+                assert e["glottocode"] in {c["glottocode"] for c in e["candidates"]}, e["rank"]
+
+
+def test_contested_entries_carry_node_confidence_group_and_inspector_note(scope, languages):
+    groups = scope["lumper_groups"]
+    assert set(groups) | {"none"} == LUMPER_GROUPS
+    for name, g in groups.items():
+        assert g["label"] and g["glottolog_ancestor"] and g["members"], name
+        assert GLOTTOCODE.match(g["glottolog_ancestor"]), name
+        assert all(GLOTTOCODE.match(m) for m in g["members"]), name
+    in_scope: dict[str, set[str]] = {}
+    for e in languages:
+        if e["confidence"] != "contested":
+            assert "lumper_group" not in e, e["rank"]
+            continue
+        assert e["node_confidence"] in NODE_CONFIDENCE, e["rank"]
+        assert e["lumper_group"] in LUMPER_GROUPS, e["rank"]
+        note = e["inspector_note"]
+        assert isinstance(note, str) and note.strip() and "\n" not in note.strip(), e["rank"]
+        if e["lumper_group"] != "none":
+            assert e["glottocode"] in groups[e["lumper_group"]]["members"], e["rank"]
+            in_scope.setdefault(e["lumper_group"], set()).add(e["glottocode"])
+        else:
+            assert e["rank"] in UNDECIDED_RANKS or e["glottocode"], e["rank"]
+    for name in groups:
+        assert in_scope.get(name), f"lumper group {name} has no entry"
+    assert groups["persian"]["owner_decision"] == "pending"
+    assert scope["owner_decisions"], "owner_decisions missing"
+
+
+def test_decided_entries_with_a_null_qid_explain_it(languages):
+    for e in languages:
+        if e["glottocode"] and e["wikidata_qid"] is None:
+            assert e.get("qid_note"), e["rank"]
+        if e.get("retired_iso"):
+            assert e["iso639_3"] is None, e["rank"]
+
+
+def test_no_em_dashes_in_the_file():
+    assert chr(0x2014) not in SCOPE.read_text(encoding="utf-8")
 
 
 def test_glottocodes_are_well_formed_and_unique_per_decided_entry(scope, languages):
@@ -110,6 +167,11 @@ def test_no_speaker_numbers_in_the_file():
     )
     body = re.sub(r"\b[a-z]{4}\d{4}\b", "", body)  # Glottocodes
     body = re.sub(r"\bQ\d+\b", "", body)  # Wikidata QIDs
+    body = re.sub(r"\b\d{4}-\d{2}(?:-\d{2})?\b", "", body)  # ISO dates, e.g. retirement dates
+    body = re.sub(r"\b\d{4}-\d{3}\b", "", body)  # ISO change request ids
+    body = re.sub(
+        r"(?i)\b(?:in|since|by|until) (?:19|20)\d{2}\b", "", body
+    )  # a year in a sentence, e.g. "in 2023"
     assert not re.search(r"\d{1,3}(?:[,.]\d{3})+", body), "thousands-grouped number found"
     assert not re.search(r"\b\d{4,}\b", body), "number with four or more digits found"
     assert not re.search(r"(?i)\b\d+(?:\.\d+)?\s*(?:million|billion|m)\b", body), (
@@ -130,7 +192,10 @@ def test_glottocodes_exist_in_real_languoids_and_fields_match(scope, languages):
         r = rows[e["glottocode"]]
         assert e["glottolog_name"] == r["name"], e["rank"]
         assert e["level"] == r["level"], e["rank"]
-        assert e["iso639_3"] == r["iso639_3"], e["rank"]
+        if e.get("retired_iso"):
+            assert r["iso639_3"] is None or e["retired_iso"].startswith(r["iso639_3"]), e["rank"]
+        else:
+            assert e["iso639_3"] == r["iso639_3"], e["rank"]
         assert e["wikidata_qid"] == r["wikidata_qid"], e["rank"]
     for e in languages:
         for c in e.get("candidates", []):
