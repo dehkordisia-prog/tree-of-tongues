@@ -1,0 +1,48 @@
+Font name-table check, 2026-11-10 (orchestrator, fontTools 4.68.0 via uv)
+Shows name IDs 0-7, 10, 13 and 25, fvar instance names and the OS/2 vendor; flags any record containing 'Source' outside IDs 0 and 7.
+
+== apps/web/public/fonts/tongues-serif/tongues-serif-latin-wght-normal.woff2
+  ID   0 p3: © 2014 - 2023 Adobe (http://www.adobe.com/), with Reserved Font Name ‘Source’.
+  ID   1 p3: Tongues Serif
+  ID   2 p3: Regular
+  ID   3 p3: 4.005;TOT;TonguesSerif-Roman
+  ID   4 p3: Tongues Serif
+  ID   5 p3: Version 4.005; modified by the Tree of Tongues project (web subset)
+  ID   6 p3: TonguesSerif-Roman
+  ID   7 p3: Source is a trademark of Adobe in the United States and/or other countries.
+  ID  10 p3: Modified by the Tree of Tongues project: subset for the web and renamed, as required by the Reserved Font Name
+  ID  13 p3: This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a 
+  ID  25 p3: TonguesSerifRoman
+  fvar instances: 
+  OS/2 vendor: 'TOT '
+== apps/web/public/fonts/tongues-sans/tongues-sans-latin-wght-normal.woff2
+  ID   0 p3: © 2023 Adobe (http://www.adobe.com/), with Reserved Font Name ‘Source’
+  ID   1 p3: Tongues Sans
+  ID   2 p3: Regular
+  ID   3 p3: 3.052;TOT;TonguesSans-ExtraLight
+  ID   4 p3: Tongues Sans
+  ID   5 p3: Version 3.052; modified by the Tree of Tongues project (web subset)
+  ID   6 p3: TonguesSans-ExtraLight
+  ID   7 p3: Source is a trademark of Adobe in the United States and/or other countries.
+  ID  10 p3: Modified by the Tree of Tongues project: subset for the web and renamed, as required by the Reserved Font Name
+  ID  13 p3: This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a 
+  ID  25 p3: TonguesSansUpright
+  fvar instances: ExtraLight, Light, Regular, Medium, Semibold, Bold, Black
+  OS/2 vendor: 'TOT '
+== apps/web/public/fonts/tongues-sans/tongues-sans-latin-wght-italic.woff2
+  ID   0 p3: © 2023 Adobe (http://www.adobe.com/), with Reserved Font Name ‘Source’
+  ID   1 p3: Tongues Sans
+  ID   2 p3: Italic
+  ID   3 p3: 3.052;TOT;TonguesSans-ExtraLightItalic
+  ID   4 p3: Tongues Sans Italic
+  ID   5 p3: Version 3.052; modified by the Tree of Tongues project (web subset)
+  ID   6 p3: TonguesSans-ExtraLightItalic
+  ID   7 p3: Source is a trademark of Adobe in the United States and/or other countries.
+  ID  10 p3: Modified by the Tree of Tongues project: subset for the web and renamed, as required by the Reserved Font Name
+  ID  13 p3: This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a 
+  ID  25 p3: TonguesSansItalic
+  fvar instances: ExtraLight Italic, Light Italic, Italic, Medium Italic, Semibold Italic, Bold Italic, Black Italic
+  OS/2 vendor: 'TOT '
+records with 'Source' outside IDs 0 and 7: 0
+
+scripts/build_fonts.py --check: ok: 15 files rebuilt byte-identical to the lock

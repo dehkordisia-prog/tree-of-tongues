@@ -201,109 +201,154 @@ sources:
 #                written permission. Unmodified upstream files and pure WOFF/WOFF2
 #                wrapping of unchanged font data may keep the name (FAQ 2.2.1).
 assets:
+  # The two entries below keep their original ids (ids never change). Each id
+  # names the upstream work and its license, which are unchanged. What ships
+  # changed on 2026-11-10: the blocked Fontsource slices were removed and
+  # replaced by our own renamed subsets. History is kept in notes.
   - id: font-source-serif-4
     kind: font
-    name: "Source Serif 4 (variable wght, roman), Fontsource build"
-    version: "@fontsource-variable/source-serif-4 5.3.1 (npm, published 2026-10-11); built from Google Fonts ofl/sourceserif4, upstream commit b3980ade53bb3d023a0006076d05349236b309b1"
-    url: "https://www.npmjs.com/package/@fontsource-variable/source-serif-4/v/5.3.1"
+    name: "Tongues Serif: renamed web subset of Adobe Source Serif 4 (variable wght, opsz pinned at 36, roman)"
+    version: "Built by scripts/build_fonts.py from Adobe Source Serif 4 release 4.005R, asset source-serif-4.005_Desktop.zip (sha256 549fdb8f9a682bd06944298621404969f6de77c2e422ff3b8244a1dcd6a0c425), member source-serif-4.005_Desktop/VAR/SourceSerif4Variable-Roman.ttf (sha256 14d360ee1b76655da9276628b229e11671bc1f5d1083636144db6677d452cf55); fontTools 4.68.0, brotli 1.2.1; output hashes in scripts/fonts-build.lock.json"
+    url: "https://github.com/adobe-fonts/source-serif/releases/tag/4.005R"
     doi: null
     license: OFL-1.1-RFN
     license_url: "https://openfontlicense.org/open-font-license-official-text/"
     attribution: >-
-      Source Serif 4 by Frank Grießhammer for Adobe. Copyright 2014-2021
-      Adobe Systems Incorporated, with Reserved Font Name "Source". SIL Open
-      Font License 1.1.
+      Tongues Serif is a modified version of Source Serif 4 by Frank
+      Grießhammer for Adobe. Copyright 2014-2023 Adobe, with Reserved Font
+      Name "Source". Source is a trademark of Adobe in the United States
+      and/or other countries. SIL Open Font License 1.1. Adobe does not
+      endorse Tree of Tongues or this modified version.
     components:
-      - "apps/web/public/fonts/source-serif-4/: 6 unicode-range slices (latin, latin-ext, cyrillic, cyrillic-ext, greek, vietnamese), wght axis only, roman only"
+      - "apps/web/public/fonts/tongues-serif/: 6 woff2 unicode-range slices (latin, latin-ext, cyrillic, cyrillic-ext, greek, vietnamese; no greek-ext glyphs upstream), wght axis 200 to 900, opsz fixed at 36, roman only"
+      - "apps/web/public/fonts/tongues-serif/OFL.txt: LICENSE.md from inside the 4.005R zip, verbatim (sha256 75784a295293a8992f5a8d99210566e0064a012e6dab6731305e3787f15896c7 per lock)"
+      - "apps/web/public/fonts/tongues-serif/FONTLOG.txt: modification note, upstream release and hashes"
+      - "apps/web/src/design/fonts.tongues.css: generated @font-face rules, family 'Tongues Serif'"
     share_alike: true
     non_commercial: false
     no_derivatives: false
     restrictions:
-      - "OFL 1.1 condition 2: every copy must carry the copyright notice and the license. Keep OFL.txt beside the files."
-      - "OFL 1.1 condition 3: Reserved Font Name 'Source' (declared in upstream LICENSE.md and in the font's own copyright string). A Modified Version may not use it as the primary font name without written permission from Adobe."
+      - "OFL 1.1 condition 2: every copy must carry the copyright notice and the license. OFL.txt and FONTLOG.txt stay beside the woff2 files and are served with them; name IDs 0, 13 and 14 stay unchanged inside every file."
+      - "OFL 1.1 condition 3: Reserved Font Name 'Source'. No Modified Version may use 'Source' in the primary font name. Name IDs 1, 3, 4, 6, 16, 17, 21, 22, 25, fvar instance names and STAT names must never contain it. build_fonts.py enforces this and fails the build otherwise; keep that check."
+      - "Name IDs 0 (copyright, including the RFN declaration) and 7 (trademark) must stay exactly as Adobe wrote them. Do not edit Adobe's copyright line in OFL.txt either."
+      - "OFL 1.1 condition 5: Tongues Serif stays under OFL 1.1. The repo MIT and CC BY-SA licenses do not cover it (LICENSE-CONTENT.md says so)."
       - "OFL 1.1 condition 1: the font may not be sold by itself."
-      - "OFL 1.1 condition 4: do not use Adobe's name to promote the project, beyond acknowledgement."
-      - "Source is a trademark of Adobe. Credit only; no implied endorsement."
-    status: blocked
+      - "OFL 1.1 condition 4: do not use Adobe's or Frank Grießhammer's name to promote the project or the modified font, beyond acknowledgement."
+      - "Do not reintroduce Fontsource or Google Fonts slices named 'Source Serif 4' (the previously blocked build)."
+    status: cleared
     verified_on: 2026-11-10
     verified_url:
-      - "https://raw.githubusercontent.com/adobe-fonts/source-serif/release/LICENSE.md"
-      - "https://github.com/adobe-fonts/source-serif/releases/latest"
-      - "https://raw.githubusercontent.com/google/fonts/main/ofl/sourceserif4/OFL.txt"
-      - "https://raw.githubusercontent.com/google/fonts/main/ofl/sourceserif4/METADATA.pb"
-      - "https://registry.npmjs.org/@fontsource-variable/source-serif-4"
+      - "docs/reports/2026-11-10-overnight/font-name-tables.txt"
+      - "https://github.com/adobe-fonts/source-serif/releases/tag/4.005R"
+      - "https://raw.githubusercontent.com/adobe-fonts/source-serif/4.005R/LICENSE.md"
       - "https://openfontlicense.org/ofl-faq/"
       - "https://openfontlicense.org/webfonts-and-reserved-font-names/"
     notes: >-
-      BLOCKER (RFN). Upstream adobe-fonts/source-serif LICENSE.md declares
-      Reserved Font Name 'Source' (Copyright 2014-2023 Adobe). The Google
-      Fonts METADATA.pb copyright string for both styles also declares it:
-      "2014 - 2021 Adobe Systems Incorporated ... with Reserved Font Name
-      'Source'". Google's OFL.txt for this family instead reads "Copyright
-      2014 The Source Serif 4 Project Authors" with no RFN, and that is the
-      text we copied. The two Google files contradict each other; the in-font
-      statement and upstream win. Fontsource slices are pre-made unicode-range
-      subsets with the opsz axis likely instanced away, so they are Modified
-      Versions under OFL FAQ 2.6 to 2.8 and still named "Source Serif 4". Any
-      Adobe and Google agreement is not public and, per FAQ 2.12, binds only
-      its parties; we are not one. Fix options: (a) serve Adobe's official
-      unmodified WOFF2 variable files from release 4.005R (compliant, larger
-      payload; check the perf budget); (b) build our own subset and rename it
-      (no "Source" in the name), keeping the Adobe copyright line; (c) ask
-      Adobe for written permission. Also replace OFL.txt with the Adobe
-      copyright line from upstream LICENSE.md, matched to the name ID 0 string
-      in the binaries we ship.
+      RFN compliant by construction, per review of scripts/build_fonts.py,
+      scripts/fonts-build.lock.json, OFL.txt, FONTLOG.txt and the generated
+      CSS on 2026-11-10. The family is renamed "Tongues Serif" (PostScript
+      prefix TonguesSerif); every name record except IDs 0 and 7 is
+      rewritten and the script exits if any of them still contains
+      "Source". ID 10 and FONTLOG.txt carry the modification note; ID 5 has a
+      modification suffix; IDs 16, 17, 21 and 22 are dropped; OS/2 vendor is
+      "TOT ". Mentions of "Source Serif 4" in FONTLOG.txt, README.md and CSS
+      comments are acknowledgement, which condition 4 permits, and are not
+      the primary font name. OFL.txt first line ("Copyright 2014 - 2023 Adobe
+      ... with Reserved Font Name 'Source' ... Source is a trademark of Adobe")
+      matches LICENSE.md at tag 4.005R as fetched on 2026-11-10. CONDITIONS
+      (why not plain cleared): rights-auditor had no shell, so the name
+      tables, the input sha256 values and the byte identity of the committed
+      woff2 files were not inspected directly. Before release, qa-gatekeeper
+      or script-typographer must record (1) a passing `uv run python
+      scripts/build_fonts.py --check` and (2) a name-table dump of
+      tongues-serif-latin-wght-normal.woff2 showing no "Source" outside IDs 0
+      and 7, and the ID 0 string. If ID 0 differs from the OFL.txt year
+      range, both are Adobe's own statements; keep both verbatim. Status
+      becomes cleared once both are recorded. CONDITIONS MET 2026-11-10: the
+      orchestrator ran both checks (docs/reports/2026-11-10-overnight/font-name-tables.txt):
+      --check rebuilt 15 files byte-identical to the lock, and no name
+      record outside IDs 0 and 7 contains "Source". Byte identity also
+      proves the shipped files passed the script's own RFN check. ID 0
+      reads "© 2014 - 2023 Adobe (http://www.adobe.com/), with Reserved Font
+      Name ‘Source’.", matching OFL.txt. That string comes from the
+      orchestrator's message; the evidence file holds a summary, not the
+      raw dump. Upgraded to cleared. HISTORY: until 2026-11-10 this
+      id described @fontsource-variable/source-serif-4 5.3.1 slices, which
+      kept the RFN and were blocked; those files were removed.
 
   - id: font-source-sans-3
     kind: font
-    name: "Source Sans 3 (variable wght, roman and italic), Fontsource build"
-    version: "@fontsource-variable/source-sans-3 5.3.1 (npm, published 2026-10-11); built from Google Fonts ofl/sourcesans3, upstream commit 272b22b02e097e8eff1372111f88b5ab6063499f"
-    url: "https://www.npmjs.com/package/@fontsource-variable/source-sans-3/v/5.3.1"
+    name: "Tongues Sans: renamed web subset of Adobe Source Sans 3 (variable wght, roman and italic)"
+    version: "Built by scripts/build_fonts.py from Adobe Source Sans 3 release 3.052R (build dated 2023-03-30), asset VF-source-sans-3.052R.zip (sha256 d8e2ac355e06e6a0f0e0a0b1ac0c2451afa707584d7bb9d6b11ef9e4b749904c), members VF/SourceSans3VF-Upright.ttf (sha256 1147db9a3f0edd4956068de77930148acce2742dd76d57f7239b2b1c687ac63f) and VF/SourceSans3VF-Italic.ttf (sha256 c34791f4f889af43d84e2f84ebeb02e6eed07058aca21e6729d26e6436d18965); fontTools 4.68.0, brotli 1.2.1; output hashes in scripts/fonts-build.lock.json"
+    url: "https://github.com/adobe-fonts/source-sans/releases/tag/3.052R"
     doi: null
     license: OFL-1.1-RFN
     license_url: "https://openfontlicense.org/open-font-license-official-text/"
     attribution: >-
-      Source Sans 3 by Paul D. Hunt for Adobe. Copyright 2010-2020 Adobe,
-      with Reserved Font Name "Source". Source is a trademark of Adobe in the
-      United States and/or other countries. SIL Open Font License 1.1.
+      Tongues Sans is a modified version of Source Sans 3 by Paul D. Hunt for
+      Adobe. Copyright 2010-2022 Adobe, with Reserved Font Name "Source".
+      Source is a trademark of Adobe in the United States and/or other
+      countries. SIL Open Font License 1.1. Adobe does not endorse Tree of
+      Tongues or this modified version.
     components:
-      - "apps/web/public/fonts/source-sans-3/: 9 unicode-range slices (roman: latin, latin-ext, cyrillic, cyrillic-ext, greek, greek-ext, vietnamese; italic: latin, latin-ext), wght axis"
+      - "apps/web/public/fonts/tongues-sans/: 9 woff2 unicode-range slices (roman: latin, latin-ext, cyrillic, cyrillic-ext, greek, greek-ext, vietnamese; italic: latin, latin-ext), wght axis 200 to 900"
+      - "apps/web/public/fonts/tongues-sans/OFL.txt: LICENSE.md at tag 3.052R, verbatim (sha256 89ad2c4f66dd29127527493e729c31e731f111cf10faf5774c3db9275ed0c22c per lock); the VF zip ships no licence file"
+      - "apps/web/public/fonts/tongues-sans/FONTLOG.txt: modification note, upstream release and hashes"
+      - "apps/web/src/design/fonts.tongues.css: generated @font-face rules, family 'Tongues Sans'"
     share_alike: true
     non_commercial: false
     no_derivatives: false
     restrictions:
-      - "OFL 1.1 condition 2: every copy must carry the copyright notice and the license. Keep OFL.txt beside the files."
-      - "OFL 1.1 condition 3: Reserved Font Name 'Source'. A Modified Version may not use it as the primary font name without written permission from Adobe."
+      - "OFL 1.1 condition 2: every copy must carry the copyright notice and the license. OFL.txt and FONTLOG.txt stay beside the woff2 files and are served with them; name IDs 0, 13 and 14 stay unchanged inside every file."
+      - "OFL 1.1 condition 3: Reserved Font Name 'Source'. No Modified Version may use 'Source' in the primary font name. Name IDs 1, 3, 4, 6, 16, 17, 21, 22, 25, fvar instance names and STAT names must never contain it. build_fonts.py enforces this and fails the build otherwise; keep that check."
+      - "Name IDs 0 (copyright, including the RFN declaration) and 7 (trademark) must stay exactly as Adobe wrote them. Do not edit Adobe's copyright line in OFL.txt either."
+      - "OFL 1.1 condition 5: Tongues Sans stays under OFL 1.1. The repo MIT and CC BY-SA licenses do not cover it (LICENSE-CONTENT.md says so)."
       - "OFL 1.1 condition 1: the font may not be sold by itself."
-      - "OFL 1.1 condition 4: do not use Adobe's name to promote the project, beyond acknowledgement."
-      - "Source is a trademark of Adobe. Credit only; no implied endorsement."
-    status: blocked
+      - "OFL 1.1 condition 4: do not use Adobe's or Paul D. Hunt's name to promote the project or the modified font, beyond acknowledgement."
+      - "Do not reintroduce Fontsource or Google Fonts slices named 'Source Sans 3' (the previously blocked build)."
+    status: cleared
     verified_on: 2026-11-10
     verified_url:
-      - "https://raw.githubusercontent.com/adobe-fonts/source-sans/release/LICENSE.md"
-      - "https://github.com/adobe-fonts/source-sans/releases/latest"
-      - "https://raw.githubusercontent.com/google/fonts/main/ofl/sourcesans3/OFL.txt"
+      - "docs/reports/2026-11-10-overnight/font-name-tables.txt"
+      - "https://github.com/adobe-fonts/source-sans/releases/tag/3.052R"
+      - "https://raw.githubusercontent.com/adobe-fonts/source-sans/3.052R/LICENSE.md"
+      - "https://raw.githubusercontent.com/adobe-fonts/source-sans/main/LICENSE.md"
       - "https://raw.githubusercontent.com/google/fonts/main/ofl/sourcesans3/METADATA.pb"
-      - "https://registry.npmjs.org/@fontsource-variable/source-sans-3"
       - "https://openfontlicense.org/ofl-faq/"
       - "https://openfontlicense.org/webfonts-and-reserved-font-names/"
     notes: >-
-      BLOCKER (RFN). RFN 'Source' is declared in upstream LICENSE.md
-      (2010-2024 Adobe), in Google's OFL.txt (2010-2020) and in the font's
-      own copyright string per METADATA.pb ("2023 Adobe ... with Reserved
-      Font Name 'Source'"). Fontsource slices are pre-made unicode-range
-      subsets of Google's build. The SIL webfonts paper states that
-      pre-subsetting is a Modified Version "because these subsets do not
-      deliver complete functionality", so the name "Source Sans 3" may not be
-      kept without Adobe's written permission. No public permission found.
-      Any Google agreement would not extend to us (FAQ 2.12). Practical
-      enforcement risk is low, but the project standard is strict
-      compliance. Fix options: (a) serve Adobe's official unmodified WOFF2
-      variable files (Upright and Italic) from release 3.052R; (b) our own
-      renamed subset; (c) written permission from Adobe. OFL.txt matches
-      Google's copy verbatim; its year range (2010-2020) differs from
-      upstream (2010-2024) and from the in-font string (2023). Use the line
-      that matches whichever binary ships.
+      RFN compliant by construction; same review and same build rules as
+      font-source-serif-4 (family "Tongues Sans", PostScript prefix
+      TonguesSans). COPYRIGHT YEARS: three Adobe statements exist.
+      LICENSE.md at tag 3.052R says "Copyright 2010-2022 Adobe"; the font's
+      name ID 0 says "© 2023 Adobe ... with Reserved Font Name 'Source'"
+      (reported by script-typographer; Google's METADATA.pb for the same
+      upstream shows the same string); LICENSE.md on main now says
+      2010-2024. Decision: OFL.txt keeps the 3.052R tag text verbatim
+      (2010-2022), and name ID 0 stays unchanged inside each woff2, so both
+      notices Adobe published for this release travel with the files. Do
+      not use the main-branch 2010-2024 line: it postdates the release we
+      ship and is not the notice distributed with it. Do not merge or edit
+      the years ourselves: the copyright line is Adobe's, not ours. Revisit
+      only when we move to a newer release, then take that tag's
+      LICENSE.md. CONDITIONS (why not plain cleared): no shell was available
+      to rights-auditor, so name tables, input sha256 values and byte
+      identity were not inspected directly. Before release, qa-gatekeeper or
+      script-typographer must record (1) a passing `uv run python
+      scripts/build_fonts.py --check` and (2) a name-table dump of
+      tongues-sans-latin-wght-normal.woff2 and
+      tongues-sans-latin-wght-italic.woff2 showing no "Source" outside IDs 0
+      and 7, and confirming the ID 0 string. Status becomes cleared once
+      both are recorded. CONDITIONS MET 2026-11-10: the orchestrator ran
+      both checks (docs/reports/2026-11-10-overnight/font-name-tables.txt):
+      --check rebuilt 15 files byte-identical to the lock, and no name
+      record outside IDs 0 and 7 contains "Source" in the roman or italic
+      file. ID 0 in both reads "© 2023 Adobe (http://www.adobe.com/), with
+      Reserved Font Name ‘Source’", which confirms the year note above. That
+      string comes from the orchestrator's message; the evidence file holds
+      a summary, not the raw dump. Upgraded to cleared. HISTORY: until 2026-11-10 this id described
+      @fontsource-variable/source-sans-3 5.3.1 slices, which kept the RFN
+      and were blocked; those files were removed.
 
   - id: font-charis-sil
     kind: font
@@ -475,4 +520,9 @@ assets:
       primary font name is "Noto Sans SC", which does not use it. OFL
       condition 3 applies only to the primary font name, so the slices may
       keep the Noto Sans SC name. Cleared. Local OFL.txt matches Google's copy
-      verbatim.
+      verbatim. Reconfirmed 2026-11-10 after the Source fonts were renamed:
+      the test is the same as for Tongues Sans and Tongues Serif (does the
+      primary name of a Modified Version use the RFN?), and "Noto Sans SC"
+      does not. A "Source" in IDs 0 or 7 is a notice, not a name, and must
+      stay. Rule for the future: if anyone builds our own CJK subset from
+      Adobe's Source Han Sans files, it must be renamed like Tongues Sans.

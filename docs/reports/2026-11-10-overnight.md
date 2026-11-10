@@ -25,7 +25,7 @@ If `uv` is "not recognized", open a new terminal: the installer added it to PATH
 ## Done
 ### Phase 0
 - Scaffold: pnpm workspace, React Router 8 SPA with prerender, Python pipeline package, CI. All eight commands in CLAUDE.md pass.
-- Licenses: Glottolog 5.3, CLDR 49, Wikidata, Natural Earth cleared (rights-auditor, verified at the source). Seven fonts filed: five cleared. The two Source fonts were blocked (Reserved Font Name), so we now ship our own renamed subsets, Tongues Serif and Tongues Sans, built reproducibly from Adobe's releases (D-016, your decision). rights-auditor is re-verifying them.
+- Licenses: Glottolog 5.3, CLDR 49, Wikidata, Natural Earth cleared (rights-auditor, verified at the source). Seven fonts filed: five cleared. The two Source fonts were blocked (Reserved Font Name), so we now ship our own renamed subsets, Tongues Serif and Tongues Sans, built reproducibly from Adobe's releases (D-016, your decision). rights-auditor cleared both after a name-table check: no "Source" outside the copyright and trademark notices ([evidence](2026-11-10-overnight/font-name-tables.txt)). All seven fonts are now cleared.
 - Checks on 0d0b97e: content lint, lint, 27 unit and 18 pipeline tests, 10 browser tests, 5 accessibility tests, Lighthouse, and the font build determinism check all pass.
 - Design system: night and parchment themes, 11 family colors plus a neutral, each with a pattern, marker and two-letter label; contrast computed and tested (WCAG AA in both themes).
 - Type and scripts: self-hosted fonts, Persian in Naskh and Nastaliq, RTL with `?lang=fa`, Turkish casing. Han font fetched at build, not stored in git (D-015, your decision).

@@ -36,15 +36,17 @@ License: [public domain](https://www.naturalearthdata.com/about/terms-of-use/). 
 
 All our fonts use the [SIL Open Font License 1.1](https://openfontlicense.org/open-font-license-official-text/). We host them ourselves. Your browser does not fetch them from anyone else. Each font folder holds its license and copyright notice in OFL.txt.
 
-### Source Serif 4
+### Tongues Serif
 Headings and long reading text.
 
-Source Serif 4 by Frank Grießhammer for Adobe. Copyright 2014-2021 Adobe Systems Incorporated, with Reserved Font Name "Source".
+Tongues Serif is our web version of Source Serif 4, release 4.005R, by Frank Grießhammer for Adobe. We cut it into smaller files for the web and renamed it, as the license asks. Copyright 2014-2023 Adobe, with Reserved Font Name "Source". Source is a trademark of Adobe in the United States and/or other countries.
 
-### Source Sans 3
+### Tongues Sans
 Interface text.
 
-Source Sans 3 by Paul D. Hunt for Adobe. Copyright 2010-2020 Adobe, with Reserved Font Name "Source". Source is a trademark of Adobe in the United States and/or other countries.
+Tongues Sans is our web version of Source Sans 3, release 3.052R, by Paul D. Hunt for Adobe. We cut it into smaller files for the web and renamed it, as the license asks. Copyright 2010-2022 Adobe, with Reserved Font Name "Source". Source is a trademark of Adobe in the United States and/or other countries.
+
+Adobe did not make or review Tongues Serif or Tongues Sans. Each folder has a FONTLOG.txt that lists our changes.
 
 ### Charis
 IPA and phonetic text. Version 7.000, used unchanged.
@@ -71,7 +73,7 @@ Simplified Chinese characters. Loaded only when a page needs them.
 
 Copyright 2014-2021 Adobe, with Reserved Font Name "Source".
 
-We got the Source and Noto fonts as web files from [Fontsource](https://fontsource.org). Noto is a trademark of Google. Naming these fonts does not mean Adobe, Google or SIL endorse Tree of Tongues.
+We got the Noto fonts as web files from [Fontsource](https://fontsource.org). Noto is a trademark of Google. Naming these fonts does not mean Adobe, Google or SIL endorse Tree of Tongues.
 
 ## Unicode License v3 notice
 
