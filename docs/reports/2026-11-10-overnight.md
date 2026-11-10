@@ -88,7 +88,9 @@ What to look at:
    - Wikidata's Persian item (Q9168, `fa`) points to Glottolog `fars1254`, which in Glottolog 5.3 is a family ("Farsic-Caucasian Tat"), not a language.
    - Glottolog has no language-level entry for ISO `fas` (the macrolanguage). ISO `pes` maps to `west2369` "Western Farsi"; Dari and Tajik are separate languages.
    - Result today: CLDR territory shares and names for `fa` are left unmapped instead of being attached to a family, so Persian has no territory rows yet. Wikidata's speaker figures stay on `fars1254`, labeled as Wikidata's claim.
-   - My plan for Phase 1 (provisional until you decide): show Persian as a labeled macrolanguage grouping Iranian Persian (west2369), Dari and Tajik, which is exactly the Lumper/Splitter toggle in the spec; Glottolog's tree stays the default view. linguist-reviewer checks this before anything ships.
+   - My plan for Phase 1 (provisional until you decide): show Persian as a labeled macrolanguage grouping Iranian Persian (west2369), Dari and Tajik, which is exactly the Lumper/Splitter toggle in the spec; Glottolog's tree stays the default view.
+   - linguist-reviewer checked it (D-023): accurate, with corrections. ISO's macrolanguage fas covers only Iranian Persian and Dari, not Tajik, so a three-way lens is our own grouping and is labeled that way. Glottolog's fars1254 is "Farsic-Caucasian Tat" (it also contains Caucasian Tat), so it is never shown as Persian; the pipeline stops Wikidata labels from renaming Glottolog families.
+   - Still yours to decide: the English labels for the Glottolog family nodes Farsic, Eastern Farsic and Farsic-Caucasian Tat, which would otherwise show "Farsi" in the tree and breadcrumbs, against D-004. Options: a display label such as "Persian group" with the Glottolog name in the details, or Glottolog's names as they are.
 2. Persian and Turkish UI strings in `apps/web/src/i18n/fa.json` and `tr.json`: all marked "awaiting owner review".
 3. Nastaliq digits ۴ ۶ ۷: Noto Nastaliq Urdu follows Urdu shapes. Acceptable for Persian?
 4. Persian sample words on `/design` (Scripts section).

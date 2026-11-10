@@ -31,3 +31,10 @@ Append only. One entry per decision: ID, date, decision, why, alternatives, revi
   - Single-key shortcuts work only while the canvas has focus (WCAG 2.1.4).
   - The Words tab shows ASJP's own transcription, labeled ASJPcode, and never calls it IPA.
   Why: the nerd contract (provenance, no averaging, contested stays contested) applied to the shell. Revisit: owner review of the spec's open questions.
+- D-023 (2026-11-10, provisional: linguist-reviewer recommendation applied overnight, awaiting owner confirmation). Contested scope entries.
+  - Key: a contested language gets its Glottolog language-level node as its key for the default view (D-001, D-002), and stays flagged contested, with its candidates and a one-line "why linguists disagree" note. A null key would break pages, search and links; the disagreement lives in the Lumper/Splitter lens and the Inspector. Only rank 91 (Deccan) stays without a key, because Glottolog itself calls the dcc entry spurious.
+  - Lumper groups: arabic, chinese, hindustani, punjabi, malay, filipino, kurdish and persian. Each is labeled as either a Glottolog node or the atlas's own grouping.
+  - Persian: the default view uses west2369 displayed as "Iranian Persian". The Persian lens groups Iranian Persian, Dari and Tajik and is labeled as the atlas's own grouping ("Persian as one pluricentric language"), because ISO's fas covers only pes and prs. The family fars1254 ("Farsic-Caucasian Tat") is never shown as Persian.
+  - Dialect-level chart entries get an anchored section on their parent's page, not their own page.
+  - The English display labels for the Glottolog families Farsic, Eastern Farsic and Farsic-Caucasian Tat (D-004) are left for the owner.
+  Source: the linguist-reviewer review of content/scope/phase-1-languages.yaml, citing glottolog.org v5.3 pages, Wikidata, the IANA apc record and Wikipedia's ISO 639 macrolanguage article. ISO claims were not verified at SIL, whose site refused automated requests. Revisit: owner review.
