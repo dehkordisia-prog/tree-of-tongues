@@ -64,6 +64,14 @@ claude
 3. Type /agents (11 agents listed) and /mcp (3 servers connected).
 4. Optional: /plugin install frontend-design@claude-plugins-official
 
+On native Windows, the three servers in .mcp.json fail to connect, because npx must run through cmd /c there. Keep .mcp.json unchanged (it works on macOS and Linux) and add local-scope servers with the same names, which take precedence. In Git Bash, inside the project folder:
+```bash
+MSYS_NO_PATHCONV=1 claude mcp add --scope local playwright -- cmd /c npx -y @playwright/mcp@latest
+MSYS_NO_PATHCONV=1 claude mcp add --scope local chrome-devtools -- cmd /c npx -y chrome-devtools-mcp@latest
+MSYS_NO_PATHCONV=1 claude mcp add --scope local context7 -- cmd /c npx -y @upstash/context7-mcp
+```
+MSYS_NO_PATHCONV=1 stops Git Bash from rewriting /c to C:/. In PowerShell, leave that prefix out. Check each server with `claude mcp get playwright` (and the other two), then restart Claude Code.
+
 Prefer a window to a terminal? The Code tab of the Claude desktop app runs local sessions too: start a new session, choose Local and pick this folder.
 
 ### 5. Kick off Phases 0 and 1
