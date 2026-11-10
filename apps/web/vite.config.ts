@@ -20,6 +20,18 @@ function localData(): Plugin {
 
 export default defineConfig({
   plugins: [localData(), tailwindcss(), reactRouter()],
+  // Canvas libraries load lazily, so Vite would discover them late and reload ("504 Outdated
+  // Optimize Dep") on a cold cache. Pre-bundling them up front avoids that.
+  optimizeDeps: {
+    include: [
+      "pixi.js",
+      "@deck.gl/core",
+      "@deck.gl/layers",
+      "@deck.gl/mapbox",
+      "maplibre-gl",
+      "d3-hierarchy",
+    ],
+  },
   resolve: {
     tsconfigPaths: true,
   },

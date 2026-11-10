@@ -5,7 +5,7 @@
 //
 //   node scripts/bench.mjs <out-dir> [target ...]
 //
-// Targets: tree-pixi, tree-deck, map (default: all three). Each runs in two conditions:
+// Targets: tree-pixi, tree-deck, tree-pixi-stress, tree-deck-stress, map (default: all). Each runs in two conditions:
 //   desktop  1440x900, devicePixelRatio 1, no throttling
 //   mobile   390x844, devicePixelRatio 2.625, 4x CPU throttling (a proxy, not a real phone)
 // Each page exposes window.__bench = { ready, run() } (contract in the spike briefs).
@@ -24,6 +24,9 @@ const PORT = 4320;
 const targets = {
   "tree-pixi": "/spike/tree?renderer=pixi&bench=1",
   "tree-deck": "/spike/tree?renderer=deck&bench=1",
+  // Stress: semantic zoom off, every one of the 27,177 circles drawn. An upper bound on renderer cost.
+  "tree-pixi-stress": "/spike/tree?renderer=pixi&bench=1&stress=1",
+  "tree-deck-stress": "/spike/tree?renderer=deck&bench=1&stress=1",
   map: "/spike/map?bench=1",
 };
 const chosen = process.argv.slice(3).length ? process.argv.slice(3) : Object.keys(targets);
