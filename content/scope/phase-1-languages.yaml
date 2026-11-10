@@ -533,11 +533,11 @@ languages:
     node is Persian
   candidates:
   - glottocode: west2369
-    glottolog_name: Western Farsi
+    glottolog_name: Western Farsi  # lint-allow: Glottolog's own name for this node, quoted as source data
     level: language
     iso639_3: pes
     wikidata_qid: Q3513637
-    role: language-level node, ISO pes, Glottolog name "Western Farsi"
+    role: language-level node, ISO pes, Glottolog name as in glottolog_name
   - glottocode: fars1254
     glottolog_name: Farsic-Caucasian Tat
     level: family
@@ -563,7 +563,7 @@ languages:
     wikidata_qid: Q9260
     role: 'sibling language: Tajik, ISO tgk'
   notes: 'Known issue, described and not resolved. Chart name is "Iranian Persian" (ISO pes in the ISO standard). Glottolog
-    5.3: ISO pes maps to west2369 "Western Farsi" (language, under the family Farsic fars1255). Wikidata Q9168 (Persian) is
+    5.3: ISO pes maps to west2369 (a language; Glottolog name in the candidate above; under the family Farsic fars1255). Wikidata Q9168 (Persian) is
     attached through P1394 to fars1254, a Glottolog family named "Farsic-Caucasian Tat" whose English name in the build is
     "Persian" and whose endonym is the Persian-script form of Farsi. Wikidata Q3513637 maps to west2369. Dari (dari1249) and
     Tajik (taji1245) are separate Glottolog languages under Eastern Farsic (east2745), whose name lists include "Persian"
