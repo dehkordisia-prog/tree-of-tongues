@@ -8,7 +8,7 @@
 #             of exactly one entry here. A validator should fail on unknown ids,
 #             duplicate ids and missing required keys.
 #   assets:   asset classes (fonts, images, audio). Same keys as a source, plus
-#             `kind`. Entries are added by later requests. Empty for now.
+#             `kind`. Fonts filed 2026-11-10.
 #
 # Required keys per entry:
 #   id               short, stable, lowercase, [a-z0-9.-]+ ; never reuse or rename
@@ -186,4 +186,293 @@ sources:
 
 # Asset classes (fonts, images, audio). Entries are added by later requests.
 # Each asset entry uses the source keys above plus `kind: font|image|audio`.
-assets: []
+#
+# Font conventions:
+#   license      OFL-1.1-RFN when the copyright statement (OFL.txt or the font's
+#                own name table) declares a Reserved Font Name, else
+#                OFL-1.1-no-RFN. Both are SPDX ids for the same OFL 1.1 text.
+#   share_alike  true for every OFL font: the font and any derivative must stay
+#                under OFL 1.1 (condition 5). Documents and pages that merely use
+#                the font are not affected.
+#   RFN rule     Per OFL FAQ 2.6 to 2.8 and the SIL paper "Webfonts and Reserved
+#                Font Names", pre-made subsets (including unicode-range slices)
+#                and axis-instanced files are Modified Versions. A Modified
+#                Version may not carry a Reserved Font Name without the holder's
+#                written permission. Unmodified upstream files and pure WOFF/WOFF2
+#                wrapping of unchanged font data may keep the name (FAQ 2.2.1).
+assets:
+  - id: font-source-serif-4
+    kind: font
+    name: "Source Serif 4 (variable wght, roman), Fontsource build"
+    version: "@fontsource-variable/source-serif-4 5.3.1 (npm, published 2026-10-11); built from Google Fonts ofl/sourceserif4, upstream commit b3980ade53bb3d023a0006076d05349236b309b1"
+    url: "https://www.npmjs.com/package/@fontsource-variable/source-serif-4/v/5.3.1"
+    doi: null
+    license: OFL-1.1-RFN
+    license_url: "https://openfontlicense.org/open-font-license-official-text/"
+    attribution: >-
+      Source Serif 4 by Frank Grießhammer for Adobe. Copyright 2014-2021
+      Adobe Systems Incorporated, with Reserved Font Name "Source". SIL Open
+      Font License 1.1.
+    components:
+      - "apps/web/public/fonts/source-serif-4/: 6 unicode-range slices (latin, latin-ext, cyrillic, cyrillic-ext, greek, vietnamese), wght axis only, roman only"
+    share_alike: true
+    non_commercial: false
+    no_derivatives: false
+    restrictions:
+      - "OFL 1.1 condition 2: every copy must carry the copyright notice and the license. Keep OFL.txt beside the files."
+      - "OFL 1.1 condition 3: Reserved Font Name 'Source' (declared in upstream LICENSE.md and in the font's own copyright string). A Modified Version may not use it as the primary font name without written permission from Adobe."
+      - "OFL 1.1 condition 1: the font may not be sold by itself."
+      - "OFL 1.1 condition 4: do not use Adobe's name to promote the project, beyond acknowledgement."
+      - "Source is a trademark of Adobe. Credit only; no implied endorsement."
+    status: blocked
+    verified_on: 2026-11-10
+    verified_url:
+      - "https://raw.githubusercontent.com/adobe-fonts/source-serif/release/LICENSE.md"
+      - "https://github.com/adobe-fonts/source-serif/releases/latest"
+      - "https://raw.githubusercontent.com/google/fonts/main/ofl/sourceserif4/OFL.txt"
+      - "https://raw.githubusercontent.com/google/fonts/main/ofl/sourceserif4/METADATA.pb"
+      - "https://registry.npmjs.org/@fontsource-variable/source-serif-4"
+      - "https://openfontlicense.org/ofl-faq/"
+      - "https://openfontlicense.org/webfonts-and-reserved-font-names/"
+    notes: >-
+      BLOCKER (RFN). Upstream adobe-fonts/source-serif LICENSE.md declares
+      Reserved Font Name 'Source' (Copyright 2014-2023 Adobe). The Google
+      Fonts METADATA.pb copyright string for both styles also declares it:
+      "2014 - 2021 Adobe Systems Incorporated ... with Reserved Font Name
+      'Source'". Google's OFL.txt for this family instead reads "Copyright
+      2014 The Source Serif 4 Project Authors" with no RFN, and that is the
+      text we copied. The two Google files contradict each other; the in-font
+      statement and upstream win. Fontsource slices are pre-made unicode-range
+      subsets with the opsz axis likely instanced away, so they are Modified
+      Versions under OFL FAQ 2.6 to 2.8 and still named "Source Serif 4". Any
+      Adobe and Google agreement is not public and, per FAQ 2.12, binds only
+      its parties; we are not one. Fix options: (a) serve Adobe's official
+      unmodified WOFF2 variable files from release 4.005R (compliant, larger
+      payload; check the perf budget); (b) build our own subset and rename it
+      (no "Source" in the name), keeping the Adobe copyright line; (c) ask
+      Adobe for written permission. Also replace OFL.txt with the Adobe
+      copyright line from upstream LICENSE.md, matched to the name ID 0 string
+      in the binaries we ship.
+
+  - id: font-source-sans-3
+    kind: font
+    name: "Source Sans 3 (variable wght, roman and italic), Fontsource build"
+    version: "@fontsource-variable/source-sans-3 5.3.1 (npm, published 2026-10-11); built from Google Fonts ofl/sourcesans3, upstream commit 272b22b02e097e8eff1372111f88b5ab6063499f"
+    url: "https://www.npmjs.com/package/@fontsource-variable/source-sans-3/v/5.3.1"
+    doi: null
+    license: OFL-1.1-RFN
+    license_url: "https://openfontlicense.org/open-font-license-official-text/"
+    attribution: >-
+      Source Sans 3 by Paul D. Hunt for Adobe. Copyright 2010-2020 Adobe,
+      with Reserved Font Name "Source". Source is a trademark of Adobe in the
+      United States and/or other countries. SIL Open Font License 1.1.
+    components:
+      - "apps/web/public/fonts/source-sans-3/: 9 unicode-range slices (roman: latin, latin-ext, cyrillic, cyrillic-ext, greek, greek-ext, vietnamese; italic: latin, latin-ext), wght axis"
+    share_alike: true
+    non_commercial: false
+    no_derivatives: false
+    restrictions:
+      - "OFL 1.1 condition 2: every copy must carry the copyright notice and the license. Keep OFL.txt beside the files."
+      - "OFL 1.1 condition 3: Reserved Font Name 'Source'. A Modified Version may not use it as the primary font name without written permission from Adobe."
+      - "OFL 1.1 condition 1: the font may not be sold by itself."
+      - "OFL 1.1 condition 4: do not use Adobe's name to promote the project, beyond acknowledgement."
+      - "Source is a trademark of Adobe. Credit only; no implied endorsement."
+    status: blocked
+    verified_on: 2026-11-10
+    verified_url:
+      - "https://raw.githubusercontent.com/adobe-fonts/source-sans/release/LICENSE.md"
+      - "https://github.com/adobe-fonts/source-sans/releases/latest"
+      - "https://raw.githubusercontent.com/google/fonts/main/ofl/sourcesans3/OFL.txt"
+      - "https://raw.githubusercontent.com/google/fonts/main/ofl/sourcesans3/METADATA.pb"
+      - "https://registry.npmjs.org/@fontsource-variable/source-sans-3"
+      - "https://openfontlicense.org/ofl-faq/"
+      - "https://openfontlicense.org/webfonts-and-reserved-font-names/"
+    notes: >-
+      BLOCKER (RFN). RFN 'Source' is declared in upstream LICENSE.md
+      (2010-2024 Adobe), in Google's OFL.txt (2010-2020) and in the font's
+      own copyright string per METADATA.pb ("2023 Adobe ... with Reserved
+      Font Name 'Source'"). Fontsource slices are pre-made unicode-range
+      subsets of Google's build. The SIL webfonts paper states that
+      pre-subsetting is a Modified Version "because these subsets do not
+      deliver complete functionality", so the name "Source Sans 3" may not be
+      kept without Adobe's written permission. No public permission found.
+      Any Google agreement would not extend to us (FAQ 2.12). Practical
+      enforcement risk is low, but the project standard is strict
+      compliance. Fix options: (a) serve Adobe's official unmodified WOFF2
+      variable files (Upright and Italic) from release 3.052R; (b) our own
+      renamed subset; (c) written permission from Adobe. OFL.txt matches
+      Google's copy verbatim; its year range (2010-2020) differs from
+      upstream (2010-2024) and from the in-font string (2023). Use the line
+      that matches whichever binary ships.
+
+  - id: font-charis-sil
+    kind: font
+    name: "Charis 7.000 Regular (formerly Charis SIL), official WOFF2"
+    version: "7.000 (GitHub release v7.000, 2025-06-02; SIL site lists 2025-06-03)"
+    url: "https://github.com/silnrsi/font-charis/releases/tag/v7.000"
+    doi: null
+    license: OFL-1.1-RFN
+    license_url: "https://openfontlicense.org/open-font-license-official-text/"
+    attribution: >-
+      Charis by SIL Global. Copyright 1997-2025 SIL Global, with Reserved
+      Font Names "Charis" and "SIL". SIL Open Font License 1.1.
+    components:
+      - "apps/web/public/fonts/charis-sil/Charis-Regular.woff2 (official web/ file from the v7.000 package, unmodified)"
+    share_alike: true
+    non_commercial: false
+    no_derivatives: false
+    restrictions:
+      - "OFL 1.1 condition 2: every copy must carry the copyright notice and the license. Keep OFL.txt beside the file."
+      - "OFL 1.1 condition 3: Reserved Font Names 'Charis' and 'SIL'. Any subset, instancing or other modification must be renamed with neither word in the name."
+      - "OFL 1.1 condition 1: the font may not be sold by itself."
+      - "OFL 1.1 condition 4: do not use SIL's name to promote the project, beyond acknowledgement."
+    status: cleared
+    verified_on: 2026-11-10
+    verified_url:
+      - "https://github.com/silnrsi/font-charis/releases/tag/v7.000"
+      - "https://raw.githubusercontent.com/silnrsi/font-charis/v7.000/OFL.txt"
+      - "https://software.sil.org/charis/"
+      - "https://software.sil.org/charis/release-7-000/"
+      - "https://software.sil.org/fonts/webfonts/"
+      - "https://openfontlicense.org/ofl-faq/"
+    notes: >-
+      Cleared as shipped. The WOFF2 is published by SIL itself, so it is an
+      Original Version and may keep its name; SIL's web fonts page
+      recommends copying its WOFF/WOFF2 files to your own server. OFL.txt
+      matches the v7.000 tag verbatim (1997-2025). The main branch now reads
+      1997-2026; keep 2025 while we ship 7.000. Version 7 renamed the family
+      from "Charis SIL" to "Charis"; use "Charis" in credits. Any future
+      subset (the planned 60 KB IPA subset) is a Modified Version and must be
+      renamed without "Charis" or "SIL", keep the SIL copyright line and stay
+      under OFL 1.1. Bold and italic are synthesized by the browser; that is
+      rendering, not modification. id keeps "sil" because ids never change.
+
+  - id: font-noto-naskh-arabic
+    kind: font
+    name: "Noto Naskh Arabic (variable wght, Arabic subset), Fontsource build"
+    version: "@fontsource-variable/noto-naskh-arabic 5.3.0 (npm, published 2026-07-19)"
+    url: "https://www.npmjs.com/package/@fontsource-variable/noto-naskh-arabic/v/5.3.0"
+    doi: null
+    license: OFL-1.1-no-RFN
+    license_url: "https://openfontlicense.org/open-font-license-official-text/"
+    attribution: >-
+      Noto Naskh Arabic. Copyright 2022 The Noto Project Authors. SIL Open
+      Font License 1.1.
+    components:
+      - "apps/web/public/fonts/noto-naskh-arabic/noto-naskh-arabic-arabic-wght-normal.woff2"
+    share_alike: true
+    non_commercial: false
+    no_derivatives: false
+    restrictions:
+      - "OFL 1.1 condition 2: every copy must carry the copyright notice and the license. Keep OFL.txt beside the file."
+      - "OFL 1.1 condition 1: the font may not be sold by itself."
+      - "Noto is a trademark of Google. Credit only; no implied endorsement."
+    status: cleared
+    verified_on: 2026-11-10
+    verified_url:
+      - "https://raw.githubusercontent.com/notofonts/arabic/main/OFL.txt"
+      - "https://registry.npmjs.org/@fontsource-variable/noto-naskh-arabic"
+    notes: >-
+      No Reserved Font Name, so subsets keep the name legally. OFL.txt
+      copyright line matches upstream exactly. Only difference: the FAQ link
+      reads http://scripts.sil.org/OFL where upstream now reads
+      https://openfontlicense.org. Cosmetic; license text is the same.
+
+  - id: font-noto-nastaliq-urdu
+    kind: font
+    name: "Noto Nastaliq Urdu (variable wght, Arabic subset), Fontsource build"
+    version: "@fontsource-variable/noto-nastaliq-urdu 5.3.0 (npm, published 2026-07-19)"
+    url: "https://www.npmjs.com/package/@fontsource-variable/noto-nastaliq-urdu/v/5.3.0"
+    doi: null
+    license: OFL-1.1-no-RFN
+    license_url: "https://openfontlicense.org/open-font-license-official-text/"
+    attribution: >-
+      Noto Nastaliq Urdu. Copyright 2022 The Noto Project Authors. SIL Open
+      Font License 1.1.
+    components:
+      - "apps/web/public/fonts/noto-nastaliq-urdu/noto-nastaliq-urdu-arabic-wght-normal.woff2"
+    share_alike: true
+    non_commercial: false
+    no_derivatives: false
+    restrictions:
+      - "OFL 1.1 condition 2: every copy must carry the copyright notice and the license. Keep OFL.txt beside the file."
+      - "OFL 1.1 condition 1: the font may not be sold by itself."
+      - "Noto is a trademark of Google. Credit only; no implied endorsement."
+    status: cleared
+    verified_on: 2026-11-10
+    verified_url:
+      - "https://raw.githubusercontent.com/notofonts/nastaliq/main/OFL.txt"
+      - "https://registry.npmjs.org/@fontsource-variable/noto-nastaliq-urdu"
+    notes: >-
+      No Reserved Font Name. OFL.txt copyright line matches upstream
+      exactly. FAQ link differs (http://scripts.sil.org/OFL vs
+      https://openfontlicense.org); cosmetic.
+
+  - id: font-noto-sans-devanagari
+    kind: font
+    name: "Noto Sans Devanagari (variable wght, Devanagari subset), Fontsource build"
+    version: "@fontsource-variable/noto-sans-devanagari 5.3.0 (npm, published 2026-07-19)"
+    url: "https://www.npmjs.com/package/@fontsource-variable/noto-sans-devanagari/v/5.3.0"
+    doi: null
+    license: OFL-1.1-no-RFN
+    license_url: "https://openfontlicense.org/open-font-license-official-text/"
+    attribution: >-
+      Noto Sans Devanagari. Copyright 2022 The Noto Project Authors. SIL Open
+      Font License 1.1.
+    components:
+      - "apps/web/public/fonts/noto-sans-devanagari/noto-sans-devanagari-devanagari-wght-normal.woff2"
+    share_alike: true
+    non_commercial: false
+    no_derivatives: false
+    restrictions:
+      - "OFL 1.1 condition 2: every copy must carry the copyright notice and the license. Keep OFL.txt beside the file."
+      - "OFL 1.1 condition 1: the font may not be sold by itself."
+      - "Noto is a trademark of Google. Credit only; no implied endorsement."
+    status: cleared
+    verified_on: 2026-11-10
+    verified_url:
+      - "https://raw.githubusercontent.com/notofonts/devanagari/main/OFL.txt"
+      - "https://registry.npmjs.org/@fontsource-variable/noto-sans-devanagari"
+    notes: >-
+      No Reserved Font Name. OFL.txt copyright line matches upstream
+      exactly. FAQ link is http://scripts.sil.org/OFL locally and
+      https://scripts.sil.org/OFL upstream; cosmetic.
+
+  - id: font-noto-sans-sc
+    kind: font
+    name: "Noto Sans SC (variable wght, 101 unicode-range slices), Fontsource build"
+    version: "@fontsource-variable/noto-sans-sc 5.3.1 (npm, published 2026-10-11); built from Google Fonts ofl/notosanssc, upstream notofonts/noto-cjk commit 523d033d6cb47f4a80c58a35753646f5c3608a78"
+    url: "https://www.npmjs.com/package/@fontsource-variable/noto-sans-sc/v/5.3.1"
+    doi: null
+    license: OFL-1.1-RFN
+    license_url: "https://openfontlicense.org/open-font-license-official-text/"
+    attribution: >-
+      Noto Sans SC, developed by Adobe with Google. Copyright 2014-2021
+      Adobe, with Reserved Font Name "Source". SIL Open Font License 1.1.
+    components:
+      - "apps/web/public/fonts/noto-sans-sc/: 101 unicode-range slices plus noto-sans-sc.css, loaded on demand"
+    share_alike: true
+    non_commercial: false
+    no_derivatives: false
+    restrictions:
+      - "OFL 1.1 condition 2: every copy must carry the copyright notice and the license. Keep OFL.txt beside the files."
+      - "OFL 1.1 condition 3: Reserved Font Name 'Source'. Never name a derivative with 'Source' (for example 'Source Han Sans') unless taken unmodified from Adobe."
+      - "OFL 1.1 condition 1: the font may not be sold by itself."
+      - "Noto is a trademark of Google. Credit only; no implied endorsement."
+    status: cleared
+    verified_on: 2026-11-10
+    verified_url:
+      - "https://raw.githubusercontent.com/notofonts/noto-cjk/main/Sans/LICENSE"
+      - "https://raw.githubusercontent.com/google/fonts/main/ofl/notosanssc/OFL.txt"
+      - "https://raw.githubusercontent.com/google/fonts/main/ofl/notosanssc/METADATA.pb"
+      - "https://registry.npmjs.org/@fontsource-variable/noto-sans-sc"
+      - "https://openfontlicense.org/ofl-faq/"
+    notes: >-
+      RFN 'Source' is declared in Google's OFL.txt and in the font's own
+      copyright string ("(c) 2014-2021 Adobe ... with Reserved Font Name
+      'Source'"). The noto-cjk Sans/LICENSE has the bare OFL text with no
+      copyright line and no RFN. Either way the RFN is "Source", and the
+      primary font name is "Noto Sans SC", which does not use it. OFL
+      condition 3 applies only to the primary font name, so the slices may
+      keep the Noto Sans SC name. Cleared. Local OFL.txt matches Google's copy
+      verbatim.

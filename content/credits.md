@@ -32,6 +32,47 @@ Made with Natural Earth. Free vector and raster map data @ naturalearthdata.com.
 
 License: [public domain](https://www.naturalearthdata.com/about/terms-of-use/). Natural Earth draws borders by who controls the ground. We show disputed areas in a neutral style. Borders on our maps do not mean a language belongs to a state.
 
+## Fonts
+
+All our fonts use the [SIL Open Font License 1.1](https://openfontlicense.org/open-font-license-official-text/). We host them ourselves. Your browser does not fetch them from anyone else. Each font folder holds its license and copyright notice in OFL.txt.
+
+### Source Serif 4
+Headings and long reading text.
+
+Source Serif 4 by Frank Grießhammer for Adobe. Copyright 2014-2021 Adobe Systems Incorporated, with Reserved Font Name "Source".
+
+### Source Sans 3
+Interface text.
+
+Source Sans 3 by Paul D. Hunt for Adobe. Copyright 2010-2020 Adobe, with Reserved Font Name "Source". Source is a trademark of Adobe in the United States and/or other countries.
+
+### Charis
+IPA and phonetic text. Version 7.000, used unchanged.
+
+Charis by SIL Global. Copyright 1997-2025 SIL Global, with Reserved Font Names "Charis" and "SIL".
+
+### Noto Naskh Arabic
+Arabic script, including Persian.
+
+Copyright 2022 The Noto Project Authors.
+
+### Noto Nastaliq Urdu
+Nastaliq style for Urdu and other languages.
+
+Copyright 2022 The Noto Project Authors.
+
+### Noto Sans Devanagari
+Devanagari script.
+
+Copyright 2022 The Noto Project Authors.
+
+### Noto Sans SC
+Simplified Chinese characters. Loaded only when a page needs them.
+
+Copyright 2014-2021 Adobe, with Reserved Font Name "Source".
+
+We got the Source and Noto fonts as web files from [Fontsource](https://fontsource.org). Noto is a trademark of Google. Naming these fonts does not mean Adobe, Google or SIL endorse Tree of Tongues.
+
 ## Unicode License v3 notice
 
 ```
