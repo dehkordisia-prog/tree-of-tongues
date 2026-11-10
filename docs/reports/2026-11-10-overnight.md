@@ -93,6 +93,16 @@ What to look at:
 3. Nastaliq digits ۴ ۶ ۷: Noto Nastaliq Urdu follows Urdu shapes. Acceptable for Persian?
 4. Persian sample words on `/design` (Scripts section).
 5. The palette's "Niger-Congo" token: Glottolog calls the family Atlantic-Congo (atla1278). The spikes map the token to atla1278; the UI name gets settled with linguist-reviewer in Phase 1.
+6. From the Phase 1 app shell spec (docs/specs/app-shell.md, section "Open questions"):
+   - "Persian" as the name of the macrolanguage, with west2369 shown as "Iranian Persian"? (The wireframes assume yes; this retires the map spike's override that shows west2369 as "Persian".)
+   - Some Wikidata speaker figures cite Ethnologue as their reference. Show them as "Wikidata, stated in Ethnologue"? rights-auditor checks first.
+   - Ship country pages (/country/:iso) in Phase 1, or later?
+   - Figures with no stated kind: dashed ring (more bubbles) or "no data" (stricter)?
+   - May a search result show "Alias: Farsi" when that alias matched?
+   - Default lens on the start page: Tree or Map?
+   - Time slider wording in Phase 1: "Time travel comes in a later update. Everything shows today's data."
+   - Traditional classification lens (Niger-Congo with Mande): Phase 1 or later?
+   - Persian and Turkish pages: prerendered under /fa/ and /tr/ later, or English HTML with a client switch?
 
 ## Blocked
 1. **Renderer benchmark (D-006): needs you.** `scripts/bench.mjs` opens a visible Chromium with the GPU for each of 10 runs (tree in PixiJS and deck.gl, normal and stress, plus the map; desktop and a 4x-throttled phone proxy). Claude Code stopped it before the first run finished because memory ran critically low. I must not restart it unattended. To run it, close other apps and run:
