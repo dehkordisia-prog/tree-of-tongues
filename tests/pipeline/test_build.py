@@ -143,6 +143,17 @@ def test_bundles_tree_and_geo(built):
     assert nodes["test0002"][4] == 1 and nodes["test0002"][5] == 1000000  # child_count, l1_max
     assert tree["sources"][nodes["test0002"][6]] == "wikidata"
     assert nodes["test0004"][7] is None  # only a deprecated figure: no bubble size
+    assert len(tree["columns"]) == len(nodes["test0002"]) == 9
+    pos = {n[0]: i for i, n in enumerate(tree["nodes"])}
+    sp = tree["speakers"]
+    # never summed or averaged; count = figure rows; first and last year
+    assert sp[str(pos["test0002"])] == {
+        "l1": [600000, 1000000, 2, 2011, 2020],
+        "unstated": [900000, 900000, 1, None, None],
+    }
+    assert str(pos["test0001"]) not in sp  # families never appear
+    assert str(pos["test0004"]) not in sp  # deprecated rows never summarize
+    assert all(tree["nodes"][int(k)][2] != 0 for k in sp)
     countries = json.loads((built / "geo" / "countries_50m.geojson").read_text(encoding="utf-8"))
     props = countries["features"][0]["properties"]
     assert "ADM0_A3" in props and "ADM0_A3_CN" in props and "MAPCOLOR7" not in props

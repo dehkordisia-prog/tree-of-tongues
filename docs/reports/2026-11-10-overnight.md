@@ -10,7 +10,9 @@ Owner: Siavash. Written by Claude (orchestrator). Updated as work lands; newest 
 | Phase 1 branch | `phase-1`, based on `phase-0` |
 | CI on phase-1 | Red for five pushes (17b3ddc to caf9bb1): the pipeline gained a `--scope` option defaulting to the real scope list, and CI's fixture build did not pass the fixture's scope file. I did not check CI after those pushes; I caught it at caf9bb1 and fixed the workflow in the next commit. Earlier red run: 840d51d (content lint), fixed by the next commit. |
 | CI on phase-0 | green, except one run (41f41c6, a lint error in the screenshot script) fixed by the next commit |
-| Spikes | tree (PixiJS vs deck.gl) and map being built; measured one after the other by `scripts/bench.mjs` |
+| Spikes | tree and map built and committed; GPU benchmark blocked (see Blocked 1) |
+| Phase 1 | in progress on `phase-1`: scope list, pipeline indexes, app shell with routes, Inspector, search, profile rendering, tree glyph and Lumper/Splitter section are done; the three gold-standard profiles are reviewed drafts awaiting you. Not started: map production polish, country and macrolanguage routes, Words (ASJP) and Sounds (Commons audio) tabs, Persian and Turkish UI text (needs your wording) |
+| Start here in the morning | Questions for you (12 items, the Persian model first), then Blocked (benchmark and one rebuild) |
 
 ## How to open the app
 ```powershell
@@ -165,3 +167,10 @@ What to look at:
    ```
    Results land in `docs/reports/2026-11-10-overnight/bench/bench.md`. Until then D-021 picks PixiJS provisionally, from text quality and size only.
    The results record the machine's CPU, RAM and GPU, so numbers from different computers stay comparable.
+2. **Your local data/build needs one rebuild.** The pipeline now writes a compact per-language speaker summary into tree.json (committed and tested on the fixture). The real-data rebuild was stopped by Claude Code for low memory partway through, so data/build has a new tree.json but no manifest.json, and `uv run pipeline validate` fails locally until you run:
+   ```powershell
+   uv run pipeline build
+   uv run pipeline validate
+   ```
+   (about 6 minutes; close other apps first). The app still works meanwhile: tree.json keeps its original columns and the tree reads speaker figures from bundles as before. After the rebuild, the tree glyph can switch to the summary (a small follow-up).
+3. **Overnight work stopped here for memory.** Free memory stayed too low even with no build or browser running. Builds and browser tests both need more, and Claude Code stops background jobs when memory runs critically low, so I stopped starting heavy work rather than leave things half-done. Everything finished tonight is committed, pushed and green in CI.

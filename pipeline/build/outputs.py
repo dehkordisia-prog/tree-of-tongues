@@ -251,8 +251,18 @@ TREE_FORMAT = (
     "attaches to a family through a language item, or that reach a node only by ISO 639-3 match, because the "
     "Wikidata item may be broader than the node (speakers.attached_via), are left out. Neither is averaged or "
     "merged; each points into `sources` by index (null if the figure is null). Figures are source claims, "
-    "not facts: open the bundle for source, year and every competing figure."
+    "not facts: open the bundle for source, year and every competing figure. "
+    "`speakers` is a sparse object keyed by node index as a string (the index into nodes). It holds only "
+    "languages and dialects (never families, D-022) that have at least one figure, from the same rows as above "
+    "(non-deprecated, no attached_via, value not null). Each entry maps a kind to [min, max, count, first_year, "
+    "last_year], present only when the node has a figure of that kind. Kinds: l1 = L1, total = total speakers, "
+    "unstated = kind 'unknown' (the source did not say L1, L2 or total), l2 = L2. min and max are the smallest "
+    "and largest figure of that kind (equal when there is one). count is the number of figure rows (each "
+    "statement with its own year; not distinct references). first_year and last_year are the earliest and "
+    "latest non-null year among those rows (null when no row has a year). Nothing is summed or averaged."
 )
+
+KIND_SUMMARY = (("l1", "L1"), ("total", "total"), ("unstated", "unknown"), ("l2", "L2"))
 
 
 def build_tree(build_dir: Path, tabs: dict[str, pl.DataFrame]) -> int:
@@ -275,6 +285,10 @@ def build_tree(build_dir: Path, tabs: dict[str, pl.DataFrame]) -> int:
         for best, ok in ((best_any, True), (best_l1, s["kind"] == "L1")):
             if ok and (s["glottocode"] not in best or s["value"] > best[s["glottocode"]][0]):
                 best[s["glottocode"]] = (s["value"], s["source_id"])
+    by_kind: dict[tuple[str, str], list[dict]] = {}
+    for s in figures.to_dicts():
+        if s["value"] is not None:
+            by_kind.setdefault((s["glottocode"], s["kind"]), []).append(s)
     sources = sorted({v[1] for v in list(best_l1.values()) + list(best_any.values())})
     sidx = {s: i for i, s in enumerate(sources)}
 
@@ -282,6 +296,7 @@ def build_tree(build_dir: Path, tabs: dict[str, pl.DataFrame]) -> int:
         return int(x) if float(x).is_integer() else x
 
     nodes = []
+    speakers: dict[str, dict[str, list]] = {}
     for i, r in enumerate(langs):
         gc = r["glottocode"]
         l1, an = best_l1.get(gc), best_any.get(gc)
@@ -298,6 +313,23 @@ def build_tree(build_dir: Path, tabs: dict[str, pl.DataFrame]) -> int:
                 sidx[an[1]] if an else None,
             ]
         )
+        if r["level"] == "family":
+            continue
+        entry = {}
+        for key, kind in KIND_SUMMARY:
+            rows = by_kind.get((gc, kind), [])
+            if rows:
+                vals = [x["value"] for x in rows]
+                years = [x["year"] for x in rows if x["year"] is not None]
+                entry[key] = [
+                    num(min(vals)),
+                    num(max(vals)),
+                    len(rows),
+                    min(years) if years else None,
+                    max(years) if years else None,
+                ]
+        if entry:
+            speakers[str(i)] = entry
     doc = {
         "format": TREE_FORMAT,
         "columns": [
@@ -313,6 +345,7 @@ def build_tree(build_dir: Path, tabs: dict[str, pl.DataFrame]) -> int:
         ],
         "sources": sources,
         "nodes": nodes,
+        "speakers": speakers,
     }
     path = build_dir / "tree.json"
     dump_json(doc, path)

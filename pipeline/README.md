@@ -52,6 +52,10 @@ Every fact table also has: `source_id`, `locator`, `retrieved_at` (UTC ISO), `li
 
 Other outputs: `bundles/{glottocode}.json` (under 50 KB), `tree.json` (format described in its `format` field), `geo/*.geojson`, `territory_index.json`, `search/tier1.json`, `search/tier2.json`, `coverage.md`, `manifest.json` (sha256 and licenses of every output; `validate` fails on any file it does not list), `NOTICE.md` and the verbatim Unicode license for CLDR.
 
+### tree.json speaker summary
+
+The node tuples keep their nine columns (`l1_max`, `l1_source`, `any_max`, `any_source` unchanged). A top-level `speakers` object is keyed by node index as a string (the index into `nodes`) and holds only languages and dialects with at least one figure; families never appear (D-022). Each entry maps a kind (`l1`, `total`, `unstated`, `l2`) to `[min, max, count, first_year, last_year]`, present only when that kind has a figure. `unstated` is kind `unknown`. Count is the number of figure rows (each statement with its own year, not distinct references; matches "N sources" in D-025). The years are the earliest and latest non-null year (null if no row has one). Only non-deprecated rows with no `attached_via` and a non-null value count. Nothing is summed or averaged. The same text is in the file's `format` field.
+
 ### territory_index.json
 
 `{format, provenance, territories}`. `territories[iso3166]` is a list of `[glottocode, population_share, official_status]` sorted by share, descending (null shares last). `provenance` (`source_id`, `locator_template`, `retrieved_at`, `confidence`, `notes`, `license`, `weak_mapping_note`) applies to every row except that weak rows have confidence low. Each row is `[glottocode, population_share, official_status, weak_mapping, mapped_via]`; `weak_mapping` is true when `mapped_via = wikidata_p218_iso_fallback`. Rows are copied from the territories table; nothing is averaged. The build stops if the rows ever have more than one provenance group.
