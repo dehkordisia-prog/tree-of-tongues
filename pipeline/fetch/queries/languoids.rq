@@ -1,0 +1,19 @@
+# Languoids that carry a Glottocode (P1394), with ISO 639-3 (P220) and labels in en, fa, tr.
+# Paged by Glottocode order. {limit} and {offset} are filled in by pipeline fetch.
+SELECT ?item ?glottocode ?iso ?iso1 ?label_en ?label_fa ?label_tr WHERE {
+  {
+    SELECT ?item ?glottocode WHERE {
+      ?item wdt:P1394 ?glottocode .
+      FILTER(ISLITERAL(?glottocode))
+    }
+    ORDER BY ?glottocode ?item
+    LIMIT {limit}
+    OFFSET {offset}
+  }
+  OPTIONAL { ?item wdt:P220 ?iso . }
+  OPTIONAL { ?item wdt:P218 ?iso1 . }
+  OPTIONAL { ?item rdfs:label ?label_en . FILTER(LANG(?label_en) = "en") }
+  OPTIONAL { ?item rdfs:label ?label_fa . FILTER(LANG(?label_fa) = "fa") }
+  OPTIONAL { ?item rdfs:label ?label_tr . FILTER(LANG(?label_tr) = "tr") }
+}
+ORDER BY ?glottocode ?item ?iso

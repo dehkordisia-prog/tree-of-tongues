@@ -1,0 +1,37 @@
+{
+ "supplemental": {
+  "version": {
+   "_cldrVersion": "fixture"
+  },
+  "territoryInfo": {
+   "ZZ": {
+    "_gdp": "1",
+    "_literacyPercent": "50",
+    "_population": "1000000",
+    "languagePopulation": {
+     "qaa": {
+      "_populationPercent": "60",
+      "_officialStatus": "official"
+     },
+     "qab": {
+      "_populationPercent": "10.5"
+     },
+     "qaa_Latn": {
+      "_populationPercent": "5"
+     },
+     "qzz": {
+      "_populationPercent": "1"
+     }
+    }
+   },
+   "YY": {
+    "_population": "2000",
+    "languagePopulation": {
+     "qaa": {
+      "_populationPercent": "100"
+     }
+    }
+   }
+  }
+ }
+}

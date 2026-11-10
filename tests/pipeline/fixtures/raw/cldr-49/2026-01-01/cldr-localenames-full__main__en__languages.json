@@ -1,0 +1,18 @@
+{
+ "main": {
+  "en": {
+   "identity": {
+    "language": "en"
+   },
+   "localeDisplayNames": {
+    "languages": {
+     "qaa": "Testish",
+     "qab": "Otherish",
+     "qaa-alt-short": "Tst",
+     "qaa-ZZ": "Testish (ZZ)",
+     "qzz": "Unmapped"
+    }
+   }
+  }
+ }
+}

@@ -1,0 +1,40 @@
+# Number of speakers (P1098) as full statements, every rank kept (wikibase:rank).
+# Qualifiers: point in time P585, applies to part P518, determination method P459.
+# References: stated in P248, reference URL P854, retrieved P813.
+# One row per (statement, qualifier value, reference); pipeline build collapses
+# the cross product back to one row per statement and reference, never merging statements.
+# Paged over statements. {limit} and {offset} are filled in by pipeline fetch.
+SELECT ?item ?glottocode ?statement ?value ?rank ?time ?part ?part_label ?method ?method_label ?ref ?stated ?stated_label ?refurl ?retrieved WHERE {
+  {
+    SELECT ?item ?glottocode ?statement WHERE {
+      ?item wdt:P1394 ?glottocode .
+      FILTER(ISLITERAL(?glottocode))
+      ?item p:P1098 ?statement .
+    }
+    ORDER BY ?glottocode ?statement
+    LIMIT {limit}
+    OFFSET {offset}
+  }
+  ?statement ps:P1098 ?value ;
+             wikibase:rank ?rank .
+  FILTER(ISLITERAL(?value))
+  OPTIONAL { ?statement pq:P585 ?time . }
+  OPTIONAL {
+    ?statement pq:P518 ?part .
+    OPTIONAL { ?part rdfs:label ?part_label . FILTER(LANG(?part_label) = "en") }
+  }
+  OPTIONAL {
+    ?statement pq:P459 ?method .
+    OPTIONAL { ?method rdfs:label ?method_label . FILTER(LANG(?method_label) = "en") }
+  }
+  OPTIONAL {
+    ?statement prov:wasDerivedFrom ?ref .
+    OPTIONAL {
+      ?ref pr:P248 ?stated .
+      OPTIONAL { ?stated rdfs:label ?stated_label . FILTER(LANG(?stated_label) = "en") }
+    }
+    OPTIONAL { ?ref pr:P854 ?refurl . }
+    OPTIONAL { ?ref pr:P813 ?retrieved . }
+  }
+}
+ORDER BY ?glottocode ?statement ?ref ?time ?part ?method

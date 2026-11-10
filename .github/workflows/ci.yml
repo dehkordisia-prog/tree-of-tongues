@@ -24,4 +24,8 @@ jobs:
       - run: pnpm lint:content
       - run: pnpm lint
       - run: pnpm test
+      - name: Pipeline build and validate (fixture)
+        run: |
+          uv run pipeline build --raw-dir tests/pipeline/fixtures/raw --build-dir "$RUNNER_TEMP/fixture-build"
+          uv run pipeline validate --build-dir "$RUNNER_TEMP/fixture-build"
       - run: pnpm build

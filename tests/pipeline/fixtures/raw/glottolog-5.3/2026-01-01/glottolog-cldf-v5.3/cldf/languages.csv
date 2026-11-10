@@ -1,0 +1,7 @@
+ID,Name,Macroarea,Latitude,Longitude,Glottocode,ISO639P3code,Level,Is_Isolate
+test0001,Testic,Eurasia,10.5,20.25,test0001,,family,
+test0002,Testish,Eurasia,11.123456789,21.5,test0002,qaa,language,false
+test0003,Testish Coastal,Eurasia,,,test0003,,dialect,
+test0004,Otherish,Africa;Eurasia,-5.0,30.0,test0004,qab,language,false
+test0005,Loneish,,,,test0005,qac,language,true
+test0006,Twinish,,1.0,2.0,test0006,qad,language,false

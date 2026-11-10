@@ -28,7 +28,16 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="pipeline", description=__doc__)
     sub = parser.add_subparsers(dest="stage", required=True)
     for name, help_text in STAGES.items():
-        sub.add_parser(name, help=help_text, description=help_text)
+        stage_parser = sub.add_parser(name, help=help_text, description=help_text)
+        if name == "fetch":
+            stage_parser.add_argument("--only", help="fetch a single source id (as in data/LICENSES.yaml)")
+            stage_parser.add_argument("--raw-dir", help="override data/raw (tests)")
+        elif name == "build":
+            stage_parser.add_argument("--raw-dir", help="raw input directory (default data/raw)")
+            stage_parser.add_argument("--build-dir", help="output directory (default data/build)")
+        elif name == "validate":
+            stage_parser.add_argument("--build-dir", help="directory to validate (default data/build)")
+            stage_parser.add_argument("--licenses", help="LICENSES.yaml to check source ids against")
     return parser
 
 

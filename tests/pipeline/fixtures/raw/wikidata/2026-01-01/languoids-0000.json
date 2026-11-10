@@ -1,0 +1,101 @@
+{
+ "head": {
+  "vars": []
+ },
+ "results": {
+  "bindings": [
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9001"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "test0002"
+    },
+    "iso": {
+     "type": "literal",
+     "value": "qaa"
+    },
+    "iso1": {
+     "type": "literal",
+     "value": "qa"
+    },
+    "label_en": {
+     "type": "literal",
+     "value": "Testish",
+     "xml:lang": "en"
+    },
+    "label_fa": {
+     "type": "literal",
+     "value": "تستی",
+     "xml:lang": "fa"
+    },
+    "label_tr": {
+     "type": "literal",
+     "value": "Testçe",
+     "xml:lang": "tr"
+    }
+   },
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9004"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "test0004"
+    },
+    "iso": {
+     "type": "literal",
+     "value": "qab"
+    }
+   },
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9006"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "test0006"
+    },
+    "label_en": {
+     "type": "literal",
+     "value": "Twinish",
+     "xml:lang": "en"
+    }
+   },
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9007"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "test0006"
+    },
+    "label_en": {
+     "type": "literal",
+     "value": "Twinish (other item)",
+     "xml:lang": "en"
+    }
+   },
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9099"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "zzzz9999"
+    },
+    "label_en": {
+     "type": "literal",
+     "value": "Not in Glottolog",
+     "xml:lang": "en"
+    }
+   }
+  ]
+ }
+}

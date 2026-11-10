@@ -1,0 +1,14 @@
+{
+ "main": {
+  "tr": {
+   "identity": {
+    "language": "tr"
+   },
+   "localeDisplayNames": {
+    "languages": {
+     "qaa": "Testçe"
+    }
+   }
+  }
+ }
+}

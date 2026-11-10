@@ -1,0 +1,46 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "ADM0_A3": "AAA",
+    "ISO_A3": "AAA",
+    "ISO_A3_EH": "AAA",
+    "NAME": "Disputed strip",
+    "ADMIN": "Disputed strip",
+    "ADM0_A3_US": "AAA",
+    "ADM0_A3_CN": "AAA",
+    "FCLASS_ISO": "Admin-0 country",
+    "MAPCOLOR7": 3,
+    "POP_EST": 123,
+    "NE_ID": 1,
+    "BRK_A3": "B01",
+    "NOTE_BRK": "Fixture note"
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       0.123456,
+       0.0
+      ],
+      [
+       1.0,
+       0.0
+      ],
+      [
+       1.0000001,
+       1.0
+      ],
+      [
+       0.123456,
+       0.0
+      ]
+     ]
+    ]
+   }
+  }
+ ]
+}

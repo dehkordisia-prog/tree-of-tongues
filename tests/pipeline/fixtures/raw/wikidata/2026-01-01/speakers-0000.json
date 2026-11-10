@@ -1,0 +1,274 @@
+{
+ "head": {
+  "vars": []
+ },
+ "results": {
+  "bindings": [
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9001"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "test0002"
+    },
+    "statement": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/statement/Q9001-AAA"
+    },
+    "value": {
+     "type": "literal",
+     "value": "1000000"
+    },
+    "rank": {
+     "type": "uri",
+     "value": "http://wikiba.se/ontology#NormalRank"
+    },
+    "time": {
+     "type": "literal",
+     "value": "2020-01-01T00:00:00Z"
+    },
+    "part": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q36870"
+    },
+    "part_label": {
+     "type": "literal",
+     "value": "first language",
+     "xml:lang": "en"
+    },
+    "ref": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/reference/r1"
+    },
+    "stated": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q14790"
+    },
+    "stated_label": {
+     "type": "literal",
+     "value": "Fixture Almanac",
+     "xml:lang": "en"
+    },
+    "refurl": {
+     "type": "uri",
+     "value": "https://example.invalid/almanac"
+    },
+    "retrieved": {
+     "type": "literal",
+     "value": "2024-05-01T00:00:00Z"
+    }
+   },
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9001"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "test0002"
+    },
+    "statement": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/statement/Q9001-BBB"
+    },
+    "value": {
+     "type": "literal",
+     "value": "600000"
+    },
+    "rank": {
+     "type": "uri",
+     "value": "http://wikiba.se/ontology#PreferredRank"
+    },
+    "time": {
+     "type": "literal",
+     "value": "2011-01-01T00:00:00Z"
+    },
+    "part": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q36870"
+    },
+    "part_label": {
+     "type": "literal",
+     "value": "first language",
+     "xml:lang": "en"
+    },
+    "method": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q39825"
+    },
+    "method_label": {
+     "type": "literal",
+     "value": "census",
+     "xml:lang": "en"
+    },
+    "ref": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/reference/r2"
+    },
+    "stated": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q14791"
+    },
+    "stated_label": {
+     "type": "literal",
+     "value": "Fixture Census",
+     "xml:lang": "en"
+    }
+   },
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9001"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "test0002"
+    },
+    "statement": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/statement/Q9001-CCC"
+    },
+    "value": {
+     "type": "literal",
+     "value": "900000"
+    },
+    "rank": {
+     "type": "uri",
+     "value": "http://wikiba.se/ontology#NormalRank"
+    }
+   },
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9004"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "test0004"
+    },
+    "statement": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/statement/Q9004-DDD"
+    },
+    "value": {
+     "type": "literal",
+     "value": "5"
+    },
+    "rank": {
+     "type": "uri",
+     "value": "http://wikiba.se/ontology#DeprecatedRank"
+    },
+    "ref": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/reference/r3"
+    },
+    "stated": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q14790"
+    }
+   },
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9006"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "test0006"
+    },
+    "statement": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/statement/Q9006-EEE"
+    },
+    "value": {
+     "type": "literal",
+     "value": "42"
+    },
+    "rank": {
+     "type": "uri",
+     "value": "http://wikiba.se/ontology#NormalRank"
+    }
+   },
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9099"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "zzzz9999"
+    },
+    "statement": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/statement/Q9099-FFF"
+    },
+    "value": {
+     "type": "literal",
+     "value": "7"
+    },
+    "rank": {
+     "type": "uri",
+     "value": "http://wikiba.se/ontology#NormalRank"
+    }
+   },
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9001"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "test0002"
+    },
+    "statement": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/statement/Q9001-AAA"
+    },
+    "value": {
+     "type": "literal",
+     "value": "1000000"
+    },
+    "rank": {
+     "type": "uri",
+     "value": "http://wikiba.se/ontology#NormalRank"
+    },
+    "time": {
+     "type": "literal",
+     "value": "2020-01-01T00:00:00Z"
+    },
+    "part": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q36870"
+    },
+    "part_label": {
+     "type": "literal",
+     "value": "first language",
+     "xml:lang": "en"
+    },
+    "ref": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/reference/r1b"
+    },
+    "stated": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q14799"
+    },
+    "stated_label": {
+     "type": "literal",
+     "value": "Fixture Almanac",
+     "xml:lang": "en"
+    },
+    "refurl": {
+     "type": "uri",
+     "value": "https://example.invalid/second"
+    },
+    "retrieved": {
+     "type": "literal",
+     "value": "2024-05-01T00:00:00Z"
+    }
+   }
+  ]
+ }
+}

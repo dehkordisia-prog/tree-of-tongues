@@ -1,0 +1,141 @@
+{
+  "@context": [
+    "http://www.w3.org/ns/csvw",
+    {
+      "@language": "en"
+    }
+  ],
+  "dc:conformsTo": "http://cldf.clld.org/v1.0/terms.rdf#StructureDataset",
+  "dc:title": "Fixture: Glottolog-shaped CLDF with fictional languages",
+  "tables": [
+    {
+      "url": "values.csv",
+      "dc:conformsTo": "http://cldf.clld.org/v1.0/terms.rdf#ValueTable",
+      "tableSchema": {
+        "columns": [
+          {
+            "name": "ID",
+            "propertyUrl": "http://cldf.clld.org/v1.0/terms.rdf#id"
+          },
+          {
+            "name": "Language_ID",
+            "propertyUrl": "http://cldf.clld.org/v1.0/terms.rdf#languageReference"
+          },
+          {
+            "name": "Parameter_ID",
+            "propertyUrl": "http://cldf.clld.org/v1.0/terms.rdf#parameterReference"
+          },
+          {
+            "name": "Value",
+            "propertyUrl": "http://cldf.clld.org/v1.0/terms.rdf#value"
+          },
+          {
+            "name": "Code_ID",
+            "propertyUrl": "http://cldf.clld.org/v1.0/terms.rdf#codeReference"
+          }
+        ],
+        "primaryKey": [
+          "ID"
+        ]
+      }
+    },
+    {
+      "url": "codes.csv",
+      "dc:conformsTo": "http://cldf.clld.org/v1.0/terms.rdf#CodeTable",
+      "tableSchema": {
+        "columns": [
+          {
+            "name": "ID",
+            "propertyUrl": "http://cldf.clld.org/v1.0/terms.rdf#id"
+          },
+          {
+            "name": "Parameter_ID",
+            "propertyUrl": "http://cldf.clld.org/v1.0/terms.rdf#parameterReference"
+          },
+          {
+            "name": "Name",
+            "propertyUrl": "http://cldf.clld.org/v1.0/terms.rdf#name"
+          }
+        ],
+        "primaryKey": [
+          "ID"
+        ]
+      }
+    },
+    {
+      "url": "languages.csv",
+      "dc:conformsTo": "http://cldf.clld.org/v1.0/terms.rdf#LanguageTable",
+      "tableSchema": {
+        "columns": [
+          {
+            "name": "ID",
+            "propertyUrl": "http://cldf.clld.org/v1.0/terms.rdf#id"
+          },
+          {
+            "name": "Name",
+            "propertyUrl": "http://cldf.clld.org/v1.0/terms.rdf#name"
+          },
+          {
+            "name": "Macroarea",
+            "propertyUrl": "http://cldf.clld.org/v1.0/terms.rdf#macroarea",
+            "separator": ";"
+          },
+          {
+            "name": "Latitude",
+            "propertyUrl": "http://cldf.clld.org/v1.0/terms.rdf#latitude",
+            "datatype": "decimal"
+          },
+          {
+            "name": "Longitude",
+            "propertyUrl": "http://cldf.clld.org/v1.0/terms.rdf#longitude",
+            "datatype": "decimal"
+          },
+          {
+            "name": "Glottocode",
+            "propertyUrl": "http://cldf.clld.org/v1.0/terms.rdf#glottocode"
+          },
+          {
+            "name": "ISO639P3code",
+            "propertyUrl": "http://cldf.clld.org/v1.0/terms.rdf#iso639P3code"
+          },
+          {
+            "name": "Level",
+            "datatype": "string"
+          },
+          {
+            "name": "Is_Isolate",
+            "datatype": "boolean"
+          }
+        ],
+        "primaryKey": [
+          "ID"
+        ]
+      }
+    },
+    {
+      "url": "names.csv",
+      "tableSchema": {
+        "columns": [
+          {
+            "name": "ID"
+          },
+          {
+            "name": "Language_ID"
+          },
+          {
+            "name": "Name"
+          },
+          {
+            "name": "Provider"
+          },
+          {
+            "name": "lang"
+          }
+        ],
+        "primaryKey": [
+          "ID"
+        ]
+      }
+    }
+  ]
+}
