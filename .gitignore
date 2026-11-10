@@ -1,6 +1,13 @@
 node_modules/
 dist/
-build/
+# Only the web app's build output; pipeline/build/ is source code.
+apps/*/build/
+.react-router/
+.lighthouseci/
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
 .env
 .env.*
 data/raw/

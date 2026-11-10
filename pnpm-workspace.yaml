@@ -1,0 +1,4 @@
+packages:
+  - apps/*
+# pnpm's minimumReleaseAge guard stays on: pin releases at least a few days old
+# instead of adding exclusions (supply-chain safety, see docs/DECISIONS.md).

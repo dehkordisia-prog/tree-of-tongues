@@ -1,0 +1,35 @@
+{
+  "name": "tree-of-tongues",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "packageManager": "pnpm@12.18.0",
+  "engines": {
+    "node": ">=22.22.0"
+  },
+  "scripts": {
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm --filter web build",
+    "test": "pnpm --filter web test && uv run pytest",
+    "e2e": "playwright test --project=e2e",
+    "lint": "eslint . && pnpm --filter web typecheck && uv run ruff check . && uv run ruff format --check .",
+    "lint:content": "node scripts/lint-content.mjs --all",
+    "check:a11y": "playwright test --project=a11y",
+    "check:perf": "pnpm build && lhci autorun",
+    "format": "prettier --write . && uv run ruff format ."
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@eslint/js": "10.0.1",
+    "@lhci/cli": "0.16.0",
+    "@playwright/test": "1.65.0",
+    "@types/node": "26.6.6",
+    "eslint": "10.14.0",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "globals": "17.14.0",
+    "prettier": "3.9.10",
+    "sirv-cli": "3.0.1",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.1"
+  }
+}

@@ -1,0 +1,11 @@
+node_modules
+build
+dist
+.react-router
+data
+reference
+pnpm-lock.yaml
+playwright-report
+test-results
+.lighthouseci
+.venv

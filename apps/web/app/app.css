@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+/* Placeholder until the design tokens land in src/design/ (Phase 0, step 2). */
+html,
+body {
+  background: #0b1020;
+  color: #e8ebf5;
+  color-scheme: dark;
+}
+
+a {
+  color: #9cc2ff;
+  text-decoration: underline;
+}
+
+:focus-visible {
+  outline: 3px solid #ffd166;
+  outline-offset: 2px;
+}

@@ -1,0 +1,11 @@
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.webp binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.opus binary
+*.parquet binary
+*.pmtiles binary
+*.ico binary
