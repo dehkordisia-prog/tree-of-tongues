@@ -245,7 +245,8 @@ TREE_FORMAT = (
     "2 dialect), name, child_count, l1_max, l1_source_index, any_max, any_source_index]. "
     "l1_max is the largest non-deprecated speaker figure whose kind is L1 (null if none); any_max is the largest "
     "non-deprecated figure of any kind, including kind 'unknown' (null if none). Figures that Wikidata "
-    "attaches to a family through a language item (speakers.attached_via) are left out. Neither is averaged or "
+    "attaches to a family through a language item, or that reach a node only by ISO 639-3 match, because the "
+    "Wikidata item may be broader than the node (speakers.attached_via), are left out. Neither is averaged or "
     "merged; each points into `sources` by index (null if the figure is null). Figures are source claims, "
     "not facts: open the bundle for source, year and every competing figure."
 )
@@ -261,12 +262,10 @@ def build_tree(build_dir: Path, tabs: dict[str, pl.DataFrame]) -> int:
             child_count[index[p]] += 1
     best_l1: dict[str, tuple[float, str]] = {}
     best_any: dict[str, tuple[float, str]] = {}
-    # Language items that Wikidata attaches to a family are Wikidata's claim about the language; the
-    # tree never shows them as the family's figure.
-    figures = tabs["speakers"].filter(
-        (pl.col("rank") != "deprecated")
-        & (pl.col("attached_via") != "wikidata_p1394_to_family").fill_null(True)
-    )
+    # Figures that Wikidata attaches to a family through a language item, or that reached a node only by
+    # ISO 639-3 match (the item may be broader than the node), are weaker claims; the tree never sizes
+    # a node by them.
+    figures = tabs["speakers"].filter((pl.col("rank") != "deprecated") & pl.col("attached_via").is_null())
     for s in figures.to_dicts():
         if s["value"] is None:
             continue

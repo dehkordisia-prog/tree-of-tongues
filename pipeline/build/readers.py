@@ -60,6 +60,8 @@ class GlottologData:
     values: dict[tuple[str, str], dict]  # (glottocode, parameter) -> {"value", "code_id", "row_id"}
     code_names: dict[str, str]  # Code_ID -> human name
     names: list[dict]
+    # Retired or bookkeeping languoids -> replacement Glottocode (None: Glottolog 5.3 CLDF records none).
+    retired: dict[str, str | None] = field(default_factory=dict)
 
 
 def _truthy(value: object) -> bool | None:
@@ -127,7 +129,30 @@ def read_glottolog(raw: RawSet) -> GlottologData:
             }
             for row in ds["names.csv"]
         ]
-    return GlottologData(languages, values, code_names, names)
+    return GlottologData(languages, values, code_names, names, find_retired(languages, values))
+
+
+BOOKKEEPING_CATEGORY = "Bookkeeping"
+BOOKKEEPING_FAMILY = "book1242"
+
+
+def find_retired(languages: list[dict], values: dict[tuple[str, str], dict]) -> dict[str, str | None]:
+    """Glottocodes of retired or bookkeeping languoids, mapped to a replacement (None if none is recorded).
+
+    Glottolog 5.3 CLDF marks them with the `category` value `Bookkeeping` (and a classification under the
+    pseudo-family `book1242`). The "(Retired)" name suffix is only on a minority of them, so it is not used.
+    The CLDF has no replacement field, so every replacement is None; the mapping exists so a recorded
+    replacement is honored the day Glottolog provides one.
+    """
+    retired: dict[str, str | None] = {}
+    for lang in languages:
+        gc = lang["glottocode"]
+        category = values.get((gc, "category"))
+        cls = values.get((gc, "classification"))
+        path = cls["value"].split("/") if cls and cls["value"] else []
+        if (category and category["value"] == BOOKKEEPING_CATEGORY) or BOOKKEEPING_FAMILY in path:
+            retired[gc] = None
+    return retired
 
 
 # --------------------------------------------------------------------------- CLDR
@@ -181,6 +206,22 @@ def read_wikidata_languoids(raw: RawSet) -> dict[tuple[str, str], dict]:
                 if f"label_{lang}" in b:
                     entry["labels"].setdefault(lang, set()).add(b[f"label_{lang}"]["value"])
     return out
+
+
+def read_wikidata_deprecated_p1394(raw: RawSet) -> dict[tuple[str, str], list[str]]:
+    """(glottocode, qid) -> sorted reasons for a deprecated P1394 statement (P2241 labels; may be empty).
+
+    languoids.rq sees only truthy statements, so deprecated Glottocode statements come from their own query.
+    Missing pages mean no deprecation data (the fixture has none), never an error.
+    """
+    out: dict[tuple[str, str], set[str]] = {}
+    for page in _pages(raw, "deprecated_p1394"):
+        for b in json.loads(page.read_text(encoding="utf-8"))["results"]["bindings"]:
+            key = (b["glottocode"]["value"], _tail(b["item"]["value"]))
+            reasons = out.setdefault(key, set())
+            if "reason" in b:
+                reasons.add(b.get("reason_label", {}).get("value") or _tail(b["reason"]["value"]))
+    return {k: sorted(v) for k, v in out.items()}
 
 
 def read_wikidata_speakers(raw: RawSet) -> list[dict]:

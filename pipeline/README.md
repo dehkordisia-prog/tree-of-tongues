@@ -35,7 +35,7 @@ The fixture is fictional (codes `test0001`..., ISO codes in the private-use rang
 
 ## Confidence rules
 
-Defined in the docstring of `pipeline/build/tables.py`. In short: Glottolog classification high; CLDR names high; Glottolog name lists and Wikidata labels medium; CLDR territory shares medium; Wikidata speaker statements medium with a reference, low without one, when deprecated, or when the Glottocode is shared by several items; shared-Glottocode cross-references are `contested`.
+Defined in the docstring of `pipeline/build/tables.py`. In short: Glottolog classification high; CLDR names high; Glottolog name lists and Wikidata labels medium; CLDR territory shares medium; Wikidata speaker statements medium with a reference, low without one, when deprecated, or when the Glottocode is shared by several items; shared-Glottocode cross-references are `contested`; items that reached a node by ISO match are `low`.
 
 ## Data dictionary (data/build/*.parquet)
 
@@ -64,7 +64,17 @@ Name rules: the display name is CLDR English, else a Wikidata English label that
 
 ### Wikidata attachment
 
-Wikidata never overrides Glottolog. A QID sits on one node (the language-level node wins over its family). If no P1394 node is language-level (retired Glottocode, or the language's parent), a unique ISO 639-3 match to a language-level node is used. A language item that stays on a family is Wikidata's claim: the family keeps its Glottolog name, `languoids.wikidata_qid` is null, the labels are aliases, speaker rows carry `attached_via`, and `tree.json` ignores them. `coverage.md` lists every case.
+Wikidata never overrides Glottolog. Rules, in order (code: `resolve_wikidata`):
+
+1. Retired and bookkeeping nodes (Glottolog category `Bookkeeping`; the "(Retired)" name suffix is only on a minority) never receive an item. The CLDF has no replacement field, so none is used; a recorded replacement would be attached with method `replacement of retired node`. An item with no live route stays unattached and is listed in `coverage.md`.
+2. A QID sits on one node (the language-level node wins over its family).
+3. If no P1394 node is language-level, a unique ISO 639-3 match to a live language-level node is used. That item may be broader than the node, so its speaker rows are low confidence with `attached_via = wikidata_iso_match` and the note "Wikidata item may cover more than this Glottolog node", `tree.json` ignores them, and its labels are aliases.
+4. A direct P1394 attachment always beats an ISO match on the same node. The loser stays in xrefs (low, with a note) and its speaker rows are kept but never used for sizing.
+5. A language item that stays on a family is Wikidata's claim: the family keeps its Glottolog name, `languoids.wikidata_qid` is null, the labels are aliases, speaker rows carry `attached_via`, and `tree.json` ignores them.
+
+`pipeline/fetch/queries/deprecated_p1394.rq` fetches P1394 statements with deprecated rank (`languoids.rq` sees only truthy ones). When the chosen node is such a value, the xref and speaker notes say so and give the reason.
+
+`coverage.md` lists every case.
 
 CLDR codes are tied to Glottocodes only through a unique ISO 639-3 match, or a two-letter code that Wikidata (P218) ties to exactly one Glottocode. Script-qualified (`sr_Latn`) and region variants (`en-GB`) are not languoids and are listed in coverage.md.
 

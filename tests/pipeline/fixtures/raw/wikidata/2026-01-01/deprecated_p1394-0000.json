@@ -1,0 +1,28 @@
+{
+ "head": {
+  "vars": []
+ },
+ "results": {
+  "bindings": [
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9008"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "test0008"
+    },
+    "reason": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q42415624"
+    },
+    "reason_label": {
+     "type": "literal",
+     "value": "does not exactly match",
+     "xml:lang": "en"
+    }
+   }
+  ]
+ }
+}

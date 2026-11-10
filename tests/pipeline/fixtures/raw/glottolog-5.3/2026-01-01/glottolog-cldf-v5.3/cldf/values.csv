@@ -23,3 +23,11 @@ test0008-category,test0008,category,Spoken_L1_Language,category-Spoken_L1_Langua
 test0008-classification,test0008,classification,test0007,
 test0009-level,test0009,level,family,level-family
 test0009-category,test0009,category,Family,category-Family
+test0010-level,test0010,level,language,level-language
+test0010-category,test0010,category,Spoken_L1_Language,category-Spoken_L1_Language
+test0011-level,test0011,level,language,level-language
+test0011-category,test0011,category,Bookkeeping,category-Bookkeeping
+test0012-level,test0012,level,family,level-family
+test0012-category,test0012,category,Family,category-Family
+test0013-level,test0013,level,language,level-language
+test0013-category,test0013,category,Bookkeeping,category-Bookkeeping

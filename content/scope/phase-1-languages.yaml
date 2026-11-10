@@ -1459,7 +1459,7 @@ languages:
     glottolog_name: Malay (individual language)
     level: language
     iso639_3: mly
-    wikidata_qid: Q9237
+    wikidata_qid: null  # the pipeline never attaches Wikidata items to retired (Bookkeeping) nodes; Q9237 stays unattached
     role: 'retired: "Malay (individual language)"; Glottolog parks it under Bookkeeping, outside the tree. Not a candidate
       for the atlas'
     retired_iso: mly (retired 2008-02-18; ISO change request 2007-183 split it into zsm, hji, pmy, zlm)

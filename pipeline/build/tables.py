@@ -171,11 +171,16 @@ VIA_FAMILY = "wikidata_p1394_to_family"
 VIA_ISO = "wikidata_iso_match"
 
 
+ISO_SCOPE_NOTE = "Wikidata item may cover more than this Glottolog node"
+
+
 def resolve_wikidata(
     wd_langs: dict[tuple[str, str], dict],
     known: set[str],
     levels: dict[str, str] | None = None,
     lang_by_iso: dict[str, list[str]] | None = None,
+    retired: dict[str, str | None] | None = None,
+    deprecated: dict[tuple[str, str], list[str]] | None = None,
 ) -> tuple[dict[str, str | None], dict[str, set[str]], dict[str, list[tuple[str, dict]]], int, dict]:
     """Attach Wikidata items to Glottolog nodes.
 
@@ -183,18 +188,30 @@ def resolve_wikidata(
     count of Glottocodes unknown to Glottolog, report).
 
     Rules, applied per item (QID):
+    0. A retired or bookkeeping node (`retired`, from Glottolog's category) never receives an item. If
+       Glottolog records a replacement, the item goes to it with method "replacement of retired node".
+       Otherwise the retired node is ignored and the item may still reach a live node by rule 2; if it
+       reaches none, it stays unattached and is listed in report["retired_skipped"].
     1. P1394 names a language-level node: the item goes there. Other P1394 nodes of the same item (its
        family, say) are dropped and listed in report["qid_conflicts"]. A QID never sits on two nodes.
-    2. No P1394 node is language-level (the Glottocode is retired, or it is the language's parent): if the
-       item's ISO 639-3 codes (P220) point to exactly one language-level node, the item goes there with
-       method "ISO match" and is listed in report["iso_matches"]. Never guessed beyond that.
+    2. No P1394 node is language-level (the Glottocode is unknown, or it is the language's parent): if the
+       item's ISO 639-3 codes (P220) point to exactly one live language-level node, the item goes there with
+       method "ISO match" and is listed in report["iso_matches"]. Never guessed beyond that. The item may
+       be broader than the node, so such an entry is a weaker claim (`iso_fallback`).
     3. Otherwise the item stays on its P1394 node. If that node is a family and the item is a language
        item (it carries an ISO 639-3 code), the entry is marked `via_family`: Wikidata's claim about a
        language, not a fact about the family. Its label is then an alias at most.
-    Each returned entry carries `method`, `original` (P1394 values) and `via_family`.
+    4. A direct P1394 entry always wins over an ISO-fallback entry on the same node. The loser keeps its
+       entry (`demoted`), but it is neither the node's QID nor a candidate; it is listed in
+       report["iso_demoted"].
+    Each returned entry carries `method`, `original` (P1394 values), `via_family`, `iso_fallback`,
+    `demoted` and `deprecated_p1394` (reasons if Wikidata deprecates the P1394 statement to this node,
+    else None).
     """
     levels = levels or {}
     lang_by_iso = lang_by_iso or {}
+    retired = retired or {}
+    deprecated = deprecated or {}
     items: dict[str, dict] = defaultdict(lambda: {"entries": {}, "iso3": set()})
     for (gc, qid), entry in sorted(wd_langs.items()):
         items[qid]["entries"][gc] = entry
@@ -202,7 +219,15 @@ def resolve_wikidata(
 
     by_gc: dict[str, list[tuple[str, dict]]] = defaultdict(list)
     unknown: set[str] = set()
-    report: dict = {"qid_conflicts": [], "iso_matches": [], "via_family": []}
+    report: dict = {
+        "qid_conflicts": [],
+        "iso_matches": [],
+        "via_family": [],
+        "retired_skipped": [],
+        "retired_replaced": [],
+        "iso_demoted": [],
+        "deprecated_p1394": [],
+    }
     qid_targets: dict[str, list[str]] = {}
     for qid in sorted(items):
         info = items[qid]
@@ -216,21 +241,37 @@ def resolve_wikidata(
         for e in info["entries"].values():
             for lang, labels in e["labels"].items():
                 merged["labels"].setdefault(lang, set()).update(labels)
-        known_nodes = [g for g in gcs if g in known]
         unknown.update(g for g in gcs if g not in known)
+        # Rule 0: a retired node is swapped for its recorded replacement, else ignored.
+        retired_nodes = [g for g in gcs if g in retired and g in known]
+        replaced = {
+            g: retired[g]
+            for g in retired_nodes
+            if retired[g] and retired[g] in known and retired[g] not in retired
+        }
+        known_nodes = sorted(
+            {replaced.get(g, g) for g in gcs if g in known and (g not in retired or g in replaced)}
+        )
         lang_nodes = [g for g in known_nodes if levels.get(g) == "language"]
-        method, via_family = "P1394", False
+        method, via_family, targets = "P1394", False, []
         if lang_nodes:
             targets = lang_nodes
+            if any(g in replaced.values() for g in lang_nodes):
+                method = "replacement of retired node"
+                report["retired_replaced"].append(
+                    {"qid": qid, "retired": sorted(replaced), "target": sorted(set(replaced.values()))}
+                )
             dropped = [g for g in known_nodes if g not in lang_nodes]
             if dropped:
                 report["qid_conflicts"].append(
                     {"qid": qid, "kept": lang_nodes, "dropped": dropped, "reason": "language-level node wins"}
                 )
         else:
-            iso_hits = sorted({g for code in info["iso3"] for g in lang_by_iso.get(code, [])})
-            only_family_or_retired = all(levels.get(g) == "family" for g in known_nodes)
-            if len(iso_hits) == 1 and only_family_or_retired:
+            all_hits = sorted({g for code in info["iso3"] for g in lang_by_iso.get(code, [])})
+            iso_hits = [g for g in all_hits if g not in retired]
+            retired_hits = [g for g in all_hits if g in retired]
+            only_family = all(levels.get(g) == "family" for g in known_nodes)
+            if len(iso_hits) == 1 and only_family:
                 targets, method = iso_hits, "ISO match"
                 report["iso_matches"].append(
                     {
@@ -243,21 +284,67 @@ def resolve_wikidata(
                 )
             else:
                 targets = known_nodes
-                via_family = bool(info["iso3"]) and any(levels.get(g) == "family" for g in known_nodes)
+                via_family = (
+                    bool(targets)
+                    and bool(info["iso3"])
+                    and any(levels.get(g) == "family" for g in known_nodes)
+                )
                 if via_family:
                     report["via_family"].append(
                         {"qid": qid, "nodes": known_nodes, "iso639_3": sorted(info["iso3"])}
                     )
+                if not targets and (retired_nodes or retired_hits):
+                    report["retired_skipped"].append(
+                        {
+                            "qid": qid,
+                            "retired_p1394": retired_nodes,
+                            "retired_iso_hits": retired_hits,
+                            "iso639_3": sorted(info["iso3"]),
+                        }
+                    )
         qid_targets[qid] = targets
         for gc in targets:
-            by_gc[gc].append((qid, {**merged, "method": method, "via_family": via_family, "original": gcs}))
+            reasons = deprecated.get((gc, qid))
+            if reasons is not None:
+                report["deprecated_p1394"].append({"qid": qid, "node": gc, "reasons": reasons})
+            by_gc[gc].append(
+                (
+                    qid,
+                    {
+                        **merged,
+                        "method": method,
+                        "via_family": via_family,
+                        "iso_fallback": method == "ISO match",
+                        "demoted": False,
+                        "deprecated_p1394": reasons,
+                        "original": gcs,
+                    },
+                )
+            )
+    # Rule 4: a direct P1394 entry beats an ISO-fallback entry on the same node.
+    for gc, entries in sorted(by_gc.items()):
+        direct = [q for q, e in entries if not e["iso_fallback"]]
+        if direct:
+            for q, e in entries:
+                if e["iso_fallback"]:
+                    e["demoted"] = True
+                    report["iso_demoted"].append({"qid": q, "node": gc, "winner": direct})
+    live = {gc: [(q, e) for q, e in entries if not e["demoted"]] for gc, entries in by_gc.items()}
     unique = {
         gc: (items_[0][0] if len(items_) == 1 and not items_[0][1]["via_family"] else None)
-        for gc, items_ in by_gc.items()
+        for gc, items_ in live.items()
     }
-    candidates = {gc: {q for q, _ in items_} for gc, items_ in by_gc.items()}
+    candidates = {gc: {q for q, _ in items_} for gc, items_ in live.items()}
     report["qid_targets"] = qid_targets
     return unique, candidates, dict(by_gc), len(unknown), report
+
+
+def deprecated_note(qid: str, gc: str, reasons: list[str]) -> str:
+    why = f" (reason: {', '.join(reasons)})" if reasons else ""
+    return (
+        f"Wikidata lists {gc} as a deprecated P1394 value of {qid}{why}; "
+        "its speaker figures may include varieties outside this node"
+    )
 
 
 def build_xrefs_and_names(
@@ -291,14 +378,16 @@ def build_xrefs_and_names(
                 }
             )
     for gc, items in by_gc.items():
-        shared = len(items) > 1
+        live_items = [i for i in items if not i[1].get("demoted")]
+        shared = len(live_items) > 1
         for qid, entry in items:
             via_family = entry.get("via_family", False)
             iso_match = entry.get("method") == "ISO match"
-            conf = "contested" if shared else "medium"
+            demoted = entry.get("demoted", False)
+            conf = "contested" if shared and not demoted else "medium"
             notes_parts = []
-            if shared:
-                notes_parts.append(f"Glottocode {gc} is claimed by {len(items)} Wikidata items")
+            if shared and not demoted:
+                notes_parts.append(f"Glottocode {gc} is claimed by {len(live_items)} Wikidata items")
             if via_family:
                 conf = "contested" if shared else "low"
                 notes_parts.append(
@@ -306,9 +395,19 @@ def build_xrefs_and_names(
                     "(Wikidata's claim, not a fact about the family)"
                 )
             if iso_match:
+                conf = "contested" if shared and not demoted else "low"
                 notes_parts.append(
-                    f"{qid} reached {gc} by ISO 639-3 match; its P1394 values are {', '.join(entry['original'])}"
+                    f"{qid} reached {gc} by ISO 639-3 match; its P1394 values are {', '.join(entry['original'])}; "
+                    f"{ISO_SCOPE_NOTE}"
                 )
+            if demoted:
+                winners = [q for q, e in live_items if not e.get("iso_fallback")]
+                notes_parts.append(
+                    f"{gc} keeps {', '.join(winners)} (a direct P1394 attachment wins over an ISO match); "
+                    f"{qid} is a cross-reference only and its speaker figures are not used for sizing"
+                )
+            if entry.get("deprecated_p1394") is not None:
+                notes_parts.append(deprecated_note(qid, gc, entry["deprecated_p1394"]))
             note = "; ".join(notes_parts) or None
             locator_p1394 = f"{qid}#P1394"
             base = {
@@ -320,7 +419,7 @@ def build_xrefs_and_names(
             xrefs.append({**base, "scheme": "wikidata", "code": qid})
             for code in sorted(entry["iso1"]):
                 xrefs.append({**base, "scheme": "iso639-1", "code": code, "locator": f"{qid}#P218"})
-                if not shared and not via_family:
+                if not shared and not via_family and not demoted:
                     own_codes[gc].add(code)
                     # CLDR mapping is our inference, so it only lands on language-level languoids.
                     # (Wikidata's Persian item points at a Glottolog family; that stays a Wikidata
@@ -329,7 +428,7 @@ def build_xrefs_and_names(
                         iso1_map[code].add(gc)
             for code in sorted(entry["iso3"]):
                 xrefs.append({**base, "scheme": "iso639-3", "code": code, "locator": f"{qid}#P220"})
-                if not shared and not via_family:
+                if not shared and not via_family and not demoted:
                     own_codes[gc].add(code)
 
     # --- names
@@ -376,29 +475,38 @@ def build_xrefs_and_names(
             ),
         )
     for gc, items in by_gc.items():
-        if len(items) != 1:
+        live_items = [i for i in items if not i[1].get("demoted")]
+        if len(live_items) > 1:
             continue  # ambiguous item: do not attach labels to the wrong languoid
-        qid, entry = items[0]
-        via_family = entry.get("via_family", False)
-        for lang, labels in sorted(entry["labels"].items()):
-            for label in sorted(labels):
-                # A language item attached to a family never names the family: its labels are aliases.
-                add(
-                    gc,
-                    label,
-                    lang,
-                    "alias" if via_family else name_type(lang, own_codes[gc]),
-                    _prov(
-                        wd_sid,
-                        f"{qid}#label@{lang}",
-                        entry["retrieved_at"],
-                        licenses,
-                        "low" if via_family else "medium",
-                        f"label of {qid}, a language item that Wikidata attaches to this family via P1394"
-                        if via_family
-                        else None,
-                    ),
+        for qid, entry in items:
+            via_family = entry.get("via_family", False)
+            weak = via_family or entry.get("iso_fallback", False)
+            if via_family:
+                label_note = (
+                    f"label of {qid}, a language item that Wikidata attaches to this family via P1394"
                 )
+            elif weak:
+                label_note = f"label of {qid}; {ISO_SCOPE_NOTE}"
+            else:
+                label_note = None
+            for lang, labels in sorted(entry["labels"].items()):
+                for label in sorted(labels):
+                    # A language item attached to a family never names the family, and an item that
+                    # reached its node by ISO match may be broader than it: their labels are aliases.
+                    add(
+                        gc,
+                        label,
+                        lang,
+                        "alias" if weak else name_type(lang, own_codes[gc]),
+                        _prov(
+                            wd_sid,
+                            f"{qid}#label@{lang}",
+                            entry["retrieved_at"],
+                            licenses,
+                            "low" if weak else "medium",
+                            label_note,
+                        ),
+                    )
     # CLDR names resolve through the same code maps used for territories.
     for locale, (table, retrieved) in sorted(cldr_names.items()):
         for code, text in sorted(table.items()):
@@ -541,8 +649,15 @@ def build_speakers(
         elif entry and entry.get("method") == "ISO match":
             attached_via = VIA_ISO
             notes.append(
-                f"{st['qid']} reached {gc} by ISO 639-3 match; its P1394 values are {', '.join(entry['original'])}"
+                f"{st['qid']} reached {gc} by ISO 639-3 match; its P1394 values are {', '.join(entry['original'])}; "
+                f"{ISO_SCOPE_NOTE}"
             )
+            if entry.get("demoted"):
+                notes.append(
+                    f"{gc} keeps another item through a direct P1394 attachment; this figure is not used for sizing"
+                )
+        if entry and entry.get("deprecated_p1394") is not None:
+            notes.append(deprecated_note(st["qid"], gc, entry["deprecated_p1394"]))
         years = sorted({y for y in (readers.year_of(t) for t in st["times"]) if y is not None})
         year = years[0] if len(years) == 1 else None
         if len(years) > 1:
@@ -561,7 +676,7 @@ def build_speakers(
             rank, conf = st["rank"].replace("Rank", "").lower(), "low"
         else:
             rank, conf = st["rank"].replace("Rank", "").lower(), "medium"
-        if attached_via == VIA_FAMILY:
+        if attached_via in (VIA_FAMILY, VIA_ISO):
             conf = "low"
         if gc in ambiguous:
             conf = "low"
@@ -607,12 +722,14 @@ def flag_disagreements(rows: list[dict]) -> None:
 
     Rows are never merged or averaged. Years may differ inside a group; the flag only says
     that sources disagree widely enough that the UI must show the range and each source.
-    Deprecated statements are ignored for the comparison.
+    Deprecated statements are ignored for the comparison. Rows with an `attached_via` value form their
+    own groups, so a weaker claim never makes a direct figure look contested.
     """
-    groups: dict[tuple[str, str], list[dict]] = defaultdict(list)
+    groups: dict[tuple[str, str, str | None], list[dict]] = defaultdict(list)
     for r in rows:
         if r["rank"] != "deprecated" and r["value"] is not None:
-            groups[(r["glottocode"], r["kind"])].append(r)
+            # Figures that reached the node by a weaker route are compared among themselves only.
+            groups[(r["glottocode"], r["kind"], r["attached_via"])].append(r)
     for members in groups.values():
         if len(members) < 2:
             continue

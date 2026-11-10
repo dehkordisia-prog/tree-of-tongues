@@ -76,7 +76,7 @@ def test_shared_glottocode_is_contested_in_xrefs(built):
 
 def test_speaker_rows_are_never_merged_or_averaged(built):
     spk = table(built, "speakers")
-    assert spk.height == 7  # 8 raw statements, one skipped (Glottocode not in Glottolog)
+    assert spk.height == 9  # 12 raw statements; skipped: unknown Glottocode, two items on retired nodes
     assert spk["speaker_id"].n_unique() == spk.height
     english = spk.filter(pl.col("glottocode") == "test0002")
     assert sorted(english["value"]) == [600000.0, 900000.0, 1000000.0]
@@ -239,7 +239,7 @@ def test_search_tiers_split_scope_from_everything_else(built):
     assert not set(t1) & set(t2)
     # scope languages, every candidate of contested entries, listed families and ancestors
     assert {"test0002", "test0008", "test0009", "test0006", "test0001", "test0007"} <= set(t1)
-    assert set(t2) == {"test0003", "test0004", "test0005"}
+    assert set(t2) == {"test0003", "test0004", "test0005", "test0010", "test0011", "test0012", "test0013"}
     assert t1["test0002"]["in_scope"] is True and "in_scope" not in t1["test0001"]
     assert {"ZZ", "YY"} <= set(t1) and t1["ZZ"]["kind"] == "country" and t1["ZZ"]["name"] == "Zedland"
     assert t1["ZZ"]["alt"] == ["Zed"] and {x["lang"] for x in t1["ZZ"]["localized"]} == {"fa", "tr"}
@@ -341,3 +341,94 @@ def test_iso_match_fallback_for_retired_and_parent_glottocodes(built):
     cov = (built / "coverage.md").read_text(encoding="utf-8")
     assert "Q9008" in cov and "Q9009" in cov and "retr1234" in cov
     assert "wd:Q9099-FFF" not in spk  # an item that reached no node is skipped, not guessed
+
+
+def test_direct_p1394_beats_iso_match_on_the_same_node(built):
+    # Q9012 names test0010 through P1394; Q9013 (P1394 on the family test0012) also matches it by ISO code qag.
+    langs = {r["glottocode"]: r for r in table(built, "languoids").to_dicts()}
+    assert langs["test0010"]["wikidata_qid"] == "Q9012" and langs["test0012"]["wikidata_qid"] is None
+    xr = table(built, "xrefs").filter((pl.col("scheme") == "wikidata") & (pl.col("glottocode") == "test0010"))
+    by_code = {r["code"]: r for r in xr.to_dicts()}
+    assert set(by_code) == {"Q9012", "Q9013"}
+    assert by_code["Q9012"]["confidence"] == "medium"  # not "contested": the loser is not a rival claim
+    loser = by_code["Q9013"]
+    assert loser["confidence"] == "low"
+    assert "Q9012" in loser["notes"] and "cross-reference only" in loser["notes"]
+    assert "Wikidata item may cover more than this Glottolog node" in loser["notes"]
+    spk = {r["speaker_id"]: r for r in table(built, "speakers").to_dicts()}
+    assert spk["wd:Q9012-III"]["attached_via"] is None and spk["wd:Q9012-III"]["confidence"] == "medium"
+    assert not spk["wd:Q9012-III"]["disagrees_gt_25pct"]  # the loser's 90000 does not contest 1000
+    kept = spk["wd:Q9013-JJJ"]
+    assert kept["glottocode"] == "test0010" and kept["attached_via"] == "wikidata_iso_match"
+    assert kept["confidence"] == "low" and "not used for sizing" in kept["notes"]
+    tree = json.loads((built / "tree.json").read_text(encoding="utf-8"))
+    node = next(n for n in tree["nodes"] if n[0] == "test0010")
+    assert node[7] == 1000  # any_max comes from the direct item only
+    names = table(built, "names").filter(
+        (pl.col("glottocode") == "test0010") & (pl.col("source_id") == "wikidata")
+    )
+    types = dict(zip(names["name"].to_list(), names["type"].to_list(), strict=True))
+    assert types["Directish"] != "alias" and types["Groupish language"] == "alias"
+    assert "Q9013" in (built / "coverage.md").read_text(encoding="utf-8")
+
+
+def test_iso_fallback_rows_are_weak_and_never_size_the_tree(built):
+    spk = {r["speaker_id"]: r for r in table(built, "speakers").to_dicts()}
+    row = spk["wd:Q9008-GGG"]  # Q9008 reached test0008 by ISO match
+    assert row["attached_via"] == "wikidata_iso_match" and row["confidence"] == "low"
+    assert "Wikidata item may cover more than this Glottolog node" in row["notes"]
+    tree = json.loads((built / "tree.json").read_text(encoding="utf-8"))
+    node = next(n for n in tree["nodes"] if n[0] == "test0008")
+    assert node[5] is None and node[7] is None
+    names = table(built, "names").filter(
+        (pl.col("glottocode") == "test0008") & (pl.col("source_id") == "wikidata")
+    )
+    assert names["type"].to_list() and set(names["type"].to_list()) == {"alias"}
+    # the scope list's display_name still wins for an in-scope node
+    assert search_docs(built, 1)["test0008"]["name"] == "Contestish"
+
+
+def test_retired_nodes_never_receive_a_wikidata_item(built):
+    langs = {r["glottocode"]: r for r in table(built, "languoids").to_dicts()}
+    assert langs["test0011"]["category"] == "Bookkeeping" and langs["test0011"]["wikidata_qid"] is None
+    assert langs["test0013"]["wikidata_qid"] is None  # retired without the name suffix
+    x = table(built, "xrefs").filter(pl.col("code").is_in(["Q9014", "Q9015"]))
+    assert x.height == 0
+    spk = table(built, "speakers")
+    assert spk.filter(pl.col("speaker_id").is_in(["wd:Q9014-KKK", "wd:Q9015-LLL"])).height == 0
+    assert spk.filter(pl.col("glottocode").is_in(["test0011", "test0013"])).height == 0
+    names = table(built, "names").filter(pl.col("source_id") == "wikidata")
+    assert names.filter(pl.col("glottocode").is_in(["test0011", "test0013"])).height == 0
+    cov = (built / "coverage.md").read_text(encoding="utf-8")
+    assert "Q9014" in cov and "Q9015" in cov and "retired node" in cov
+
+
+def test_retired_node_with_a_recorded_replacement_takes_the_replacement():
+    from pipeline.build.tables import resolve_wikidata
+
+    def entry(iso):
+        return {"iso3": set(iso), "iso1": set(), "labels": {}, "retrieved_at": "2026-01-01T00:00:00Z"}
+
+    levels = {"old00001": "language", "new00001": "language", "fam00001": "family"}
+    known = set(levels)
+    wd = {("old00001", "Q1"): entry({"qaa"}), ("old00001", "Q2"): entry({"qaa"})}
+    unique, _, by_gc, _, report = resolve_wikidata(
+        wd, known, levels, {"qaa": ["new00001"]}, {"old00001": "new00001"}
+    )
+    assert set(by_gc) == {"new00001"} and unique["new00001"] is None  # two items: contested, not merged
+    assert {e["method"] for _, e in by_gc["new00001"]} == {"replacement of retired node"}
+    assert len(report["retired_replaced"]) == 2 and report["retired_skipped"] == []
+    # no replacement recorded: left unattached and reported, not guessed
+    unique, _, by_gc, _, report = resolve_wikidata(
+        {("old00001", "Q1"): entry({"qaa"})}, known, levels, {}, {"old00001": None}
+    )
+    assert by_gc == {} and [r["qid"] for r in report["retired_skipped"]] == ["Q1"]
+
+
+def test_deprecated_p1394_is_recorded_in_notes(built):
+    # the fixture's deprecated_p1394 page says Q9008 lists test0008 with reason "does not exactly match"
+    x = table(built, "xrefs").filter((pl.col("code") == "Q9008") & (pl.col("scheme") == "wikidata"))
+    assert "deprecated P1394 value" in x["notes"][0] and "does not exactly match" in x["notes"][0]
+    spk = {r["speaker_id"]: r for r in table(built, "speakers").to_dicts()}
+    assert "deprecated P1394 value" in spk["wd:Q9008-GGG"]["notes"]
+    assert "Q9008 on" in (built / "coverage.md").read_text(encoding="utf-8")

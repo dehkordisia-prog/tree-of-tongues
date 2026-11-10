@@ -46,13 +46,15 @@ def build(
     known = {lang["glottocode"] for lang in gl.languages}
 
     wd_langs = readers.read_wikidata_languoids(wd_raw)
+    wd_deprecated = readers.read_wikidata_deprecated_p1394(wd_raw)
     levels = {lang["glottocode"]: lang["level"] for lang in gl.languages}
     lang_by_iso: dict[str, list[str]] = {}
     for lang in gl.languages:
+        # Retired nodes stay in this map so resolve_wikidata can report them; it never attaches to them.
         if lang["level"] == "language" and lang["iso"]:
             lang_by_iso.setdefault(lang["iso"], []).append(lang["glottocode"])
     unique_qid, candidates, by_gc, wd_unknown_gc, wd_report = tables.resolve_wikidata(
-        wd_langs, known, levels, lang_by_iso
+        wd_langs, known, levels, lang_by_iso, gl.retired, wd_deprecated
     )
 
     languoid_rows = tables.build_languoids(gl, gl_retrieved, licenses, unique_qid)
@@ -69,7 +71,9 @@ def build(
 
     ambiguous = {gc for gc, q in candidates.items() if len(q) > 1}
     statements = readers.read_wikidata_speakers(wd_raw)
-    speaker_rows, speaker_skipped = tables.build_speakers(statements, ambiguous, known, licenses, by_gc)
+    speaker_rows, speaker_skipped = tables.build_speakers(
+        statements, ambiguous, known - set(gl.retired), licenses, by_gc
+    )
 
     source_rows = []
     for sid in sorted(licenses):
@@ -153,6 +157,7 @@ def build(
     write_manifest(build_dir, raw_dir, licenses, (gl_raw, cldr_raw, wd_raw, ne_raw))
     printable = {k: v for k, v in stats.items() if k != "wikidata_report"}
     printable["wikidata_report"] = {k: len(v) for k, v in wd_report.items() if k != "qid_targets"}
+    printable["retired_nodes_in_glottolog"] = len(gl.retired)
     return {"tables": {k: v.height for k, v in tabs.items()}, **printable}
 
 
@@ -196,12 +201,56 @@ def wikidata_report_lines(report: dict, names: dict[str, str]) -> list[str]:
             f"- {c['qid']}: kept on {', '.join(label(g) for g in c['kept'])}; "
             f"dropped from {', '.join(label(g) for g in c['dropped'])}"
         )
-    lines += ["", f"### Attached by ISO 639-3 match ({len(report['iso_matches'])})", ""]
+    lines += [
+        "",
+        f"### Attached by ISO 639-3 match ({len(report['iso_matches'])})",
+        "",
+        "Each item may cover more than its node. Its speaker rows are low confidence, carry "
+        "`attached_via = wikidata_iso_match` and are left out of tree.json sizing; its labels are aliases.",
+        "",
+    ]
     for m in report["iso_matches"]:
         lines.append(
             f"- {m['qid']} ({', '.join(m['iso639_3'])}): P1394 {', '.join(label(g) for g in m['p1394'])}"
             f" -> {label(m['target'])}"
         )
+    lines += [
+        "",
+        f"### ISO match lost to a direct P1394 item on the same node ({len(report['iso_demoted'])})",
+        "",
+    ]
+    for d in report["iso_demoted"]:
+        lines.append(f"- {d['qid']} on {label(d['node'])}: node keeps {', '.join(d['winner'])}")
+    lines += [
+        "",
+        f"### Items left unattached because their only route was a retired node ({len(report['retired_skipped'])})",
+        "",
+        "Retired and bookkeeping languoids are marked by Glottolog's category `Bookkeeping`; the CLDF has no "
+        "replacement field, so none was used.",
+        "",
+    ]
+    for r in report["retired_skipped"]:
+        via = [f"P1394 {label(g)}" for g in r["retired_p1394"]] + [
+            f"ISO {', '.join(r['iso639_3'])} -> {label(g)}" for g in r["retired_iso_hits"]
+        ]
+        lines.append(f"- {r['qid']}: {'; '.join(via)}")
+    lines += [
+        "",
+        f"### Items attached to a replacement of a retired node ({len(report['retired_replaced'])})",
+        "",
+    ]
+    for r in report["retired_replaced"]:
+        lines.append(
+            f"- {r['qid']}: {', '.join(label(g) for g in r['retired'])} -> {', '.join(label(g) for g in r['target'])}"
+        )
+    lines += [
+        "",
+        f"### Chosen node is a deprecated P1394 value on Wikidata ({len(report['deprecated_p1394'])})",
+        "",
+    ]
+    for d in report["deprecated_p1394"]:
+        why = f" ({', '.join(d['reasons'])})" if d["reasons"] else ""
+        lines.append(f"- {d['qid']} on {label(d['node'])}{why}")
     lines += [
         "",
         f"### Language items left on a family as Wikidata's claim ({len(report['via_family'])})",
@@ -330,11 +379,19 @@ def coverage_report(tabs: dict[str, pl.DataFrame], stats: dict, iso3_map: dict) 
         "",
         "1. A QID sits on one node. When an item names a language-level node and its family, the "
         "language-level node keeps it.",
-        "2. When no P1394 node is language-level (retired Glottocode, or the language's parent), "
-        "a unique ISO 639-3 match to a language-level node is used (method `ISO match`).",
+        "2. When no P1394 node is language-level (unknown Glottocode, or the language's parent), "
+        "a unique ISO 639-3 match to a live language-level node is used (method `ISO match`). The item may "
+        "be broader than the node: its speaker rows are low confidence, carry `attached_via = "
+        'wikidata_iso_match` and the note "Wikidata item may cover more than this Glottolog node", '
+        "its labels are aliases, and tree.json sizing ignores them.",
         "3. A language item attached to a family stays there as Wikidata's claim: `languoids.wikidata_qid` "
         "is left null, its labels are aliases, its speaker rows carry `attached_via = "
         "wikidata_p1394_to_family`, and the tree ignores them.",
+        "4. A direct P1394 attachment always wins over an ISO match on the same node. The loser stays in "
+        "xrefs (low confidence, with a note); its speaker rows are kept, flagged and never used for sizing.",
+        "5. Retired and bookkeeping nodes (Glottolog category `Bookkeeping`) never receive an item. A "
+        "recorded replacement would be used (method `replacement of retired node`); otherwise the item "
+        "stays unattached and is listed below.",
         "",
         *wikidata_report_lines(stats["wikidata_report"], by_gc_names),
         "## Pilot languages",

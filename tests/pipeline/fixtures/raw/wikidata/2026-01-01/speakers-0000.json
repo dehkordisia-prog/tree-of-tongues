@@ -312,6 +312,146 @@
      "type": "uri",
      "value": "http://wikiba.se/ontology#NormalRank"
     }
+   },
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9012"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "test0010"
+    },
+    "statement": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/statement/Q9012-III"
+    },
+    "value": {
+     "type": "literal",
+     "value": "1000"
+    },
+    "rank": {
+     "type": "uri",
+     "value": "http://wikiba.se/ontology#NormalRank"
+    },
+    "ref": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/reference/Q9012-III"
+    },
+    "stated": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q14790"
+    },
+    "stated_label": {
+     "type": "literal",
+     "value": "Fixture Almanac",
+     "xml:lang": "en"
+    }
+   },
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9013"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "test0012"
+    },
+    "statement": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/statement/Q9013-JJJ"
+    },
+    "value": {
+     "type": "literal",
+     "value": "90000"
+    },
+    "rank": {
+     "type": "uri",
+     "value": "http://wikiba.se/ontology#NormalRank"
+    },
+    "ref": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/reference/Q9013-JJJ"
+    },
+    "stated": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q14790"
+    },
+    "stated_label": {
+     "type": "literal",
+     "value": "Fixture Almanac",
+     "xml:lang": "en"
+    }
+   },
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9014"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "test0011"
+    },
+    "statement": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/statement/Q9014-KKK"
+    },
+    "value": {
+     "type": "literal",
+     "value": "4000"
+    },
+    "rank": {
+     "type": "uri",
+     "value": "http://wikiba.se/ontology#NormalRank"
+    },
+    "ref": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/reference/Q9014-KKK"
+    },
+    "stated": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q14790"
+    },
+    "stated_label": {
+     "type": "literal",
+     "value": "Fixture Almanac",
+     "xml:lang": "en"
+    }
+   },
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9015"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "zzzz9998"
+    },
+    "statement": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/statement/Q9015-LLL"
+    },
+    "value": {
+     "type": "literal",
+     "value": "3000"
+    },
+    "rank": {
+     "type": "uri",
+     "value": "http://wikiba.se/ontology#NormalRank"
+    },
+    "ref": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/reference/Q9015-LLL"
+    },
+    "stated": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q14790"
+    },
+    "stated_label": {
+     "type": "literal",
+     "value": "Fixture Almanac",
+     "xml:lang": "en"
+    }
    }
   ]
  }

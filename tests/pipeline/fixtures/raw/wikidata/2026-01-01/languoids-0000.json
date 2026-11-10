@@ -166,6 +166,82 @@
      "value": "Persish",
      "xml:lang": "en"
     }
+   },
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9012"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "test0010"
+    },
+    "iso": {
+     "type": "literal",
+     "value": "qag"
+    },
+    "label_en": {
+     "type": "literal",
+     "value": "Directish",
+     "xml:lang": "en"
+    }
+   },
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9013"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "test0012"
+    },
+    "iso": {
+     "type": "literal",
+     "value": "qag"
+    },
+    "label_en": {
+     "type": "literal",
+     "value": "Groupish language",
+     "xml:lang": "en"
+    }
+   },
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9014"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "test0011"
+    },
+    "iso": {
+     "type": "literal",
+     "value": "qah"
+    },
+    "label_en": {
+     "type": "literal",
+     "value": "Gone language",
+     "xml:lang": "en"
+    }
+   },
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9015"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "zzzz9998"
+    },
+    "iso": {
+     "type": "literal",
+     "value": "qai"
+    },
+    "label_en": {
+     "type": "literal",
+     "value": "Quietly gone language",
+     "xml:lang": "en"
+    }
    }
   ]
  }

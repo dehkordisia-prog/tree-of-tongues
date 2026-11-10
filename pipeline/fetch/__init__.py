@@ -50,7 +50,7 @@ NE_FILES = (
     "ne_50m_admin_0_countries.geojson",
     "ne_50m_admin_0_breakaway_disputed_areas.geojson",
 )
-PAGE_SIZES = {"languoids": 2500, "speakers": 2500}
+PAGE_SIZES = {"languoids": 2500, "speakers": 2500, "deprecated_p1394": 2500}
 WDQS_PAUSE_SECONDS = 3.0
 
 

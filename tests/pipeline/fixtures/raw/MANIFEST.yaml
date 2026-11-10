@@ -80,8 +80,8 @@ files:
   source_id: glottolog-5.3
   url: https://example.invalid/fixture
   retrieved_at: '2026-01-01T00:00:00Z'
-  sha256: 5493b13c58c362a553261ca9dbad67a7ba92d2899d2f3283042da6d572202377
-  bytes: 569
+  sha256: 2a9de52fcdd62adc505b9a98e407fd5b8cf0552fa7e01a083d0f528e83a83662
+  bytes: 779
 - path: glottolog-5.3/2026-01-01/glottolog-cldf-v5.3/cldf/names.csv
   source_id: glottolog-5.3
   url: https://example.invalid/fixture
@@ -92,8 +92,8 @@ files:
   source_id: glottolog-5.3
   url: https://example.invalid/fixture
   retrieved_at: '2026-01-01T00:00:00Z'
-  sha256: c078ea5bdae51453b69472af47f35d08937e6f1210d491ab8d17a05d8ddf4f7d
-  bytes: 1502
+  sha256: d34c75e28837eaa84636ec23408c6ea029a972d1d09e44336c3ec2e89f4fbf15
+  bytes: 1994
 - path: natural-earth-5.1.1/2026-01-01/ne_110m_admin_0_countries.geojson
   source_id: natural-earth-5.1.1
   url: https://example.invalid/fixture
@@ -121,13 +121,21 @@ files:
   version: rolling
   query_file: pipeline/fetch/queries/languoids.rq
   retrieved_at: '2026-01-01T00:00:00Z'
-  sha256: 8db378bdd1297d6b446495cc68058d8ac2c69c629f42013bba9180537112f43e
-  bytes: 3212
+  sha256: 7a058a3cd19bc1b2d25ccfcb9f99a9a84818500ff9d7b6ad0afcdcc91af95df4
+  bytes: 4680
 - path: wikidata/2026-01-01/speakers-0000.json
   source_id: wikidata
   url: https://query.wikidata.org/sparql
   version: rolling
   query_file: pipeline/fetch/queries/speakers.rq
   retrieved_at: '2026-01-01T00:00:00Z'
-  sha256: 436a69e2c6f0534f443051abb68ed796fd50db7f3b6ed15b90322c0b790154ac
-  bytes: 6962
+  sha256: f03199e9513f7a77b1babb008f0dc3e7a797c4c26e5e64afb4e421a207f34025
+  bytes: 10139
+- path: wikidata/2026-01-01/deprecated_p1394-0000.json
+  source_id: wikidata
+  url: https://query.wikidata.org/sparql
+  version: rolling
+  query_file: pipeline/fetch/queries/deprecated_p1394.rq
+  retrieved_at: '2026-01-01T00:00:00Z'
+  sha256: eb34d0677ad8a4e5e23b112287a906bd86b2ef63b1105264091103ba7b731594
+  bytes: 491

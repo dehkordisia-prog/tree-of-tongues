@@ -1,0 +1,21 @@
+# Glottocode statements (P1394) that Wikidata has marked with deprecated rank, with the reason for
+# deprecation (P2241) when given. languoids.rq only sees truthy statements, so these never appear there.
+# Paged by Glottocode order. {limit} and {offset} are filled in by pipeline fetch.
+SELECT ?item ?glottocode ?reason ?reason_label WHERE {
+  {
+    SELECT ?item ?glottocode ?stmt WHERE {
+      ?item p:P1394 ?stmt .
+      ?stmt wikibase:rank wikibase:DeprecatedRank ;
+            ps:P1394 ?glottocode .
+      FILTER(ISLITERAL(?glottocode))
+    }
+    ORDER BY ?glottocode ?item
+    LIMIT {limit}
+    OFFSET {offset}
+  }
+  OPTIONAL {
+    ?stmt pq:P2241 ?reason .
+    OPTIONAL { ?reason rdfs:label ?reason_label . FILTER(LANG(?reason_label) = "en") }
+  }
+}
+ORDER BY ?glottocode ?item ?reason
