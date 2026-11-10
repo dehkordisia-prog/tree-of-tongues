@@ -57,6 +57,19 @@ Fixed after the review:
 
 Noted for later (P2): browser tests run only in Chromium and only at 1440 wide; Lighthouse audits only `/`. Firefox and WebKit are not installed on this machine.
 
+### Phase 1 (in progress on `phase-1`)
+- Scope list: the 100 chart languages mapped to Glottolog (content/scope/phase-1-languages.yaml), reviewed by linguist-reviewer (D-023); names and ranks only, no figures from the chart.
+- Pipeline: territory index and two-tier search index; Wikidata attachment hardened (no language item renames a Glottolog family; retired nodes skipped; ISO-fallback matches marked low confidence and never size the tree).
+- Licenses: ASJP v21.1 cleared with conditions; Commons audio rule; Ethnologue and ISO 639-3 entries (see questions 7 and 8).
+- App shell: routes for languages and families (410 prerendered pages), URL as the source of truth, Inspector with real data, Ctrl+K search. App-shell JS about 188 KB gzip.
+- Gold-standard profile drafts: content/languages/west2369.md (Iranian Persian), nucl1301.md (Turkish), stan1293.md (English), 99 sources. All marked draft; linguist-reviewer (one per profile) and historical-linguist are reviewing now. Nothing here is approved.
+
+### Decisions the profile writers left for you
+- Persian: the "one pluricentric language" section (Tajik included, labeled our grouping); English labels for the Farsic family nodes; whether Wikipedia and Wiktionary may stand as interim sources where Iranica and scholarly grammars blocked automated access (every such entry names its intended replacement).
+- Turkish: the hook (the 1928 law's four-week deadline for newspapers, or the whistled language of Kuşköy); whether UNESCO's estimate for the whistled language belongs in the data; the Turkish examples and glosses; keeping Dede Korkut on the culture shelf.
+- English: Wiktionary as the source for the hook (they from Old Norse þeir) until the OED or Middle English Dictionary is reachable; showing Glottolog's placement of Old English as a sister branch; the Go deeper picks (Dutch and Swedish, Mandarin, Nigerian Pidgin).
+- All three: culture-shelf images still need rights-auditor clearance.
+
 ## Screenshots
 Taken with `node scripts/screenshots.mjs <folder>` after `pnpm build`: every page at 1440x900 and 390x844, in English (night and parchment) and Persian (night, right to left). The run fails on any console error, so these double as a smoke test. All files are in [2026-11-10-overnight/](2026-11-10-overnight/), named `<page>-<width>-<lang>-<theme>.jpg`.
 
