@@ -6,8 +6,8 @@ Owner: Siavash. Written by Claude (orchestrator). Updated as work lands; newest 
 | Item | State |
 | --- | --- |
 | Phase 0 branch | `phase-0`, pushed; not merged into main (your call in the morning) |
-| Phase 0 gate | in progress |
-| Phase 1 branch | not started |
+| Phase 0 gate | ready for your review, with one item open: the renderer benchmark (see Blocked). qa-gatekeeper found 0 blocking, 2 must-fix and 3 minor issues; all fixed or noted below |
+| Phase 1 branch | `phase-1`, based on `phase-0` |
 | CI on phase-0 | green, except one run (41f41c6, a lint error in the screenshot script) fixed by the next commit |
 | Spikes | tree (PixiJS vs deck.gl) and map being built; measured one after the other by `scripts/bench.mjs` |
 
@@ -37,6 +37,24 @@ If `uv` is "not recognized", open a new terminal: the installer added it to PATH
   - Build takes about 6 minutes, mostly writing 27,177 bundle files (largest 26 KB, English).
 - The app reads pipeline output in place at `/data/` (dev server and `scripts/serve.mjs`), never copying 90 MB into the build.
 - Type and scripts: self-hosted fonts, Persian in Naskh and Nastaliq, RTL with `?lang=fa`, Turkish casing. Han font fetched at build, not stored in git (D-015, your decision).
+
+### Phase 0 gate review (qa-gatekeeper, at b8b8c4d)
+| Gate item | Result |
+| --- | --- |
+| Builds reproduce from raw data | Pass: two real builds byte-identical (data-curator); reproducibility test, font build check and font fetch check pass; `uv run pipeline validate` passes on the real data after fix 1 |
+| Spike results logged in DECISIONS.md | Partly: D-019 to D-021 logged; fps and memory not measured (Blocked, item 1) |
+| Licenses filed | Pass: 4 sources and 7 fonts, all cleared; credits complete |
+| Commands, tests, lint, a11y | Pass: 98 unit, 19 pipeline, 28 browser and 15 accessibility tests; content lint |
+| Budgets measurable here | Pass: app-shell JS about 137 KB gzip (budget 250); LCP 0.8 s on the Lighthouse mobile preset (budget 2.5); spike code lazy-loaded |
+| Real-browser checks | Pass: 5 routes x English and Persian x 1440 and 390, no console errors, no overflow, no third-party requests; disputed areas never filled |
+
+Fixed after the review:
+1. `pipeline validate` failed on the real data because the map's stopgap territory index lives in data/build/derived/, outside the manifest. Validate now ignores derived/ (script-made indexes that add no facts) and still fails on any other unlisted file; a test covers both. Phase 1 moves the index into the pipeline.
+2. No visible focus ring on the deck.gl tree canvas and the map canvas (WCAG 2.4.7). Both libraries reset outlines; an unlayered rule restores the ring, and a new accessibility test checks the computed outline on all three canvases.
+3. English sentences on the Persian tree page had their punctuation flipped; each line now keeps its own direction.
+4. D-019 to D-021 were dated a day late; corrected.
+
+Noted for later (P2): browser tests run only in Chromium and only at 1440 wide; Lighthouse audits only `/`. Firefox and WebKit are not installed on this machine.
 
 ## Screenshots
 Taken with `node scripts/screenshots.mjs <folder>` after `pnpm build`: every page at 1440x900 and 390x844, in English (night and parchment) and Persian (night, right to left). The run fails on any console error, so these double as a smoke test. All files are in [2026-11-10-overnight/](2026-11-10-overnight/), named `<page>-<width>-<lang>-<theme>.jpg`.

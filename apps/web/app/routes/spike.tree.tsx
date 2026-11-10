@@ -39,7 +39,8 @@ export default function TreeSpike() {
   const otherHref = `?${other.toString()}`;
 
   return (
-    <main className="px-gutter py-6">
+    // tt-bidi-plain: the spike copy is English only, so each line keeps its own direction on RTL pages.
+    <main className="tt-bidi-plain px-gutter py-6">
       <h1 className="text-title">Tree spike</h1>
       {View ? (
         <View key={renderer} renderer={renderer} bench={bench} stress={stress} initialFocus={initialFocus} otherRendererHref={otherHref} />

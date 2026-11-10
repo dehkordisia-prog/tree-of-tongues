@@ -18,6 +18,7 @@ import polars as pl
 from pipeline import common, schemas
 
 BUNDLE_MAX_BYTES = 50 * 1024
+DERIVED_DIR = "derived"
 FACT_TABLES = ("languoids", "names", "xrefs", "speakers", "territories")
 
 
@@ -232,10 +233,14 @@ def _check_manifest(build_dir: Path, licenses: dict[str, dict], report: Report) 
         for sid in out["source_ids"]:
             if sid not in licenses:
                 report.fail(f"manifest: {out['path']} cites source {sid} not in LICENSES.yaml")
+    # derived/ holds indexes that scripts compute from pipeline outputs only (for now
+    # scripts/build-territory-index.mjs). They add no facts and are not pipeline outputs, so they
+    # are outside the manifest. Phase 1 moves the territory index into the pipeline.
     actual = {
-        p.relative_to(build_dir).as_posix()
+        rel
         for p in build_dir.rglob("*")
         if p.is_file() and p.name != "manifest.json"
+        if not (rel := p.relative_to(build_dir).as_posix()).startswith(DERIVED_DIR + "/")
     }
     report.check(
         actual == listed,

@@ -158,6 +158,16 @@ def test_build_is_reproducible(tmp_path):
     assert sums_a == sums_b and len(sums_a) > 10
 
 
+def test_validate_ignores_derived_but_not_other_unlisted_files(built, tmp_path):
+    copy = tmp_path / "copy"
+    shutil.copytree(built, copy)
+    (copy / "derived").mkdir()
+    (copy / "derived" / "territory_index.json").write_text("{}\n")
+    assert validate(copy) == []
+    (copy / "stray.json").write_text("{}\n")
+    assert any("manifest/disk mismatch" in f for f in validate(copy))
+
+
 def test_validate_catches_unknown_source_and_orphans(built, tmp_path):
     bad = tmp_path / "bad"
     shutil.copytree(built, bad)

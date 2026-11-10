@@ -102,6 +102,14 @@
   unicode-bidi: plaintext;
 }
 
+/* Canvas libraries (deck.gl, MapLibre) reset outlines on their canvases. Keyboard users must still
+   see focus (WCAG 2.4.7), so this rule is unlayered and important. The ring sits inside the edge. */
+canvas:focus-visible,
+.maplibregl-canvas:focus-visible {
+  outline: var(--tt-focus-width) solid var(--tt-focus) !important;
+  outline-offset: calc(-1 * var(--tt-focus-width)) !important;
+}
+
 /* No animation runs unless asked; and none survives reduced motion. */
 @media (prefers-reduced-motion: reduce) {
   *,
