@@ -46,12 +46,17 @@ Taken with `node scripts/screenshots.mjs <folder>` after `pnpm build`: every pag
 | --- | --- | --- | --- | --- |
 | Start `/` | ![](2026-11-10-overnight/home-1440-en-night.jpg) | ![](2026-11-10-overnight/home-390-en-parchment.jpg) | ![](2026-11-10-overnight/home-1440-fa-night.jpg) | ![](2026-11-10-overnight/home-390-fa-night.jpg) |
 | Design `/design` | ![](2026-11-10-overnight/design-1440-en-night.jpg) | ![](2026-11-10-overnight/design-390-en-parchment.jpg) | ![](2026-11-10-overnight/design-1440-fa-night.jpg) | ![](2026-11-10-overnight/design-390-fa-night.jpg) |
-| Tree spike | placeholder until the spike lands | | | |
-| Map spike | placeholder until the spike lands | | | |
+| Tree spike `/spike/tree` | ![](2026-11-10-overnight/spike-tree-1440-en-night.jpg) | ![](2026-11-10-overnight/spike-tree-390-en-parchment.jpg) | ![](2026-11-10-overnight/spike-tree-1440-fa-night.jpg) | ![](2026-11-10-overnight/spike-tree-390-fa-night.jpg) |
+| Map spike `/spike/map` | ![](2026-11-10-overnight/spike-map-1440-en-night.jpg) | ![](2026-11-10-overnight/spike-map-390-en-parchment.jpg) | ![](2026-11-10-overnight/spike-map-1440-fa-night.jpg) | ![](2026-11-10-overnight/spike-map-390-fa-night.jpg) |
+
+Tree and map screenshots were retaken after the spikes landed (7243661).
 
 What to look at:
 - Persian start page: the tagline and "سامانهٔ طراحی" are translated; the other labels fall back to English and keep their own left-to-right order. Untranslated strings stay English until you approve wording.
 - Design page in Persian: the page mirrors (navigation and theme toggle flip), English copy keeps its punctuation in place.
+- Tree spike: all 27,177 languoids packed as circles; area is the number of entries below a node, not speakers (the page says so). Families take the design tokens' colors; groups without a token are gray. Known layout weakness: circle packing wastes space (a language is about 0.2 px at the world view) and lines small groups up in rows. The Phase 1 plan should test a collapsed or treemap-style layout. The "draw 54.6 ms" in the stats line comes from headless software rendering and is not a measurement.
+- Map spike: about 8,300 language points from Glottolog coordinates, the family legend (each family also has a marker shape and label), the always-visible borders note, and the time slider stub. In Persian the controls mirror and the map does not; the slider runs right to left, as DESIGN.md specifies. UI text on the map is still English (awaiting your wording).
+- Both spikes make zero requests outside localhost (tested).
 
 ## Provisional decisions (made overnight, please confirm or overrule)
 - D-017: themes use CSS `light-dark()`; very old browsers fall back to default colors.
