@@ -19,6 +19,16 @@ Recorded as D-028 to D-033 in docs/DECISIONS.md. They answer question 1 (Persian
 
 Morning restart: the local rebuild (Blocked 2) was retried with a memory guard and stopped for low memory before writing anything; data/build is unchanged. The benchmark (Blocked 1) was not started.
 
+Daytime work (light only, as you asked: no builds, browsers or pipeline runs):
+- **Farsic labels.** linguist-reviewer proposed them in [docs/reviews/farsic-labels.md](../reviews/farsic-labels.md): fars1254 "Persian and Caucasian Tat", fars1255 "Persian group", east2745 "Eastern Persian group". Fars Dialects and Tajikic stay as they are. The labels wait for your approval.
+- **Spec.** [docs/specs/persian.md](../specs/persian.md) covers the Persian lens, the labels, "Alias: Farsi" and the Nastaliq digits. It has four provisional (P) items for you:
+  - the route /group/persian, instead of /macrolanguage/fas;
+  - "Groupings" as the search group name;
+  - "Glottolog name: Western Farsi" as the match line;
+  - the scope sentence for figures, which content-writer will word.
+- **Nastaliq digits, checked in the font files.** Noto Nastaliq Urdu has no Persian digit forms: no `locl` feature at all. Noto Naskh Arabic's default digits are the Persian forms. So digits in Persian Nastaliq text will come from the Naskh file, and Urdu text keeps its Urdu forms.
+- **Tests.** apps/web/src/search/persian.test.ts, apps/web/src/data/names.test.ts, apps/web/src/data/persianLens.test.ts, apps/web/src/design/fonts.test.ts, tests/e2e/nastaliq-digits.spec.ts and tests/pipeline/test_persian_lens.py. Tests for behavior that exists today are live. The rest are marked pending and name the spec section they wait for. None were run locally because of low memory; CI runs the unit tests.
+
 ## How to open the app
 ```powershell
 cd tree-of-tongues
