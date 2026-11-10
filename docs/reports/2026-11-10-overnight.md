@@ -83,6 +83,23 @@ Taken with `node scripts/screenshots.mjs <folder>` after `pnpm build`: every pag
 
 Tree and map screenshots were retaken after the spikes landed (7243661).
 
+### Phase 1 app shell (taken at 8f4dc68, after the hydration fix; no console errors on any page)
+Files in [2026-11-10-overnight/phase-1/](2026-11-10-overnight/phase-1/).
+
+| Page | 1440, English | 390, English | 1440, Persian (RTL) | 390, Persian (RTL) |
+| --- | --- | --- | --- | --- |
+| Start `/` | ![](2026-11-10-overnight/phase-1/home-1440-en-night.jpg) | ![](2026-11-10-overnight/phase-1/home-390-en-parchment.jpg) | ![](2026-11-10-overnight/phase-1/home-1440-fa-night.jpg) | ![](2026-11-10-overnight/phase-1/home-390-fa-night.jpg) |
+| Turkish `/language/nucl1301` | ![](2026-11-10-overnight/phase-1/language-nucl1301-1440-en-night.jpg) | ![](2026-11-10-overnight/phase-1/language-nucl1301-390-en-parchment.jpg) | ![](2026-11-10-overnight/phase-1/language-nucl1301-1440-fa-night.jpg) | ![](2026-11-10-overnight/phase-1/language-nucl1301-390-fa-night.jpg) |
+| Iranian Persian `/language/west2369` | ![](2026-11-10-overnight/phase-1/language-west2369-1440-en-night.jpg) | ![](2026-11-10-overnight/phase-1/language-west2369-390-en-parchment.jpg) | ![](2026-11-10-overnight/phase-1/language-west2369-1440-fa-night.jpg) | ![](2026-11-10-overnight/phase-1/language-west2369-390-fa-night.jpg) |
+| English `/language/stan1293` | ![](2026-11-10-overnight/phase-1/language-stan1293-1440-en-night.jpg) | ![](2026-11-10-overnight/phase-1/language-stan1293-390-en-parchment.jpg) | ![](2026-11-10-overnight/phase-1/language-stan1293-1440-fa-night.jpg) | ![](2026-11-10-overnight/phase-1/language-stan1293-390-fa-night.jpg) |
+| Indo-European `/family/indo1319` | ![](2026-11-10-overnight/phase-1/family-indo1319-1440-en-night.jpg) | ![](2026-11-10-overnight/phase-1/family-indo1319-390-en-parchment.jpg) | ![](2026-11-10-overnight/phase-1/family-indo1319-1440-fa-night.jpg) | ![](2026-11-10-overnight/phase-1/family-indo1319-390-fa-night.jpg) |
+
+What to look at:
+- Turkish: the Inspector shows its own name with its source, the family path, L1 speakers as a range with "5 sources, 2006 to 2021" (each source and year one tap away; never averaged), and where it is spoken with CLDR shares. The profile prose (the reviewed drafts) is not on the page yet; the Inspector shows data only.
+- Iranian Persian: mostly "No data yet" (see question 1). The breadcrumb shows Glottolog's names for the Farsic nodes (question 1, last point).
+- Persian layout: the shell mirrors (search, lens switcher and Inspector flip sides), the tree does not. UI labels are still English inside the RTL layout until you approve Persian wording.
+- Known cosmetic issue: some tree labels overlap at certain zooms (for example "Southern Persian" and "Khuzestani"); label collision handling is a Phase 1 tree task.
+
 What to look at:
 - Persian start page: the tagline and "سامانهٔ طراحی" are translated; the other labels fall back to English and keep their own left-to-right order. Untranslated strings stay English until you approve wording.
 - Design page in Persian: the page mirrors (navigation and theme toggle flip), English copy keeps its punctuation in place.
@@ -104,6 +121,7 @@ What to look at:
    - Result today: CLDR territory shares and names for `fa` are left unmapped instead of being attached to a family, so Persian has no territory rows yet. Wikidata's speaker figures stay on `fars1254`, labeled as Wikidata's claim.
    - My plan for Phase 1 (provisional until you decide): show Persian as a labeled macrolanguage grouping Iranian Persian (west2369), Dari and Tajik, which is exactly the Lumper/Splitter toggle in the spec; Glottolog's tree stays the default view.
    - linguist-reviewer checked it (D-023): accurate, with corrections. ISO's macrolanguage fas covers only Iranian Persian and Dari, not Tajik, so a three-way lens is our own grouping and is labeled that way. Glottolog's fars1254 is "Farsic-Caucasian Tat" (it also contains Caucasian Tat), so it is never shown as Persian; the pipeline stops Wikidata labels from renaming Glottolog families.
+   - **Visible consequence today:** the Iranian Persian page (/language/west2369) shows "No data yet" for its own name, speakers, where it is spoken and scripts. The data exists but is filed under "Persian" as a whole: CLDR's `fa` covers both Iran and Afghanistan (Dari), and Wikidata's figures sit on its broader Persian item. Copying them onto Iranian Persian alone would put Afghanistan's numbers on the wrong language, so the page stays honest and empty until you choose the model. Your decision unlocks it: with the Persian lens (D-023), these rows attach to the lens, and the Iranian Persian page shows them clearly labeled as figures for Persian as a whole.
    - Still yours to decide: the English labels for the Glottolog family nodes Farsic, Eastern Farsic and Farsic-Caucasian Tat, which would otherwise show "Farsi" in the tree and breadcrumbs, against D-004. Options: a display label such as "Persian group" with the Glottolog name in the details, or Glottolog's names as they are.
 2. Persian and Turkish UI strings in `apps/web/src/i18n/fa.json` and `tr.json`: all marked "awaiting owner review".
 3. Nastaliq digits ۴ ۶ ۷: Noto Nastaliq Urdu follows Urdu shapes. Acceptable for Persian?
