@@ -1,0 +1,189 @@
+# data/LICENSES.yaml
+# Rights register for Tree of Tongues. Maintained by rights-auditor only.
+#
+# Schema (schema_version 1):
+#   schema_version: integer
+#   sources:  list of data sources. Every source_id used in data rows,
+#             data/raw/MANIFEST.yaml or content citations MUST equal the `id`
+#             of exactly one entry here. A validator should fail on unknown ids,
+#             duplicate ids and missing required keys.
+#   assets:   asset classes (fonts, images, audio). Same keys as a source, plus
+#             `kind`. Entries are added by later requests. Empty for now.
+#
+# Required keys per entry:
+#   id               short, stable, lowercase, [a-z0-9.-]+ ; never reuse or rename
+#   name             human-readable name
+#   version          release / version string, or "rolling" for live services
+#   url              canonical landing page of the exact version used
+#   doi              DOI string or null
+#   license          SPDX id where one exists (e.g. CC-BY-4.0, CC0-1.0,
+#                    Unicode-3.0); otherwise "LicenseRef-<name>"
+#   license_url      URL of the license text
+#   attribution      text the app displays (credits page and source chips)
+#   share_alike      bool: derived files must carry the same license
+#   non_commercial   bool: no commercial use (project is non-commercial forever)
+#   no_derivatives   bool: only link or show unmodified
+#   restrictions     list of strings: access protocols, rate limits, notices,
+#                    anything beyond the license itself ([] if none)
+#   status           cleared | cleared-with-conditions | blocked | pending
+#   verified_on      ISO date the terms were checked at the source
+#   verified_url     list of URLs where the terms were read on verified_on
+#   notes            free text: discrepancies, risks, handling rules
+# Optional keys: citation (formal bibliographic citation), components
+#   (sub-parts actually used), kind (assets only).
+
+schema_version: 1
+
+sources:
+  - id: glottolog-5.3
+    name: "Glottolog 5.3 (CLDF release)"
+    version: "v5.3 (Zenodo record published 2026-03-02)"
+    url: "https://zenodo.org/records/18840967"
+    doi: "10.5281/zenodo.18840967"
+    license: CC-BY-4.0
+    license_url: "https://creativecommons.org/licenses/by/4.0/"
+    attribution: >-
+      Glottolog 5.3, edited by Harald Hammarström, Robert Forkel,
+      Martin Haspelmath and Sebastian Bank. Max Planck Institute for
+      Evolutionary Anthropology. https://glottolog.org. CC BY 4.0.
+    citation: >-
+      Hammarström, Harald & Forkel, Robert & Haspelmath, Martin & Bank,
+      Sebastian. 2026. Glottolog 5.3. Leipzig: Max Planck Institute for
+      Evolutionary Anthropology. (Available online at https://glottolog.org)
+      https://doi.org/10.5281/zenodo.18840967
+    share_alike: false
+    non_commercial: false
+    no_derivatives: false
+    restrictions:
+      - "Attribution required (CC BY 4.0): credit, license link, and indicate if changes were made."
+      - "Use the versioned Zenodo release, not the live site, so builds are reproducible."
+    status: cleared
+    verified_on: 2026-11-10
+    verified_url:
+      - "https://zenodo.org/records/18840967"
+      - "https://glottolog.org/meta/cite"
+    notes: >-
+      Record confirmed as "glottolog/glottolog: Glottolog database 5.3 as
+      CLDF", version v5.3, published 2026-03-02, license cc-by-4.0. It is a
+      supplement to github.com/glottolog/glottolog-cldf release v5.3.
+      glottolog.org footer still shows 5.3 as the current edition on the
+      verification date. Concept DOI (all versions) not shown on the record
+      page; data-curator should record it in MANIFEST.yaml if needed.
+      Matches DATA_SOURCES.md. Glottolog bundles references (sources.bib);
+      bibliographic records fall under the same release license.
+
+  - id: cldr-49
+    name: "Unicode CLDR 49 (cldr-json)"
+    version: "49.0.0 (CLDR 49, released 2026-10-22)"
+    url: "https://github.com/unicode-org/cldr-json/releases/tag/49.0.0"
+    doi: null
+    license: Unicode-3.0
+    license_url: "https://www.unicode.org/license.txt"
+    attribution: >-
+      Unicode CLDR 49. Copyright © 2015-2024 Unicode, Inc. Used under the
+      Unicode License v3. Unicode and the Unicode Logo are registered
+      trademarks of Unicode, Inc. in the United States and other countries.
+    components:
+      - "cldr-core: supplemental/territoryInfo.json (language population shares, official status)"
+      - "cldr-localenames-full: main/{en,fa,tr}/languages.json (localized language names)"
+    share_alike: false
+    non_commercial: false
+    no_derivatives: false
+    restrictions:
+      - "Unicode-3.0 condition: the full copyright and permission notice must appear with all copies of the data, or in associated documentation. We ship the full notice in content/credits.md and beside any derived CLDR file."
+      - "Do not use the name Unicode, Inc. to promote the project without written permission (license clause)."
+      - "Unicode Terms of Use also apply (https://www.unicode.org/copyright.html). Section 3.3 places Data Files and Software under Unicode License v3, which is what permits redistribution."
+      - "Use tagged release 49.0.0, not main, for reproducible builds."
+    status: cleared-with-conditions
+    verified_on: 2026-11-10
+    verified_url:
+      - "https://github.com/unicode-org/cldr-json/releases"
+      - "https://raw.githubusercontent.com/unicode-org/cldr-json/main/LICENSE"
+      - "https://cldr.unicode.org/index/downloads"
+      - "https://www.unicode.org/copyright.html"
+    notes: >-
+      LICENSE file in cldr-json is titled "UNICODE LICENSE V3" with
+      SPDX-License-Identifier Unicode-3.0. The copyright line in the repo
+      LICENSE reads 2015-2024 although the release is 2026; we reproduce the
+      notice verbatim as published. Package mapping (territoryInfo in
+      cldr-core) is inferred from PACKAGES.md descriptions; data-curator
+      should confirm file paths on download. territoryInfo population
+      figures are CLDR estimates; show them as estimates with source and
+      year per the nerd contract.
+
+  - id: wikidata
+    name: "Wikidata (structured data via the Wikidata Query Service)"
+    version: "rolling (each query result is dated at fetch time)"
+    url: "https://query.wikidata.org/"
+    doi: null
+    license: CC0-1.0
+    license_url: "https://creativecommons.org/publicdomain/zero/1.0/"
+    attribution: "Data from Wikidata (CC0)."
+    share_alike: false
+    non_commercial: false
+    no_derivatives: false
+    restrictions:
+      - "CC0 covers structured data in the main (Q), Property, Lexeme and EntitySchema namespaces only. Text in other Wikidata namespaces is CC BY-SA 4.0."
+      - "Media referenced by Wikidata statements (images, audio such as pronunciation files, maps on Wikimedia Commons) is NOT CC0. Each file carries its own license and needs its own entry or per-file record before use."
+      - "User-Agent policy: send a descriptive User-Agent of the form '<client>/<version> (<contact URL or email>) <library>/<version>'. Do not use generic agents (curl, python-requests, Python-urllib) or copy a browser UA. Non-compliant clients may be blocked without notice or get HTTP 403. Browser JavaScript uses the Api-User-Agent header."
+      - "Query timeout: 60 seconds per query on the public endpoint."
+      - "Rate limits: 60 seconds of query processing time per 60-second window per client (User-Agent plus IP); 30 error queries per minute; 5 parallel queries per IP."
+      - "On HTTP 429, honor the Retry-After header. Clients that keep sending after 429 may be temporarily banned."
+      - "Store queries in pipeline/fetch/queries/ and date every result; do not query WDQS from the live app."
+    status: cleared-with-conditions
+    verified_on: 2026-11-10
+    verified_url:
+      - "https://www.wikidata.org/wiki/Wikidata:Licensing"
+      - "https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual"
+      - "https://foundation.wikimedia.org/wiki/Policy:User-Agent_policy"
+    notes: >-
+      Attribution is not legally required under CC0; we credit anyway.
+      User-Agent policy page last edited 2026-03-27. Facts in Wikidata keep
+      their own provenance: store the referenced source (stated in, URL,
+      retrieval date) and qualifiers such as point in time alongside each
+      speaker figure, and show it. DATA_SOURCES.md lists "images" as a
+      Wikidata yield under CC0; that is incorrect for the image files
+      themselves (see restrictions).
+
+  - id: natural-earth-5.1.1
+    name: "Natural Earth vector data, Admin 0 Countries"
+    version: "5.1.1"
+    url: "https://www.naturalearthdata.com/downloads/"
+    doi: null
+    license: LicenseRef-PublicDomain
+    license_url: "https://www.naturalearthdata.com/about/terms-of-use/"
+    attribution: "Made with Natural Earth. Free vector and raster map data @ naturalearthdata.com."
+    components:
+      - "ne_110m_admin_0_countries (1:110m), version 5.1.1"
+      - "ne_50m_admin_0_countries (1:50m), version 5.1.1"
+    share_alike: false
+    non_commercial: false
+    no_derivatives: false
+    restrictions:
+      - "None legally. Terms say all raster and vector data on the site is public domain, no permission needed, credit unnecessary. We credit anyway with the suggested line."
+      - "Point of view: Natural Earth draws de facto boundaries (who controls the territory), not de jure. That is a stance, not neutrality. Our maps must apply the project's neutral disputed-territory rendering on top (see notes)."
+    status: cleared-with-conditions
+    verified_on: 2026-11-10
+    verified_url:
+      - "https://www.naturalearthdata.com/about/terms-of-use/"
+      - "https://www.naturalearthdata.com/downloads/110m-cultural-vectors/110m-admin-0-countries/"
+      - "https://www.naturalearthdata.com/downloads/50m-cultural-vectors/50m-admin-0-countries-2/"
+      - "https://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-0-countries/"
+    notes: >-
+      Both requested scales (1:110m and 1:50m) are public domain like all
+      Natural Earth data; any scale is fine rights-wise. Current version is
+      5.1.1 at both scales. Disputed areas: the download pages state that
+      boundaries are de facto by default and invite users to combine the
+      separate "breakaway and disputed areas" theme to match their outlook.
+      Optional point-of-view (POV) variants for several dozen countries are
+      offered on the 1:10m admin-0 page only; the 1:50m and 1:110m pages do
+      not mention POV variants. The rights side is clear; the neutrality
+      side is a cartographer task: use the 1:50m breakaway and disputed
+      areas layer to render disputed zones with a neutral hatched style and
+      no single-state fill, and label it. Not verified: whether the 50m and
+      110m attribute tables carry per-worldview columns; data-curator should
+      inspect on download. Public domain has no SPDX id, hence LicenseRef.
+
+# Asset classes (fonts, images, audio). Entries are added by later requests.
+# Each asset entry uses the source keys above plus `kind: font|image|audio`.
+assets: []

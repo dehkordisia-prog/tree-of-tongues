@@ -6,7 +6,7 @@ Open, versioned datasets cover the backbone; audio and historical maps are the h
 | --- | --- | --- | --- |
 | Glottolog 5.3 (March 2026), https://zenodo.org/records/18840967 | Classification of 8,500+ languages plus families and dialects, coordinates, endangerment, references | CC BY 4.0 | Backbone and primary keys |
 | Glottography, https://openhumanitiesdata.metajnl.com/articles/10.5334/johd.459 | 13,000+ speaker-area polygons for 5,300 languages, digitized from 29 published atlases | Varies by dataset; some are CC BY-NC 4.0 | Language areas on the map, source always shown |
-| Wikidata | Names in hundreds of languages, speaker figures with year qualifiers, ISO codes, images | CC0 | Names, speaker estimates, cross-links |
+| Wikidata | Names in hundreds of languages, speaker figures with year qualifiers, ISO codes, links to media | CC0 for structured data; linked images and audio on Commons keep their own licenses | Names, speaker estimates, cross-links; each linked media file needs its own license record |
 | Unicode CLDR | Language share per territory with official status; localized language and script names | Unicode License v3 | "Where is it spoken" and "what is spoken here" |
 | WALS Online, https://github.com/cldf-datasets/wals | Typological features for about 2,600 languages | CC BY 4.0 | Grammar maps, DNA glyph |
 | Grambank, https://github.com/grambank/grambank | 195 grammatical features for 2,400+ languages | CC BY 4.0 | Grammar module |
