@@ -8,6 +8,8 @@
 // and in Persian (night, right to left). Console errors are listed at the end and make the
 // script exit 1, so a screenshot run doubles as a smoke test.
 
+/* global document -- used only inside page.evaluate callbacks, which run in the browser */
+
 import { spawn } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
