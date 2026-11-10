@@ -1,0 +1,3649 @@
+# Phase 1 scope list: the 100 languages of the first vertical slice.
+#
+# Provenance: Selection follows the order of a third-party reference chart (Ethnologue 200 based, 2026, kept locally);
+# only names and ranks were used; no figures. The chart, any crop of it and its speaker numbers are never committed (D-009).
+# Names were transcribed by data-curator on 2026-11-10 from full-resolution crops of the chart's ranked list; no name was
+# unreadable. `chart_name` is the name as printed (the chart prints capitals; stored in title case). `rank` is the printed number.
+#
+# Mapping target: Glottolog 5.3 (Zenodo 10.5281/zenodo.18840967, CC BY 4.0) as built into data/build/*.parquet (D-001, D-002).
+# Cross-references (ISO 639-3, Wikidata QID) are copied from that build, never typed from memory. The chart prints no codes,
+# so "ISO match" means the ISO 639-3 code that the ISO standard gives the chart's language name, looked up in the xrefs table.
+#
+# How to read an entry
+#   glottocode            the decided Glottolog node, or null while the choice is contested.
+#   confidence            high, medium, low or contested. contested means linguist-reviewer must choose; data-curator did not.
+#   mechanical_candidate  (contested only) the node an exact-name or ISO match would pick. Not a decision. Null if none fits.
+#   candidates            (contested only) every plausible node with its level, ISO code and Wikidata QID.
+#   family_path           top-level Glottolog family (D-002), not the chart's grouping. The chart is a labeled alternative lens only.
+#   families              family-level nodes above every entry and candidate, for the tree.
+
+languages:
+- rank: 1
+  chart_name: English
+  glottocode: stan1293
+  glottolog_name: English
+  level: language
+  iso639_3: eng
+  wikidata_qid: Q1860
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 2
+  chart_name: Mandarin Chinese
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Sino-Tibetan
+  method: exact name match; lumping unresolved
+  confidence: contested
+  mechanical_candidate: mand1415
+  contested_reason: Chinese as one language versus separate languages
+  candidates:
+  - glottocode: mand1415
+    glottolog_name: Mandarin Chinese
+    level: language
+    iso639_3: cmn
+    wikidata_qid: Q9192
+    role: language-level node, exact name, ISO cmn
+  - glottocode: sini1245
+    glottolog_name: Sinitic
+    level: family
+    iso639_3: null
+    wikidata_qid: null
+    role: 'family: Sinitic, all Chinese varieties'
+  notes: The chart lists eight Sinitic varieties as separate languages and ranks them separately. Glottolog also has them
+    as separate languages under Sinitic (sini1245), but many sources call all of them dialects of one language, Chinese (ISO
+    macrolanguage zho). Whether the atlas shows Chinese as one language, a family or separate languages is the Lumper/Splitter
+    question for the reviewer.
+- rank: 3
+  chart_name: Hindi
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Indo-European
+  method: exact name match; lumping unresolved
+  confidence: contested
+  mechanical_candidate: hind1269
+  contested_reason: Hindi and Urdu as one language (Hindustani) or two
+  candidates:
+  - glottocode: hind1269
+    glottolog_name: Hindi
+    level: language
+    iso639_3: hin
+    wikidata_qid: Q1568
+    role: language-level node, exact name, ISO hin
+  - glottocode: hind1270
+    glottolog_name: Hindustani
+    level: family
+    iso639_3: null
+    wikidata_qid: Q11051
+    role: 'family: Hindustani, parent of Hindi and Urdu, Q11051'
+  notes: Exact name match. Glottolog has Hindi and Urdu as separate languages under the family Hindustani (hind1270). The
+    chart ranks them separately (ranks 3 and 11). The reviewer decides.
+- rank: 4
+  chart_name: Spanish
+  glottocode: stan1288
+  glottolog_name: Spanish
+  level: language
+  iso639_3: spa
+  wikidata_qid: Q1321
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 5
+  chart_name: French
+  glottocode: stan1290
+  glottolog_name: French
+  level: language
+  iso639_3: fra
+  wikidata_qid: Q150
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 6
+  chart_name: Standard Arabic
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Afro-Asiatic
+  method: exact name match (stan1318); lumping unresolved
+  confidence: contested
+  mechanical_candidate: stan1318
+  contested_reason: macrolanguage versus family; Standard Arabic versus spoken varieties
+  candidates:
+  - glottocode: stan1318
+    glottolog_name: Standard Arabic
+    level: language
+    iso639_3: arb
+    wikidata_qid: Q122602987
+    role: language-level node, ISO arb
+  - glottocode: arab1395
+    glottolog_name: Arabic
+    level: family
+    iso639_3: null
+    wikidata_qid: Q13955
+    role: 'family: Arabic as a whole, ISO ara'
+  notes: The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
+    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
+    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
+    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer.
+- rank: 7
+  chart_name: Bengali
+  glottocode: beng1280
+  glottolog_name: Bengali
+  level: language
+  iso639_3: ben
+  wikidata_qid: Q9610
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 8
+  chart_name: Russian
+  glottocode: russ1263
+  glottolog_name: Russian
+  level: language
+  iso639_3: rus
+  wikidata_qid: Q7737
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 9
+  chart_name: Portuguese
+  glottocode: port1283
+  glottolog_name: Portuguese
+  level: language
+  iso639_3: por
+  wikidata_qid: Q5146
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 10
+  chart_name: Indonesian
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Austronesian
+  method: 'manual: ISO ind inferred from the chart name; lumping unresolved'
+  confidence: contested
+  mechanical_candidate: indo1316
+  contested_reason: Malay and Indonesian as one language or two
+  candidates:
+  - glottocode: indo1316
+    glottolog_name: Standard Indonesian
+    level: language
+    iso639_3: ind
+    wikidata_qid: Q110620923
+    role: language-level node, ISO ind (Standard Indonesian)
+  - glottocode: stin1234
+    glottolog_name: Bahasa Indonesia
+    level: dialect
+    iso639_3: null
+    wikidata_qid: Q9240
+    role: 'dialect: Bahasa Indonesia, also ISO ind, Q9240'
+  - glottocode: stan1327
+    glottolog_name: Standard Malay-Indonesian
+    level: family
+    iso639_3: null
+    wikidata_qid: Q110621927
+    role: 'family: Standard Malay-Indonesian'
+  notes: Chart name "Indonesian" is not a Glottolog name; Glottolog has Standard Indonesian (indo1316). Two Glottolog nodes
+    carry ISO ind (the language and its dialect Bahasa Indonesia). Together with Malay (rank 67) this is the Malay and Indonesian
+    question.
+- rank: 11
+  chart_name: Urdu
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Indo-European
+  method: exact name match; lumping unresolved
+  confidence: contested
+  mechanical_candidate: urdu1245
+  contested_reason: Hindi and Urdu as one language (Hindustani) or two
+  candidates:
+  - glottocode: urdu1245
+    glottolog_name: Urdu
+    level: language
+    iso639_3: urd
+    wikidata_qid: Q1617
+    role: language-level node, exact name, ISO urd
+  - glottocode: hind1270
+    glottolog_name: Hindustani
+    level: family
+    iso639_3: null
+    wikidata_qid: Q11051
+    role: 'family: Hindustani, parent of Hindi and Urdu, Q11051'
+  notes: Exact name match. See rank 3.
+- rank: 12
+  chart_name: Standard German
+  glottocode: stan1295
+  glottolog_name: German
+  level: language
+  iso639_3: deu
+  wikidata_qid: Q188
+  family_path: Indo-European
+  method: ISO match (chart name "Standard German" is not a Glottolog name; ISO 639-3 deu is German)
+  confidence: medium
+  notes: Glottolog has one language "German" (stan1295) whose name does not say "Standard". Bavarian (rank 80) is a separate
+    Glottolog language, so the two chart entries do not overlap here.
+- rank: 13
+  chart_name: Japanese
+  glottocode: nucl1643
+  glottolog_name: Japanese
+  level: language
+  iso639_3: jpn
+  wikidata_qid: Q5287
+  family_path: Japonic
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 14
+  chart_name: Swahili
+  glottocode: swah1253
+  glottolog_name: Swahili
+  level: language
+  iso639_3: swh
+  wikidata_qid: Q3197533
+  family_path: Atlantic-Congo
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 15
+  chart_name: Marathi
+  glottocode: mara1378
+  glottolog_name: Marathi
+  level: language
+  iso639_3: mar
+  wikidata_qid: Q1571
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 16
+  chart_name: Telugu
+  glottocode: telu1262
+  glottolog_name: Telugu
+  level: language
+  iso639_3: tel
+  wikidata_qid: Q8097
+  family_path: Dravidian
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 17
+  chart_name: Western Punjabi
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Indo-European
+  method: 'manual: spelling variant of an exact match (Punjabi and Panjabi); lumping unresolved'
+  confidence: contested
+  mechanical_candidate: west2386
+  contested_reason: Lahnda as one language versus Western Panjabi, Saraiki and Hindko as separate languages; Punjabi as one
+    language
+  candidates:
+  - glottocode: west2386
+    glottolog_name: Western Panjabi
+    level: language
+    iso639_3: pnb
+    wikidata_qid: Q1334774
+    role: language-level node, ISO pnb
+  - glottocode: lahn1241
+    glottolog_name: Greater Panjabic
+    level: family
+    iso639_3: null
+    wikidata_qid: Q2656685
+    role: 'family: Greater Panjabic (Lahnda), Q2656685'
+  notes: Chart "Western Punjabi" matches ISO pnb. Glottolog name is "Western Panjabi" (spelling). Glottolog does not carry
+    the ISO macrolanguage Lahnda (lah) as a node; the nearest is the family Greater Panjabic lahn1241, which also holds Saraiki
+    (rank 65, separate on the chart) and Hindko. Many sources treat Western and Eastern Punjabi as one language. The reviewer
+    decides.
+- rank: 18
+  chart_name: Wu Chinese
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Sino-Tibetan
+  method: exact name match; lumping unresolved
+  confidence: contested
+  mechanical_candidate: wuch1236
+  contested_reason: Chinese as one language versus separate languages
+  candidates:
+  - glottocode: wuch1236
+    glottolog_name: Wu Chinese
+    level: language
+    iso639_3: wuu
+    wikidata_qid: Q34290
+    role: language-level node, exact name, ISO wuu
+  - glottocode: sini1245
+    glottolog_name: Sinitic
+    level: family
+    iso639_3: null
+    wikidata_qid: null
+    role: 'family: Sinitic, all Chinese varieties'
+  notes: The chart lists eight Sinitic varieties as separate languages and ranks them separately. Glottolog also has them
+    as separate languages under Sinitic (sini1245), but many sources call all of them dialects of one language, Chinese (ISO
+    macrolanguage zho). Whether the atlas shows Chinese as one language, a family or separate languages is the Lumper/Splitter
+    question for the reviewer.
+- rank: 19
+  chart_name: Tamil
+  glottocode: tami1289
+  glottolog_name: Tamil
+  level: language
+  iso639_3: tam
+  wikidata_qid: Q5885
+  family_path: Dravidian
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 20
+  chart_name: Turkish
+  glottocode: nucl1301
+  glottolog_name: Turkish
+  level: language
+  iso639_3: tur
+  wikidata_qid: Q256
+  family_path: Turkic
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 21
+  chart_name: Korean
+  glottocode: kore1280
+  glottolog_name: Korean
+  level: language
+  iso639_3: kor
+  wikidata_qid: Q9176
+  family_path: Koreanic
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 22
+  chart_name: Vietnamese
+  glottocode: viet1252
+  glottolog_name: Vietnamese
+  level: language
+  iso639_3: vie
+  wikidata_qid: Q9199
+  family_path: Austroasiatic
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 23
+  chart_name: Yue Chinese
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Sino-Tibetan
+  method: exact name match; lumping unresolved
+  confidence: contested
+  mechanical_candidate: yuec1235
+  contested_reason: Chinese as one language versus separate languages
+  candidates:
+  - glottocode: yuec1235
+    glottolog_name: Yue Chinese
+    level: language
+    iso639_3: yue
+    wikidata_qid: Q7033959
+    role: language-level node, exact name, ISO yue
+  - glottocode: sini1245
+    glottolog_name: Sinitic
+    level: family
+    iso639_3: null
+    wikidata_qid: null
+    role: 'family: Sinitic, all Chinese varieties'
+  notes: The chart lists eight Sinitic varieties as separate languages and ranks them separately. Glottolog also has them
+    as separate languages under Sinitic (sini1245), but many sources call all of them dialects of one language, Chinese (ISO
+    macrolanguage zho). Whether the atlas shows Chinese as one language, a family or separate languages is the Lumper/Splitter
+    question for the reviewer.
+- rank: 24
+  chart_name: Javanese
+  glottocode: java1254
+  glottolog_name: Javanese
+  level: language
+  iso639_3: jav
+  wikidata_qid: null
+  family_path: Austronesian
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 25
+  chart_name: Italian
+  glottocode: ital1282
+  glottolog_name: Italian
+  level: language
+  iso639_3: ita
+  wikidata_qid: Q652
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 26
+  chart_name: Egyptian Spoken Arabic
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Afro-Asiatic
+  method: 'manual: ISO arz inferred from the chart name; chart prints no codes'
+  confidence: contested
+  mechanical_candidate: egyp1253
+  contested_reason: language-versus-dialect cut and lumping of Arabic
+  candidates:
+  - glottocode: egyp1253
+    glottolog_name: Egyptian Arabic
+    level: language
+    iso639_3: arz
+    wikidata_qid: Q29919
+    role: language-level node by ISO arz
+  - glottocode: egyp1254
+    glottolog_name: Egypto-Sudanic Arabic
+    level: family
+    iso639_3: null
+    wikidata_qid: Q135994328
+    role: parent grouping in Glottolog
+  - glottocode: arab1395
+    glottolog_name: Arabic
+    level: family
+    iso639_3: null
+    wikidata_qid: Q13955
+    role: 'family: Arabic as a whole'
+  notes: The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
+    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
+    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
+    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer.
+- rank: 27
+  chart_name: Hausa
+  glottocode: haus1257
+  glottolog_name: Hausa
+  level: language
+  iso639_3: hau
+  wikidata_qid: Q56475
+  family_path: Afro-Asiatic
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 28
+  chart_name: Thai
+  glottocode: thai1261
+  glottolog_name: Thai
+  level: language
+  iso639_3: tha
+  wikidata_qid: Q9217
+  family_path: Tai-Kadai
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 29
+  chart_name: Gujarati
+  glottocode: guja1252
+  glottolog_name: Gujarati
+  level: language
+  iso639_3: guj
+  wikidata_qid: Q5137
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 30
+  chart_name: Kannada
+  glottocode: nucl1305
+  glottolog_name: Kannada
+  level: language
+  iso639_3: kan
+  wikidata_qid: Q33673
+  family_path: Dravidian
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 31
+  chart_name: Iranian Persian
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Indo-European
+  method: 'manual: several candidate nodes; no choice made'
+  confidence: contested
+  mechanical_candidate: null
+  contested_reason: Persian as one language, a macrolanguage or a family; Wikidata and ISO disagree about which Glottolog
+    node is Persian
+  candidates:
+  - glottocode: west2369
+    glottolog_name: Western Farsi
+    level: language
+    iso639_3: pes
+    wikidata_qid: Q3513637
+    role: language-level node, ISO pes, Glottolog name "Western Farsi"
+  - glottocode: fars1254
+    glottolog_name: Farsic-Caucasian Tat
+    level: family
+    iso639_3: null
+    wikidata_qid: Q9168
+    role: 'family: Glottolog "Farsic-Caucasian Tat", English name "Persian", Wikidata Q9168, ISO fas'
+  - glottocode: fars1255
+    glottolog_name: Farsic
+    level: family
+    iso639_3: null
+    wikidata_qid: Q12639554
+    role: 'family: Farsic, parent of west2369'
+  - glottocode: dari1249
+    glottolog_name: Dari
+    level: language
+    iso639_3: prs
+    wikidata_qid: Q178440
+    role: 'sibling language: Dari, ISO prs'
+  - glottocode: taji1245
+    glottolog_name: Tajik
+    level: language
+    iso639_3: tgk
+    wikidata_qid: Q9260
+    role: 'sibling language: Tajik, ISO tgk'
+  notes: 'Known issue, described and not resolved. Chart name is "Iranian Persian" (ISO pes in the ISO standard). Glottolog
+    5.3: ISO pes maps to west2369 "Western Farsi" (language, under the family Farsic fars1255). Wikidata Q9168 (Persian) is
+    attached through P1394 to fars1254, a Glottolog family named "Farsic-Caucasian Tat" whose English name in the build is
+    "Persian" and whose endonym is the Persian-script form of Farsi. Wikidata Q3513637 maps to west2369. Dari (dari1249) and
+    Tajik (taji1245) are separate Glottolog languages under Eastern Farsic (east2745), whose name lists include "Persian"
+    and "Farsi" as aliases. A rule-based ISO match would pick west2369; it is not chosen here (D-004: the UI says "Persian";
+    "Farsi" is a search alias only). The reviewer decides between west2369, a Persian grouping built from several nodes, or
+    fars1254.'
+- rank: 32
+  chart_name: Bhojpuri
+  glottocode: bhoj1244
+  glottolog_name: Bhojpuri
+  level: language
+  iso639_3: bho
+  wikidata_qid: Q33268
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 33
+  chart_name: Southern Min Chinese
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Sino-Tibetan
+  method: 'manual: ISO nan inferred from the chart name; chart prints no codes'
+  confidence: contested
+  mechanical_candidate: minn1241
+  contested_reason: Chinese as one language versus separate languages; Southern Min naming
+  candidates:
+  - glottocode: minn1241
+    glottolog_name: Min Nan Chinese
+    level: language
+    iso639_3: nan
+    wikidata_qid: Q36495
+    role: language-level node, ISO nan (Min Nan Chinese)
+  - glottocode: sout3424
+    glottolog_name: Southern Min
+    level: family
+    iso639_3: null
+    wikidata_qid: null
+    role: Southern Min grouping
+  - glottocode: minn1248
+    glottolog_name: Min
+    level: family
+    iso639_3: null
+    wikidata_qid: Q56504
+    role: 'family: Min'
+  notes: The chart lists eight Sinitic varieties as separate languages and ranks them separately. Glottolog also has them
+    as separate languages under Sinitic (sini1245), but many sources call all of them dialects of one language, Chinese (ISO
+    macrolanguage zho). Whether the atlas shows Chinese as one language, a family or separate languages is the Lumper/Splitter
+    question for the reviewer. Chart name "Southern Min Chinese" is not a Glottolog name; Glottolog has Southern Min (sout3424,
+    family) and Min Nan Chinese (minn1241, language).
+- rank: 34
+  chart_name: Hakka Chinese
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Sino-Tibetan
+  method: exact name match; lumping unresolved
+  confidence: contested
+  mechanical_candidate: hakk1236
+  contested_reason: Chinese as one language versus separate languages
+  candidates:
+  - glottocode: hakk1236
+    glottolog_name: Hakka Chinese
+    level: language
+    iso639_3: hak
+    wikidata_qid: Q33375
+    role: language-level node, exact name, ISO hak
+  - glottocode: sini1245
+    glottolog_name: Sinitic
+    level: family
+    iso639_3: null
+    wikidata_qid: null
+    role: 'family: Sinitic, all Chinese varieties'
+  notes: The chart lists eight Sinitic varieties as separate languages and ranks them separately. Glottolog also has them
+    as separate languages under Sinitic (sini1245), but many sources call all of them dialects of one language, Chinese (ISO
+    macrolanguage zho). Whether the atlas shows Chinese as one language, a family or separate languages is the Lumper/Splitter
+    question for the reviewer.
+- rank: 35
+  chart_name: Jinyu Chinese
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Sino-Tibetan
+  method: exact name match; lumping unresolved
+  confidence: contested
+  mechanical_candidate: jiny1235
+  contested_reason: Chinese as one language versus separate languages
+  candidates:
+  - glottocode: jiny1235
+    glottolog_name: Jinyu Chinese
+    level: language
+    iso639_3: cjy
+    wikidata_qid: Q56479
+    role: language-level node, exact name, ISO cjy
+  - glottocode: sini1245
+    glottolog_name: Sinitic
+    level: family
+    iso639_3: null
+    wikidata_qid: null
+    role: 'family: Sinitic, all Chinese varieties'
+  notes: The chart lists eight Sinitic varieties as separate languages and ranks them separately. Glottolog also has them
+    as separate languages under Sinitic (sini1245), but many sources call all of them dialects of one language, Chinese (ISO
+    macrolanguage zho). Whether the atlas shows Chinese as one language, a family or separate languages is the Lumper/Splitter
+    question for the reviewer.
+- rank: 36
+  chart_name: Filipino
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Austronesian
+  method: exact name match; lumping unresolved
+  confidence: contested
+  mechanical_candidate: fili1244
+  contested_reason: Filipino and Tagalog as one language or two
+  candidates:
+  - glottocode: fili1244
+    glottolog_name: Filipino
+    level: language
+    iso639_3: fil
+    wikidata_qid: Q33298
+    role: language-level node, exact name, ISO fil
+  - glottocode: taga1269
+    glottolog_name: Tagalog-Filipino
+    level: family
+    iso639_3: null
+    wikidata_qid: Q34057
+    role: 'family: Tagalog-Filipino, Q34057'
+  notes: Exact name match. Glottolog has Filipino and Tagalog as separate languages under Tagalog-Filipino (taga1269). The
+    chart ranks them separately (ranks 36 and 59). The reviewer decides.
+- rank: 37
+  chart_name: Burmese
+  glottocode: nucl1310
+  glottolog_name: Burmese
+  level: language
+  iso639_3: mya
+  wikidata_qid: Q9228
+  family_path: Sino-Tibetan
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 38
+  chart_name: Polish
+  glottocode: poli1260
+  glottolog_name: Polish
+  level: language
+  iso639_3: pol
+  wikidata_qid: Q809
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 39
+  chart_name: Yoruba
+  glottocode: yoru1245
+  glottolog_name: Yoruba
+  level: language
+  iso639_3: yor
+  wikidata_qid: Q34311
+  family_path: Atlantic-Congo
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 40
+  chart_name: Odia
+  glottocode: oriy1255
+  glottolog_name: Odia
+  level: language
+  iso639_3: ory
+  wikidata_qid: Q33810
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 41
+  chart_name: Malayalam
+  glottocode: mala1464
+  glottolog_name: Malayalam
+  level: language
+  iso639_3: mal
+  wikidata_qid: Q36236
+  family_path: Dravidian
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 42
+  chart_name: Xiang Chinese
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Sino-Tibetan
+  method: exact name match; lumping unresolved
+  confidence: contested
+  mechanical_candidate: xian1251
+  contested_reason: Chinese as one language versus separate languages
+  candidates:
+  - glottocode: xian1251
+    glottolog_name: Xiang Chinese
+    level: language
+    iso639_3: hsn
+    wikidata_qid: Q13220
+    role: language-level node, exact name, ISO hsn
+  - glottocode: sini1245
+    glottolog_name: Sinitic
+    level: family
+    iso639_3: null
+    wikidata_qid: null
+    role: 'family: Sinitic, all Chinese varieties'
+  notes: The chart lists eight Sinitic varieties as separate languages and ranks them separately. Glottolog also has them
+    as separate languages under Sinitic (sini1245), but many sources call all of them dialects of one language, Chinese (ISO
+    macrolanguage zho). Whether the atlas shows Chinese as one language, a family or separate languages is the Lumper/Splitter
+    question for the reviewer.
+- rank: 43
+  chart_name: Maithili
+  glottocode: mait1250
+  glottolog_name: Maithili
+  level: language
+  iso639_3: mai
+  wikidata_qid: Q36109
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 44
+  chart_name: Ukrainian
+  glottocode: ukra1253
+  glottolog_name: Ukrainian
+  level: language
+  iso639_3: ukr
+  wikidata_qid: Q8798
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 45
+  chart_name: Moroccan Spoken Arabic
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Afro-Asiatic
+  method: 'manual: ISO ary inferred from the chart name; chart prints no codes'
+  confidence: contested
+  mechanical_candidate: moro1292
+  contested_reason: language-versus-dialect cut and lumping of Arabic
+  candidates:
+  - glottocode: moro1292
+    glottolog_name: Moroccan Arabic
+    level: language
+    iso639_3: ary
+    wikidata_qid: Q56426
+    role: language-level node by ISO ary
+  - glottocode: magh1239
+    glottolog_name: Maghrebi
+    level: family
+    iso639_3: null
+    wikidata_qid: null
+    role: parent grouping in Glottolog
+  - glottocode: arab1395
+    glottolog_name: Arabic
+    level: family
+    iso639_3: null
+    wikidata_qid: Q13955
+    role: 'family: Arabic as a whole'
+  notes: The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
+    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
+    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
+    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer.
+- rank: 46
+  chart_name: Eastern Punjabi
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Indo-European
+  method: 'manual: spelling variant of an exact match; lumping unresolved'
+  confidence: contested
+  mechanical_candidate: panj1256
+  contested_reason: Punjabi as one language versus Eastern and Western Punjabi
+  candidates:
+  - glottocode: panj1256
+    glottolog_name: Eastern Panjabi
+    level: language
+    iso639_3: pan
+    wikidata_qid: null
+    role: language-level node, ISO pan (Eastern Panjabi)
+  - glottocode: east2727
+    glottolog_name: Eastern Panjabic
+    level: family
+    iso639_3: null
+    wikidata_qid: null
+    role: 'family: Eastern Panjabic'
+  - glottocode: lahn1241
+    glottolog_name: Greater Panjabic
+    level: family
+    iso639_3: null
+    wikidata_qid: Q2656685
+    role: 'family: Greater Panjabic'
+  notes: Chart "Eastern Punjabi" matches ISO pan. Glottolog name is "Eastern Panjabi". The chart treats it as separate from
+    Western Punjabi (rank 17); the ISO standard has a single Punjabi (pan). The reviewer decides whether the atlas shows Punjabi
+    as one language.
+- rank: 47
+  chart_name: Sunda
+  glottocode: sund1252
+  glottolog_name: Sundanese
+  level: language
+  iso639_3: sun
+  wikidata_qid: null
+  family_path: Austronesian
+  method: ISO match (sun); chart name Sunda is the short form of Sundanese
+  confidence: medium
+  notes: Glottolog name is Sundanese. Wikidata QID is null in the build.
+- rank: 48
+  chart_name: Algerian Spoken Arabic
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Afro-Asiatic
+  method: 'manual: ISO arq inferred from the chart name; chart prints no codes'
+  confidence: contested
+  mechanical_candidate: alge1239
+  contested_reason: language-versus-dialect cut and lumping of Arabic
+  candidates:
+  - glottocode: alge1239
+    glottolog_name: Algerian Arabic
+    level: language
+    iso639_3: arq
+    wikidata_qid: Q56499
+    role: language-level node by ISO arq
+  - glottocode: magh1239
+    glottolog_name: Maghrebi
+    level: family
+    iso639_3: null
+    wikidata_qid: null
+    role: parent grouping in Glottolog
+  - glottocode: arab1395
+    glottolog_name: Arabic
+    level: family
+    iso639_3: null
+    wikidata_qid: Q13955
+    role: 'family: Arabic as a whole'
+  notes: The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
+    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
+    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
+    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer.
+- rank: 49
+  chart_name: Sudanese Spoken Arabic
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Afro-Asiatic
+  method: 'manual: ISO apd inferred from the chart name; chart prints no codes'
+  confidence: contested
+  mechanical_candidate: suda1236
+  contested_reason: language-versus-dialect cut and lumping of Arabic
+  candidates:
+  - glottocode: suda1236
+    glottolog_name: Sudanese Arabic
+    level: language
+    iso639_3: apd
+    wikidata_qid: Q56573
+    role: language-level node by ISO apd
+  - glottocode: egyp1254
+    glottolog_name: Egypto-Sudanic Arabic
+    level: family
+    iso639_3: null
+    wikidata_qid: Q135994328
+    role: parent grouping in Glottolog
+  - glottocode: arab1395
+    glottolog_name: Arabic
+    level: family
+    iso639_3: null
+    wikidata_qid: Q13955
+    role: 'family: Arabic as a whole'
+  notes: The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
+    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
+    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
+    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer.
+- rank: 50
+  chart_name: Nigerian Pidgin
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Indo-European
+  method: exact name match; classification unresolved
+  confidence: contested
+  mechanical_candidate: nige1257
+  contested_reason: pidgin or creole versus English dialect; where it sits in the tree
+  candidates:
+  - glottocode: nige1257
+    glottolog_name: Nigerian Pidgin
+    level: language
+    iso639_3: pcm
+    wikidata_qid: Q33655
+    role: language-level node, exact name, ISO pcm
+  - glottocode: nige1262
+    glottolog_name: Nigerian-Ghanaian Krio
+    level: family
+    iso639_3: null
+    wikidata_qid: null
+    role: 'family: Nigerian-Ghanaian Krio'
+  notes: Exact name match. Glottolog files Nigerian Pidgin under West African Creole English inside Macro-English, so it falls
+    under Indo-European, Germanic. Whether a pidgin or creole belongs on the family tree at all, and under which family, is
+    contested. The chart groups it with Indo-European.
+- rank: 51
+  chart_name: Zulu
+  glottocode: zulu1248
+  glottolog_name: Zulu
+  level: language
+  iso639_3: zul
+  wikidata_qid: Q10179
+  family_path: Atlantic-Congo
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 52
+  chart_name: Igbo
+  glottocode: nucl1417
+  glottolog_name: Igbo
+  level: language
+  iso639_3: ibo
+  wikidata_qid: Q33578
+  family_path: Atlantic-Congo
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 53
+  chart_name: Amharic
+  glottocode: amha1245
+  glottolog_name: Amharic
+  level: language
+  iso639_3: amh
+  wikidata_qid: Q28244
+  family_path: Afro-Asiatic
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 54
+  chart_name: Northern Uzbek
+  glottocode: nort2690
+  glottolog_name: Northern Uzbek
+  level: language
+  iso639_3: uzn
+  wikidata_qid: Q1066766
+  family_path: Turkic
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 55
+  chart_name: Sindhi
+  glottocode: sind1272
+  glottolog_name: Sindhi
+  level: language
+  iso639_3: snd
+  wikidata_qid: Q33997
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 56
+  chart_name: North Levantine Spoken Arabic
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Afro-Asiatic
+  method: 'manual: ISO apc inferred from the chart name; chart prints no codes'
+  confidence: contested
+  mechanical_candidate: nort3139
+  contested_reason: chart splits Levantine Arabic in two; Glottolog has one language
+  candidates:
+  - glottocode: nort3139
+    glottolog_name: Levantine Arabic
+    level: language
+    iso639_3: apc
+    wikidata_qid: Q56593
+    role: language-level node, ISO apc (Levantine Arabic; Glottolog does not split north and south at language level)
+  - glottocode: leva1239
+    glottolog_name: Levantine-Cypriot Arabic
+    level: family
+    iso639_3: null
+    wikidata_qid: null
+    role: 'parent grouping: Levantine-Cypriot Arabic'
+  - glottocode: arab1395
+    glottolog_name: Arabic
+    level: family
+    iso639_3: null
+    wikidata_qid: Q13955
+    role: 'family: Arabic as a whole'
+  notes: The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
+    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
+    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
+    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer. Chart ranks 56 (North Levantine)
+    and 98 (South Levantine) both fall on Glottolog nort3139 or its dialect sout3123.
+- rank: 57
+  chart_name: Nepali
+  glottocode: nepa1254
+  glottolog_name: Nepali
+  level: language
+  iso639_3: npi
+  wikidata_qid: Q33823
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 58
+  chart_name: Romanian
+  glottocode: roma1327
+  glottolog_name: Romanian
+  level: language
+  iso639_3: ron
+  wikidata_qid: Q7913
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 59
+  chart_name: Tagalog
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Austronesian
+  method: exact name match; lumping unresolved
+  confidence: contested
+  mechanical_candidate: taga1270
+  contested_reason: Filipino and Tagalog as one language or two
+  candidates:
+  - glottocode: taga1270
+    glottolog_name: Tagalog
+    level: language
+    iso639_3: tgl
+    wikidata_qid: null
+    role: language-level node, exact name, ISO tgl
+  - glottocode: taga1269
+    glottolog_name: Tagalog-Filipino
+    level: family
+    iso639_3: null
+    wikidata_qid: Q34057
+    role: 'family: Tagalog-Filipino, Q34057'
+  notes: Exact name match. See rank 36. The Wikidata QID for taga1270 is null in the build.
+- rank: 60
+  chart_name: Dutch
+  glottocode: dutc1256
+  glottolog_name: Dutch
+  level: language
+  iso639_3: nld
+  wikidata_qid: Q7411
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 61
+  chart_name: Sa'idi Spoken Arabic
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Afro-Asiatic
+  method: 'manual: ISO aec inferred from the chart name; chart prints no codes'
+  confidence: contested
+  mechanical_candidate: said1239
+  contested_reason: language-versus-dialect cut and lumping of Arabic
+  candidates:
+  - glottocode: said1239
+    glottolog_name: Saidi Arabic
+    level: language
+    iso639_3: aec
+    wikidata_qid: Q56592
+    role: language-level node by ISO aec
+  - glottocode: egyp1254
+    glottolog_name: Egypto-Sudanic Arabic
+    level: family
+    iso639_3: null
+    wikidata_qid: Q135994328
+    role: parent grouping in Glottolog
+  - glottocode: arab1395
+    glottolog_name: Arabic
+    level: family
+    iso639_3: null
+    wikidata_qid: Q13955
+    role: 'family: Arabic as a whole'
+  notes: The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
+    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
+    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
+    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer.
+- rank: 62
+  chart_name: Gan Chinese
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Sino-Tibetan
+  method: exact name match; lumping unresolved
+  confidence: contested
+  mechanical_candidate: ganc1239
+  contested_reason: Chinese as one language versus separate languages
+  candidates:
+  - glottocode: ganc1239
+    glottolog_name: Gan Chinese
+    level: language
+    iso639_3: gan
+    wikidata_qid: Q33475
+    role: language-level node, exact name, ISO gan
+  - glottocode: sini1245
+    glottolog_name: Sinitic
+    level: family
+    iso639_3: null
+    wikidata_qid: null
+    role: 'family: Sinitic, all Chinese varieties'
+  notes: The chart lists eight Sinitic varieties as separate languages and ranks them separately. Glottolog also has them
+    as separate languages under Sinitic (sini1245), but many sources call all of them dialects of one language, Chinese (ISO
+    macrolanguage zho). Whether the atlas shows Chinese as one language, a family or separate languages is the Lumper/Splitter
+    question for the reviewer.
+- rank: 63
+  chart_name: Northern Pashto
+  glottocode: nort2646
+  glottolog_name: Northern Pashto
+  level: language
+  iso639_3: pbu
+  wikidata_qid: Q12642194
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 64
+  chart_name: Magahi
+  glottocode: maga1260
+  glottolog_name: Magahi
+  level: language
+  iso639_3: mag
+  wikidata_qid: Q33728
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 65
+  chart_name: Saraiki
+  glottocode: sera1259
+  glottolog_name: Saraiki
+  level: language
+  iso639_3: skr
+  wikidata_qid: Q33902
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 66
+  chart_name: Xhosa
+  glottocode: xhos1239
+  glottolog_name: Xhosa
+  level: language
+  iso639_3: xho
+  wikidata_qid: Q13218
+  family_path: Atlantic-Congo
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 67
+  chart_name: Malay
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Austronesian
+  method: 'manual: no unique candidate'
+  confidence: contested
+  mechanical_candidate: null
+  contested_reason: Malay and Indonesian as one language or two; which Malay
+  candidates:
+  - glottocode: stan1306
+    glottolog_name: Standard Malay
+    level: language
+    iso639_3: zsm
+    wikidata_qid: Q123474569
+    role: language-level node, ISO zsm (Standard Malay)
+  - glottocode: mala1546
+    glottolog_name: Malay (individual language)
+    level: language
+    iso639_3: mly
+    wikidata_qid: Q9237
+    role: '"Malay (individual language)", ISO mly; Glottolog parks it under Bookkeeping, outside the tree'
+  - glottocode: mala1479
+    glottolog_name: Central Malay
+    level: language
+    iso639_3: zlm
+    wikidata_qid: null
+    role: Central Malay, ISO zlm
+  - glottocode: stan1327
+    glottolog_name: Standard Malay-Indonesian
+    level: family
+    iso639_3: null
+    wikidata_qid: Q110621927
+    role: 'family: Standard Malay-Indonesian'
+  notes: No exact name match for "Malay" among Glottolog language names. Several Malay nodes exist (see candidates) and the
+    chart does not say which code it uses. The reviewer decides. The mechanical candidate is null because no node fits uniquely.
+- rank: 68
+  chart_name: Khmer
+  glottocode: cent1989
+  glottolog_name: Central Khmer
+  level: language
+  iso639_3: khm
+  wikidata_qid: Q9205
+  family_path: Austroasiatic
+  method: ISO match (khm)
+  confidence: medium
+  notes: Glottolog name is Central Khmer. Wikidata Q9205 (Khmer) is also claimed by the family khme1253 Khmeric, so the QID
+    is shared; kept here because it is the language-level node with ISO khm.
+- rank: 69
+  chart_name: Afrikaans
+  glottocode: afri1274
+  glottolog_name: Afrikaans
+  level: language
+  iso639_3: afr
+  wikidata_qid: Q14196
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 70
+  chart_name: Sinhala
+  glottocode: sinh1246
+  glottolog_name: Sinhala
+  level: language
+  iso639_3: sin
+  wikidata_qid: Q13267
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 71
+  chart_name: Somali
+  glottocode: soma1255
+  glottolog_name: Somali
+  level: language
+  iso639_3: som
+  wikidata_qid: Q13275
+  family_path: Afro-Asiatic
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 72
+  chart_name: Chhattisgarhi
+  glottocode: chha1249
+  glottolog_name: Chhattisgarhi
+  level: language
+  iso639_3: hne
+  wikidata_qid: Q33158
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 73
+  chart_name: Cebuano
+  glottocode: cebu1242
+  glottolog_name: Cebuano
+  level: language
+  iso639_3: ceb
+  wikidata_qid: Q33239
+  family_path: Austronesian
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 74
+  chart_name: Mesopotamian Spoken Arabic
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Afro-Asiatic
+  method: 'manual: ISO acm inferred from the chart name; chart prints no codes'
+  confidence: contested
+  mechanical_candidate: meso1252
+  contested_reason: language-versus-dialect cut and lumping of Arabic
+  candidates:
+  - glottocode: meso1252
+    glottolog_name: Gilit Mesopotamian Arabic
+    level: language
+    iso639_3: acm
+    wikidata_qid: Q115978649
+    role: language-level node by ISO acm
+  - glottocode: east2729
+    glottolog_name: Eastern Arabic
+    level: family
+    iso639_3: null
+    wikidata_qid: null
+    role: parent grouping in Glottolog
+  - glottocode: arab1395
+    glottolog_name: Arabic
+    level: family
+    iso639_3: null
+    wikidata_qid: Q13955
+    role: 'family: Arabic as a whole'
+  notes: 'The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
+    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
+    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
+    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer. Glottolog name is "Gilit
+    Mesopotamian Arabic": it may cover only the Gilit group, not all Mesopotamian Arabic.'
+- rank: 75
+  chart_name: Assamese
+  glottocode: assa1263
+  glottolog_name: Assamese
+  level: language
+  iso639_3: asm
+  wikidata_qid: Q29401
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 76
+  chart_name: Northeastern Thai
+  glottocode: nort2741
+  glottolog_name: Northeastern Thai
+  level: language
+  iso639_3: tts
+  wikidata_qid: Q33417
+  family_path: Tai-Kadai
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 77
+  chart_name: Northern Kurdish
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Indo-European
+  method: exact name match; lumping unresolved
+  confidence: contested
+  mechanical_candidate: nort2641
+  contested_reason: Kurdish as one language versus Northern, Central and Southern Kurdish
+  candidates:
+  - glottocode: nort2641
+    glottolog_name: Northern Kurdish
+    level: language
+    iso639_3: kmr
+    wikidata_qid: Q36163
+    role: language-level node, exact name, ISO kmr
+  - glottocode: kurd1259
+    glottolog_name: Kurdish
+    level: family
+    iso639_3: kur
+    wikidata_qid: Q36368
+    role: Kurdish, ISO kur; Glottolog marks it as a family
+  notes: Exact name match. Glottolog has Kurdish (kurd1259, ISO kur) as a family node under Laki-Kurdish (laki1246), with
+    Northern Kurdish as a language below it in the build. Many sources treat Northern, Central and Southern Kurdish as one
+    language. The reviewer decides.
+- rank: 78
+  chart_name: Hijazi Spoken Arabic
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Afro-Asiatic
+  method: 'manual: ISO acw inferred from the chart name; chart prints no codes'
+  confidence: contested
+  mechanical_candidate: hija1235
+  contested_reason: language-versus-dialect cut and lumping of Arabic
+  candidates:
+  - glottocode: hija1235
+    glottolog_name: Hijazi Arabic
+    level: language
+    iso639_3: acw
+    wikidata_qid: Q56608
+    role: language-level node by ISO acw
+  - glottocode: arab1393
+    glottolog_name: Arabian Peninsula Arabic
+    level: family
+    iso639_3: null
+    wikidata_qid: Q15043573
+    role: parent grouping in Glottolog
+  - glottocode: arab1395
+    glottolog_name: Arabic
+    level: family
+    iso639_3: null
+    wikidata_qid: Q13955
+    role: 'family: Arabic as a whole'
+  notes: The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
+    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
+    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
+    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer.
+- rank: 79
+  chart_name: Nigerian Fulfulde
+  glottocode: nige1253
+  glottolog_name: Hausa States Fulfulde
+  level: language
+  iso639_3: fuv
+  wikidata_qid: Q36129
+  family_path: Atlantic-Congo
+  method: ISO match (fuv, Nigerian Fulfulde)
+  confidence: medium
+  notes: Glottolog name is Hausa States Fulfulde (nige1253), under Eastern Fula. Glottolog has no language called Nigerian
+    Fulfulde.
+- rank: 80
+  chart_name: Bavarian
+  glottocode: bava1246
+  glottolog_name: Bavarian
+  level: language
+  iso639_3: bar
+  wikidata_qid: Q29540
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 81
+  chart_name: Bamanankan
+  glottocode: bamb1269
+  glottolog_name: Bambara
+  level: language
+  iso639_3: bam
+  wikidata_qid: Q33243
+  family_path: Mande
+  method: ISO match (bam); chart uses the endonym Bamanankan
+  confidence: medium
+  notes: Glottolog name is Bambara.
+- rank: 82
+  chart_name: South Azerbaijani
+  glottocode: sout2697
+  glottolog_name: South Azerbaijani
+  level: language
+  iso639_3: azb
+  wikidata_qid: Q3449805
+  family_path: Turkic
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 83
+  chart_name: Northern Sotho
+  glottocode: pedi1238
+  glottolog_name: Pedi
+  level: language
+  iso639_3: nso
+  wikidata_qid: null
+  family_path: Atlantic-Congo
+  method: 'manual: exact name "Northern Sotho" hits only the family nort3233; the language-level node with ISO nso is Pedi'
+  confidence: medium
+  notes: 'Glottolog: Northern Sotho (nort3233, family, Q33890) > Sepedic (sepe1241) > Pedi (pedi1238, nso). Wikidata Q33890
+    sits on the family. The reviewer may prefer the family node.'
+- rank: 84
+  chart_name: Setswana
+  glottocode: tswa1253
+  glottolog_name: Tswana
+  level: language
+  iso639_3: tsn
+  wikidata_qid: Q34137
+  family_path: Atlantic-Congo
+  method: ISO match (tsn); chart uses the endonym Setswana
+  confidence: medium
+  notes: Glottolog name is Tswana.
+- rank: 85
+  chart_name: Southern Sotho
+  glottocode: sout2807
+  glottolog_name: Southern Sotho
+  level: language
+  iso639_3: sot
+  wikidata_qid: Q34340
+  family_path: Atlantic-Congo
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 86
+  chart_name: Czech
+  glottocode: czec1258
+  glottolog_name: Czech
+  level: language
+  iso639_3: ces
+  wikidata_qid: Q9056
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 87
+  chart_name: Greek
+  glottocode: mode1248
+  glottolog_name: Modern Greek
+  level: language
+  iso639_3: ell
+  wikidata_qid: Q36510
+  family_path: Indo-European
+  method: 'manual: exact name "Greek" hits only the family gree1276; the language-level node with ISO ell is Modern Greek'
+  confidence: medium
+  notes: Chart Greek is read as the modern language. Glottolog Greek (gree1276, Q9129) is a family that also holds Ancient
+    Greek and others.
+- rank: 88
+  chart_name: Chittagonian
+  glottocode: chit1275
+  glottolog_name: Chittagonian
+  level: language
+  iso639_3: ctg
+  wikidata_qid: Q33173
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 89
+  chart_name: Kazakh
+  glottocode: kaza1248
+  glottolog_name: Kazakh
+  level: language
+  iso639_3: kaz
+  wikidata_qid: Q9252
+  family_path: Turkic
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 90
+  chart_name: Swedish
+  glottocode: swed1254
+  glottolog_name: Swedish
+  level: language
+  iso639_3: swe
+  wikidata_qid: Q9027
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 91
+  chart_name: Deccan
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Indo-European
+  method: 'manual: closest node; language-versus-dialect unresolved'
+  confidence: contested
+  mechanical_candidate: decc1239
+  contested_reason: language versus dialect
+  candidates:
+  - glottocode: decc1239
+    glottolog_name: Deccan Marathi
+    level: dialect
+    iso639_3: dcc
+    wikidata_qid: Q86753925
+    role: 'dialect-level node: Deccan Marathi, ISO dcc'
+  - glottocode: mara1378
+    glottolog_name: Marathi
+    level: language
+    iso639_3: mar
+    wikidata_qid: Q1571
+    role: 'parent language: Marathi'
+  notes: The chart ranks Deccan as a language. Glottolog 5.3 has only Deccan Marathi (decc1239), a dialect of Marathi, with
+    ISO dcc attached. A dialect may not get its own language page. The reviewer decides.
+- rank: 92
+  chart_name: Hungarian
+  glottocode: hung1274
+  glottolog_name: Hungarian
+  level: language
+  iso639_3: hun
+  wikidata_qid: Q9067
+  family_path: Uralic
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 93
+  chart_name: Jula
+  glottocode: dyul1238
+  glottolog_name: Dyula
+  level: language
+  iso639_3: dyu
+  wikidata_qid: Q32706
+  family_path: Mande
+  method: ISO match (dyu); chart spelling Jula is a variant of Dyula
+  confidence: medium
+  notes: Glottolog name is Dyula (East Manding).
+- rank: 94
+  chart_name: Sadri
+  glottocode: sadr1248
+  glottolog_name: Sadri
+  level: language
+  iso639_3: sck
+  wikidata_qid: Q765922
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 95
+  chart_name: Kinyarwanda
+  glottocode: kiny1244
+  glottolog_name: Kinyarwanda
+  level: language
+  iso639_3: kin
+  wikidata_qid: Q33573
+  family_path: Atlantic-Congo
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 96
+  chart_name: Cameroonian Pidgin
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Indo-European
+  method: 'manual: name variant (Cameroonian and Cameroon); classification unresolved'
+  confidence: contested
+  mechanical_candidate: came1254
+  contested_reason: pidgin or creole versus English dialect; where it sits in the tree
+  candidates:
+  - glottocode: came1254
+    glottolog_name: Cameroon Pidgin
+    level: language
+    iso639_3: wes
+    wikidata_qid: Q35541
+    role: language-level node, ISO wes (Cameroon Pidgin)
+  - glottocode: coas1331
+    glottolog_name: Coastal Nigerian Krio
+    level: family
+    iso639_3: null
+    wikidata_qid: null
+    role: 'family: Coastal Nigerian Krio'
+  notes: Chart "Cameroonian Pidgin"; Glottolog name is "Cameroon Pidgin". Same classification question as Nigerian Pidgin
+    (rank 50). The reviewer decides.
+- rank: 97
+  chart_name: Sylheti
+  glottocode: sylh1242
+  glottolog_name: Sylheti
+  level: language
+  iso639_3: syl
+  wikidata_qid: Q2044560
+  family_path: Indo-European
+  method: exact name match
+  confidence: high
+  notes: null
+- rank: 98
+  chart_name: South Levantine Spoken Arabic
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Afro-Asiatic
+  method: 'manual: ISO ajp inferred from the chart name; chart prints no codes'
+  confidence: contested
+  mechanical_candidate: sout3123
+  contested_reason: chart splits Levantine Arabic in two; Glottolog has one language with a South Levantine dialect
+  candidates:
+  - glottocode: sout3123
+    glottolog_name: South Levantine Arabic
+    level: dialect
+    iso639_3: ajp
+    wikidata_qid: Q55633582
+    role: dialect-level node, ISO ajp (South Levantine Arabic)
+  - glottocode: nort3139
+    glottolog_name: Levantine Arabic
+    level: language
+    iso639_3: apc
+    wikidata_qid: Q56593
+    role: 'parent language: Levantine Arabic, ISO apc'
+  - glottocode: arab1395
+    glottolog_name: Arabic
+    level: family
+    iso639_3: null
+    wikidata_qid: Q13955
+    role: 'family: Arabic as a whole'
+  notes: The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
+    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
+    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
+    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer. This is a dialect in Glottolog,
+    so it may not get its own language page.
+- rank: 99
+  chart_name: Tunisian Spoken Arabic
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Afro-Asiatic
+  method: 'manual: ISO aeb inferred from the chart name; chart prints no codes'
+  confidence: contested
+  mechanical_candidate: tuni1259
+  contested_reason: language-versus-dialect cut and lumping of Arabic
+  candidates:
+  - glottocode: tuni1259
+    glottolog_name: Tunisian Arabic
+    level: language
+    iso639_3: aeb
+    wikidata_qid: Q56240
+    role: language-level node by ISO aeb
+  - glottocode: magh1239
+    glottolog_name: Maghrebi
+    level: family
+    iso639_3: null
+    wikidata_qid: null
+    role: parent grouping in Glottolog
+  - glottocode: arab1395
+    glottolog_name: Arabic
+    level: family
+    iso639_3: null
+    wikidata_qid: Q13955
+    role: 'family: Arabic as a whole'
+  notes: The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
+    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
+    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
+    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer.
+- rank: 100
+  chart_name: Sanaani Spoken Arabic
+  glottocode: null
+  glottolog_name: null
+  level: null
+  iso639_3: null
+  wikidata_qid: null
+  family_path: Afro-Asiatic
+  method: 'manual: ISO ayn inferred from the chart name; chart prints no codes'
+  confidence: contested
+  mechanical_candidate: sana1295
+  contested_reason: language-versus-dialect cut and lumping of Arabic
+  candidates:
+  - glottocode: sana1295
+    glottolog_name: Sanaani Arabic
+    level: language
+    iso639_3: ayn
+    wikidata_qid: Q56578
+    role: language-level node by ISO ayn
+  - glottocode: arab1393
+    glottolog_name: Arabian Peninsula Arabic
+    level: family
+    iso639_3: null
+    wikidata_qid: Q15043573
+    role: parent grouping in Glottolog
+  - glottocode: arab1395
+    glottolog_name: Arabic
+    level: family
+    iso639_3: null
+    wikidata_qid: Q13955
+    role: 'family: Arabic as a whole'
+  notes: The chart splits Arabic into Standard Arabic plus spoken varieties named by country or region. Glottolog also lists
+    Standard Arabic (stan1318) beside many spoken Arabic languages under the family Arabic (arab1395, ISO ara), but its groupings
+    and language-versus-dialect cuts differ from the chart. Whether Arabic is one language, a macrolanguage or a family, and
+    which spoken variety counts as a language, is the Lumper/Splitter question for the reviewer.
+
+families:
+- glottocode: afro1255
+  name: Afro-Asiatic
+  parent_glottocode: null
+  wikidata_qid: Q25268
+  depth: 0
+  top_level: Afro-Asiatic
+- glottocode: atla1278
+  name: Atlantic-Congo
+  parent_glottocode: null
+  wikidata_qid: Q771124
+  depth: 0
+  top_level: Atlantic-Congo
+- glottocode: aust1305
+  name: Austroasiatic
+  parent_glottocode: null
+  wikidata_qid: Q33199
+  depth: 0
+  top_level: Austroasiatic
+- glottocode: aust1307
+  name: Austronesian
+  parent_glottocode: null
+  wikidata_qid: Q49228
+  depth: 0
+  top_level: Austronesian
+- glottocode: drav1251
+  name: Dravidian
+  parent_glottocode: null
+  wikidata_qid: null
+  depth: 0
+  top_level: Dravidian
+- glottocode: indo1319
+  name: Indo-European
+  parent_glottocode: null
+  wikidata_qid: Q19860
+  depth: 0
+  top_level: Indo-European
+- glottocode: japo1237
+  name: Japonic
+  parent_glottocode: null
+  wikidata_qid: Q33612
+  depth: 0
+  top_level: Japonic
+- glottocode: kore1284
+  name: Koreanic
+  parent_glottocode: null
+  wikidata_qid: Q11263525
+  depth: 0
+  top_level: Koreanic
+- glottocode: mand1469
+  name: Mande
+  parent_glottocode: null
+  wikidata_qid: Q33681
+  depth: 0
+  top_level: Mande
+- glottocode: sino1245
+  name: Sino-Tibetan
+  parent_glottocode: null
+  wikidata_qid: Q45961
+  depth: 0
+  top_level: Sino-Tibetan
+- glottocode: taik1256
+  name: Tai-Kadai
+  parent_glottocode: null
+  wikidata_qid: null
+  depth: 0
+  top_level: Tai-Kadai
+- glottocode: turk1311
+  name: Turkic
+  parent_glottocode: null
+  wikidata_qid: Q34090
+  depth: 0
+  top_level: Turkic
+- glottocode: ural1272
+  name: Uralic
+  parent_glottocode: null
+  wikidata_qid: Q34113
+  depth: 0
+  top_level: Uralic
+- glottocode: burm1265
+  name: Burmo-Qiangic
+  parent_glottocode: sino1245
+  wikidata_qid: Q16056278
+  depth: 1
+  top_level: Sino-Tibetan
+- glottocode: chad1250
+  name: Chadic
+  parent_glottocode: afro1255
+  wikidata_qid: Q33184
+  depth: 1
+  top_level: Afro-Asiatic
+- glottocode: clas1257
+  name: Classical Indo-European
+  parent_glottocode: indo1319
+  wikidata_qid: null
+  depth: 1
+  top_level: Indo-European
+- glottocode: comm1245
+  name: Common Turkic
+  parent_glottocode: turk1311
+  wikidata_qid: Q1126028
+  depth: 1
+  top_level: Turkic
+- glottocode: cush1243
+  name: Cushitic
+  parent_glottocode: afro1255
+  wikidata_qid: Q33248
+  depth: 1
+  top_level: Afro-Asiatic
+- glottocode: hung1287
+  name: Hungaric
+  parent_glottocode: ural1272
+  wikidata_qid: null
+  depth: 1
+  top_level: Uralic
+- glottocode: japa1256
+  name: Japanesic
+  parent_glottocode: japo1237
+  wikidata_qid: null
+  depth: 1
+  top_level: Japonic
+- glottocode: kamt1241
+  name: Kam-Tai
+  parent_glottocode: taik1256
+  wikidata_qid: Q4921933
+  depth: 1
+  top_level: Tai-Kadai
+- glottocode: khme1253
+  name: Khmeric
+  parent_glottocode: aust1305
+  wikidata_qid: Q9205
+  depth: 1
+  top_level: Austroasiatic
+- glottocode: mala1545
+  name: Malayo-Polynesian
+  parent_glottocode: aust1307
+  wikidata_qid: Q143158
+  depth: 1
+  top_level: Austronesian
+- glottocode: nort3146
+  name: North-Central Atlantic
+  parent_glottocode: atla1278
+  wikidata_qid: null
+  depth: 1
+  top_level: Atlantic-Congo
+- glottocode: semi1276
+  name: Semitic
+  parent_glottocode: afro1255
+  wikidata_qid: Q34049
+  depth: 1
+  top_level: Afro-Asiatic
+- glottocode: sini1245
+  name: Sinitic
+  parent_glottocode: sino1245
+  wikidata_qid: null
+  depth: 1
+  top_level: Sino-Tibetan
+- glottocode: sout3133
+  name: South Dravidian
+  parent_glottocode: drav1251
+  wikidata_qid: Q128886618
+  depth: 1
+  top_level: Dravidian
+- glottocode: viet1250
+  name: Vietic
+  parent_glottocode: aust1305
+  wikidata_qid: null
+  depth: 1
+  top_level: Austroasiatic
+- glottocode: volt1241
+  name: Volta-Congo
+  parent_glottocode: atla1278
+  wikidata_qid: Q37228
+  depth: 1
+  top_level: Atlantic-Congo
+- glottocode: west2780
+  name: Western Mande
+  parent_glottocode: mand1469
+  wikidata_qid: Q16113831
+  depth: 1
+  top_level: Mande
+- glottocode: balt1263
+  name: Balto-Slavic
+  parent_glottocode: clas1257
+  wikidata_qid: Q147356
+  depth: 2
+  top_level: Indo-European
+- glottocode: benu1247
+  name: Benue-Congo
+  parent_glottocode: volt1241
+  wikidata_qid: Q33253
+  depth: 2
+  top_level: Atlantic-Congo
+- glottocode: clas1255
+  name: Classical-Middle-Modern Sinitic
+  parent_glottocode: sini1245
+  wikidata_qid: null
+  depth: 2
+  top_level: Sino-Tibetan
+- glottocode: daic1238
+  name: Daic-Beic
+  parent_glottocode: kamt1241
+  wikidata_qid: null
+  depth: 2
+  top_level: Tai-Kadai
+- glottocode: east2699
+  name: East Cushitic
+  parent_glottocode: cush1243
+  wikidata_qid: Q56568
+  depth: 2
+  top_level: Afro-Asiatic
+- glottocode: germ1287
+  name: Germanic
+  parent_glottocode: clas1257
+  wikidata_qid: Q21200
+  depth: 2
+  top_level: Indo-European
+- glottocode: grae1234
+  name: Graeco-Phrygian
+  parent_glottocode: clas1257
+  wikidata_qid: Q17143217
+  depth: 2
+  top_level: Indo-European
+- glottocode: grea1284
+  name: Greater Central Philippine
+  parent_glottocode: mala1545
+  wikidata_qid: Q3832998
+  depth: 2
+  top_level: Austronesian
+- glottocode: indo1320
+  name: Indo-Iranian
+  parent_glottocode: clas1257
+  wikidata_qid: Q33514
+  depth: 2
+  top_level: Indo-European
+- glottocode: ital1284
+  name: Italic
+  parent_glottocode: clas1257
+  wikidata_qid: Q131848
+  depth: 2
+  top_level: Indo-European
+- glottocode: japa1258
+  name: Japan-Taiwan Japanese
+  parent_glottocode: japa1256
+  wikidata_qid: null
+  depth: 2
+  top_level: Japonic
+- glottocode: java1253
+  name: Javanesic
+  parent_glottocode: mala1545
+  wikidata_qid: Q112902982
+  depth: 2
+  top_level: Austronesian
+- glottocode: kipc1240
+  name: Kipchak-Turkestan
+  parent_glottocode: comm1245
+  wikidata_qid: null
+  depth: 2
+  top_level: Turkic
+- glottocode: lolo1265
+  name: Lolo-Burmese
+  parent_glottocode: burm1265
+  wikidata_qid: null
+  depth: 2
+  top_level: Sino-Tibetan
+- glottocode: mala1554
+  name: Malayo-Chamic
+  parent_glottocode: mala1545
+  wikidata_qid: null
+  depth: 2
+  top_level: Austronesian
+- glottocode: mand1431
+  name: Manding-Kpelle
+  parent_glottocode: west2780
+  wikidata_qid: Q16116173
+  depth: 2
+  top_level: Mande
+- glottocode: minn1248
+  name: Min
+  parent_glottocode: sini1245
+  wikidata_qid: Q56504
+  depth: 2
+  top_level: Sino-Tibetan
+- glottocode: oghu1243
+  name: Oghuz
+  parent_glottocode: comm1245
+  wikidata_qid: Q494600
+  depth: 2
+  top_level: Turkic
+- glottocode: peul1234
+  name: Fula-Sereer
+  parent_glottocode: nort3146
+  wikidata_qid: null
+  depth: 2
+  top_level: Atlantic-Congo
+- glottocode: sout3138
+  name: South Dravidian I
+  parent_glottocode: sout3133
+  wikidata_qid: Q16112843
+  depth: 2
+  top_level: Dravidian
+- glottocode: sout3139
+  name: South Dravidian II
+  parent_glottocode: sout3133
+  wikidata_qid: Q12633975
+  depth: 2
+  top_level: Dravidian
+- glottocode: viet1251
+  name: Viet-Muong
+  parent_glottocode: viet1250
+  wikidata_qid: null
+  depth: 2
+  top_level: Austroasiatic
+- glottocode: west2785
+  name: West Chadic
+  parent_glottocode: chad1250
+  wikidata_qid: Q2447774
+  depth: 2
+  top_level: Afro-Asiatic
+- glottocode: west2786
+  name: West Semitic
+  parent_glottocode: semi1276
+  wikidata_qid: Q124901
+  depth: 2
+  top_level: Afro-Asiatic
+- glottocode: bant1294
+  name: Bantoid
+  parent_glottocode: benu1247
+  wikidata_qid: Q806992
+  depth: 3
+  top_level: Atlantic-Congo
+- glottocode: burm1266
+  name: Burmish
+  parent_glottocode: lolo1265
+  wikidata_qid: null
+  depth: 3
+  top_level: Sino-Tibetan
+- glottocode: cent2047
+  name: Central Mande
+  parent_glottocode: mand1431
+  wikidata_qid: Q5972907
+  depth: 3
+  top_level: Mande
+- glottocode: cent2236
+  name: Central Semitic
+  parent_glottocode: west2786
+  wikidata_qid: Q3433228
+  depth: 3
+  top_level: Afro-Asiatic
+- glottocode: cent2246
+  name: Central Philippine
+  parent_glottocode: grea1284
+  wikidata_qid: Q3119651
+  depth: 3
+  top_level: Austronesian
+- glottocode: coas1318
+  name: Coastal Min
+  parent_glottocode: minn1248
+  wikidata_qid: Q20667215
+  depth: 3
+  top_level: Sino-Tibetan
+- glottocode: daic1237
+  name: Daic
+  parent_glottocode: daic1238
+  wikidata_qid: null
+  depth: 3
+  top_level: Tai-Kadai
+- glottocode: defo1239
+  name: Defoid
+  parent_glottocode: benu1247
+  wikidata_qid: Q1182733
+  depth: 3
+  top_level: Atlantic-Congo
+- glottocode: ethi1244
+  name: Ethiosemitic
+  parent_glottocode: west2786
+  wikidata_qid: Q163629
+  depth: 3
+  top_level: Afro-Asiatic
+- glottocode: fula1264
+  name: Fula
+  parent_glottocode: peul1234
+  wikidata_qid: Q33454
+  depth: 3
+  top_level: Atlantic-Congo
+- glottocode: gree1276
+  name: Greek
+  parent_glottocode: grae1234
+  wikidata_qid: Q9129
+  depth: 3
+  top_level: Indo-European
+- glottocode: igbo1258
+  name: Igboid
+  parent_glottocode: benu1247
+  wikidata_qid: null
+  depth: 3
+  top_level: Atlantic-Congo
+- glottocode: indo1321
+  name: Indo-Aryan
+  parent_glottocode: indo1320
+  wikidata_qid: Q33577
+  depth: 3
+  top_level: Indo-European
+- glottocode: iran1271
+  name: Iranian-Nuristani
+  parent_glottocode: indo1320
+  wikidata_qid: null
+  depth: 3
+  top_level: Indo-European
+- glottocode: kipc1239
+  name: Kipchak
+  parent_glottocode: kipc1240
+  wikidata_qid: Q1339898
+  depth: 3
+  top_level: Turkic
+- glottocode: lati1262
+  name: Latino-Faliscan
+  parent_glottocode: ital1284
+  wikidata_qid: Q33478
+  depth: 3
+  top_level: Indo-European
+- glottocode: lowl1267
+  name: Lowland East Cushitic
+  parent_glottocode: east2699
+  wikidata_qid: Q46453053
+  depth: 3
+  top_level: Afro-Asiatic
+- glottocode: mala1538
+  name: Malayic
+  parent_glottocode: mala1554
+  wikidata_qid: Q662628
+  depth: 3
+  top_level: Austronesian
+- glottocode: midd1354
+  name: Middle-Modern Sinitic
+  parent_glottocode: clas1255
+  wikidata_qid: null
+  depth: 3
+  top_level: Sino-Tibetan
+- glottocode: mode1251
+  name: Modern Javanese
+  parent_glottocode: java1253
+  wikidata_qid: null
+  depth: 3
+  top_level: Austronesian
+- glottocode: nort3152
+  name: Northwest Germanic
+  parent_glottocode: germ1287
+  wikidata_qid: Q13137302
+  depth: 3
+  top_level: Indo-European
+- glottocode: nucl1769
+  name: Nuclear Oghuz
+  parent_glottocode: oghu1243
+  wikidata_qid: null
+  depth: 3
+  top_level: Turkic
+- glottocode: slav1255
+  name: Slavic
+  parent_glottocode: balt1263
+  wikidata_qid: null
+  depth: 3
+  top_level: Indo-European
+- glottocode: tami1291
+  name: Tamil-Kannada
+  parent_glottocode: sout3138
+  wikidata_qid: Q6478506
+  depth: 3
+  top_level: Dravidian
+- glottocode: telu1265
+  name: Teluguic
+  parent_glottocode: sout3139
+  wikidata_qid: null
+  depth: 3
+  top_level: Dravidian
+- glottocode: uygh1241
+  name: Turkestan
+  parent_glottocode: kipc1240
+  wikidata_qid: Q703173
+  depth: 3
+  top_level: Turkic
+- glottocode: west2714
+  name: West Chadic A
+  parent_glottocode: west2785
+  wikidata_qid: Q125500977
+  depth: 3
+  top_level: Afro-Asiatic
+- glottocode: arab1394
+  name: Arabian
+  parent_glottocode: cent2236
+  wikidata_qid: Q164667
+  depth: 4
+  top_level: Afro-Asiatic
+- glottocode: azer1255
+  name: Central Oghuz
+  parent_glottocode: nucl1769
+  wikidata_qid: Q9292
+  depth: 4
+  top_level: Turkic
+- glottocode: bada1263
+  name: Badaga-Kannada
+  parent_glottocode: tami1291
+  wikidata_qid: Q6363888
+  depth: 4
+  top_level: Dravidian
+- glottocode: bisa1268
+  name: Bisayan
+  parent_glottocode: cent2246
+  wikidata_qid: Q1584458
+  depth: 4
+  top_level: Austronesian
+- glottocode: cent2251
+  name: Central-Southwestern Tai
+  parent_glottocode: daic1237
+  wikidata_qid: null
+  depth: 4
+  top_level: Tai-Kadai
+- glottocode: east1426
+  name: East Slavic
+  parent_glottocode: slav1255
+  wikidata_qid: null
+  depth: 4
+  top_level: Indo-European
+- glottocode: east2798
+  name: South Greek
+  parent_glottocode: gree1276
+  wikidata_qid: null
+  depth: 4
+  top_level: Indo-European
+- glottocode: fula1265
+  name: Eastern Fula
+  parent_glottocode: fula1264
+  wikidata_qid: Q136399166
+  depth: 4
+  top_level: Atlantic-Congo
+- glottocode: glob1245
+  name: Global Javanese
+  parent_glottocode: mode1251
+  wikidata_qid: Q33549
+  depth: 4
+  top_level: Austronesian
+- glottocode: igbo1259
+  name: Nuclear Igboid
+  parent_glottocode: igbo1258
+  wikidata_qid: null
+  depth: 4
+  top_level: Atlantic-Congo
+- glottocode: iran1269
+  name: Iranian
+  parent_glottocode: iran1271
+  wikidata_qid: null
+  depth: 4
+  top_level: Indo-European
+- glottocode: lati1263
+  name: Latinic
+  parent_glottocode: lati1262
+  wikidata_qid: null
+  depth: 4
+  top_level: Indo-European
+- glottocode: mand1432
+  name: Manding-Jogo
+  parent_glottocode: cent2047
+  wikidata_qid: Q12636153
+  depth: 4
+  top_level: Mande
+- glottocode: midd1375
+  name: Middle-Modern Indo-Aryan
+  parent_glottocode: indo1321
+  wikidata_qid: Q116076343
+  depth: 4
+  top_level: Indo-European
+- glottocode: nort3155
+  name: Northern Chinese
+  parent_glottocode: midd1354
+  wikidata_qid: null
+  depth: 4
+  top_level: Sino-Tibetan
+- glottocode: nort3160
+  name: North Germanic
+  parent_glottocode: nort3152
+  wikidata_qid: Q106085
+  depth: 4
+  top_level: Indo-European
+- glottocode: nucl1806
+  name: Nuclear Malayic
+  parent_glottocode: mala1538
+  wikidata_qid: Q1190607
+  depth: 4
+  top_level: Austronesian
+- glottocode: sout3055
+  name: Southern Lowland East Cushitic
+  parent_glottocode: lowl1267
+  wikidata_qid: null
+  depth: 4
+  top_level: Afro-Asiatic
+- glottocode: sout3078
+  name: South Ethiopic
+  parent_glottocode: ethi1244
+  wikidata_qid: null
+  depth: 4
+  top_level: Afro-Asiatic
+- glottocode: sout3152
+  name: Southern Bantoid
+  parent_glottocode: bant1294
+  wikidata_qid: Q3183152
+  depth: 4
+  top_level: Atlantic-Congo
+- glottocode: sout3159
+  name: Southern Burmish
+  parent_glottocode: burm1266
+  wikidata_qid: Q16112836
+  depth: 4
+  top_level: Sino-Tibetan
+- glottocode: sout3396
+  name: Southeast Kipchak
+  parent_glottocode: kipc1239
+  wikidata_qid: null
+  depth: 4
+  top_level: Turkic
+- glottocode: sout3421
+  name: Southern Min-Pu-Xian
+  parent_glottocode: coas1318
+  wikidata_qid: null
+  depth: 4
+  top_level: Sino-Tibetan
+- glottocode: taga1280
+  name: Tagalogic
+  parent_glottocode: cent2246
+  wikidata_qid: Q124457471
+  depth: 4
+  top_level: Austronesian
+- glottocode: tami1292
+  name: Tamil-Kota
+  parent_glottocode: tami1291
+  wikidata_qid: null
+  depth: 4
+  top_level: Dravidian
+- glottocode: uygh1240
+  name: Modern Turkestan
+  parent_glottocode: uygh1241
+  wikidata_qid: Q137260465
+  depth: 4
+  top_level: Turkic
+- glottocode: west2406
+  name: West Oghuz
+  parent_glottocode: nucl1769
+  wikidata_qid: Q97725298
+  depth: 4
+  top_level: Turkic
+- glottocode: west2718
+  name: West Chadic A.1
+  parent_glottocode: west2714
+  wikidata_qid: Q12632162
+  depth: 4
+  top_level: Afro-Asiatic
+- glottocode: west2792
+  name: West Slavic
+  parent_glottocode: slav1255
+  wikidata_qid: Q145852
+  depth: 4
+  top_level: Indo-European
+- glottocode: west2793
+  name: West Germanic
+  parent_glottocode: nort3152
+  wikidata_qid: Q26721
+  depth: 4
+  top_level: Indo-European
+- glottocode: wuhu1234
+  name: Wu-Hui Chinese
+  parent_glottocode: midd1354
+  wikidata_qid: null
+  depth: 4
+  top_level: Sino-Tibetan
+- glottocode: yoru1244
+  name: Yoruboid
+  parent_glottocode: defo1239
+  wikidata_qid: Q1789745
+  depth: 4
+  top_level: Atlantic-Congo
+- glottocode: yuep1234
+  name: Yue-Pinghua
+  parent_glottocode: midd1354
+  wikidata_qid: null
+  depth: 4
+  top_level: Sino-Tibetan
+- glottocode: amha1244
+  name: Amharic-Argobba
+  parent_glottocode: sout3078
+  wikidata_qid: Q4746001
+  depth: 5
+  top_level: Afro-Asiatic
+- glottocode: arab1395
+  name: Arabic
+  parent_glottocode: arab1394
+  wikidata_qid: Q13955
+  depth: 5
+  top_level: Afro-Asiatic
+- glottocode: cent2317
+  name: Central Iranian PBS
+  parent_glottocode: iran1269
+  wikidata_qid: null
+  depth: 5
+  top_level: Indo-European
+- glottocode: cent2404
+  name: Central Greek
+  parent_glottocode: east2798
+  wikidata_qid: null
+  depth: 5
+  top_level: Indo-European
+- glottocode: cent2417
+  name: Central-Northern Igbo
+  parent_glottocode: igbo1259
+  wikidata_qid: null
+  depth: 5
+  top_level: Atlantic-Congo
+- glottocode: cont1248
+  name: Continental Indo-Aryan
+  parent_glottocode: midd1375
+  wikidata_qid: null
+  depth: 5
+  top_level: Indo-European
+- glottocode: czec1260
+  name: Czech-Slovak
+  parent_glottocode: west2792
+  wikidata_qid: null
+  depth: 5
+  top_level: Indo-European
+- glottocode: edek1238
+  name: Edekiri
+  parent_glottocode: yoru1244
+  wikidata_qid: Q5336735
+  depth: 5
+  top_level: Atlantic-Congo
+- glottocode: high1289
+  name: High German
+  parent_glottocode: west2793
+  wikidata_qid: Q52040
+  depth: 5
+  top_level: Indo-European
+- glottocode: impe1234
+  name: Imperial Latin
+  parent_glottocode: lati1263
+  wikidata_qid: null
+  depth: 5
+  top_level: Indo-European
+- glottocode: kann1259
+  name: Kannadoid
+  parent_glottocode: bada1263
+  wikidata_qid: null
+  depth: 5
+  top_level: Dravidian
+- glottocode: lech1241
+  name: Lechitic
+  parent_glottocode: west2792
+  wikidata_qid: Q742782
+  depth: 5
+  top_level: Indo-European
+- glottocode: macr1270
+  name: Macro-Dutch
+  parent_glottocode: west2793
+  wikidata_qid: Q153050
+  depth: 5
+  top_level: Indo-European
+- glottocode: main1283
+  name: Mainstream Lowland East Cushitic
+  parent_glottocode: sout3055
+  wikidata_qid: null
+  depth: 5
+  top_level: Afro-Asiatic
+- glottocode: mand1433
+  name: Manding-Vai
+  parent_glottocode: mand1432
+  wikidata_qid: null
+  depth: 5
+  top_level: Mande
+- glottocode: mand1471
+  name: Mandarinic
+  parent_glottocode: nort3155
+  wikidata_qid: null
+  depth: 5
+  top_level: Sino-Tibetan
+- glottocode: mran1234
+  name: Mranmaic
+  parent_glottocode: sout3159
+  wikidata_qid: null
+  depth: 5
+  top_level: Sino-Tibetan
+- glottocode: narr1281
+  name: Narrow Bantu
+  parent_glottocode: sout3152
+  wikidata_qid: Q33146
+  depth: 5
+  top_level: Atlantic-Congo
+- glottocode: nort3175
+  name: North Sea Germanic
+  parent_glottocode: west2793
+  wikidata_qid: Q30134
+  depth: 5
+  top_level: Indo-European
+- glottocode: nort3266
+  name: North Scandinavian
+  parent_glottocode: nort3160
+  wikidata_qid: null
+  depth: 5
+  top_level: Indo-European
+- glottocode: pash1269
+  name: Pashto
+  parent_glottocode: iran1269
+  wikidata_qid: Q58680
+  depth: 5
+  top_level: Indo-European
+- glottocode: sing1270
+  name: Greater Riau-Johoric
+  parent_glottocode: nucl1806
+  wikidata_qid: Q12636082
+  depth: 5
+  top_level: Austronesian
+- glottocode: sinh1245
+  name: Dhivehi-Sinhala
+  parent_glottocode: midd1375
+  wikidata_qid: Q12179302
+  depth: 5
+  top_level: Indo-European
+- glottocode: sout2701
+  name: South Kipchak
+  parent_glottocode: sout3396
+  wikidata_qid: Q4326954
+  depth: 5
+  top_level: Turkic
+- glottocode: sout3157
+  name: Southwestern Iranian
+  parent_glottocode: iran1269
+  wikidata_qid: Q390424
+  depth: 5
+  top_level: Indo-European
+- glottocode: sout3424
+  name: Southern Min
+  parent_glottocode: sout3421
+  wikidata_qid: null
+  depth: 5
+  top_level: Sino-Tibetan
+- glottocode: stan1327
+  name: Standard Malay-Indonesian
+  parent_glottocode: nucl1806
+  wikidata_qid: Q110621927
+  depth: 5
+  top_level: Austronesian
+- glottocode: taga1269
+  name: Tagalog-Filipino
+  parent_glottocode: taga1280
+  wikidata_qid: Q34057
+  depth: 5
+  top_level: Austronesian
+- glottocode: tami1293
+  name: Tamil-Toda
+  parent_glottocode: tami1292
+  wikidata_qid: null
+  depth: 5
+  top_level: Dravidian
+- glottocode: ukra1257
+  name: Ukrainian-Rusyn
+  parent_glottocode: east1426
+  wikidata_qid: null
+  depth: 5
+  top_level: Indo-European
+- glottocode: uzbe1247
+  name: Uzbek
+  parent_glottocode: uygh1240
+  wikidata_qid: Q9264
+  depth: 5
+  top_level: Turkic
+- glottocode: wenm1239
+  name: Wenma-Southwestern Tai
+  parent_glottocode: cent2251
+  wikidata_qid: null
+  depth: 5
+  top_level: Tai-Kadai
+- glottocode: wuic1234
+  name: Wuic
+  parent_glottocode: wuhu1234
+  wikidata_qid: null
+  depth: 5
+  top_level: Sino-Tibetan
+- glottocode: angl1264
+  name: Anglo-Frisian
+  parent_glottocode: nort3175
+  wikidata_qid: Q5329170
+  depth: 6
+  top_level: Indo-European
+- glottocode: arab1393
+  name: Arabian Peninsula Arabic
+  parent_glottocode: arab1395
+  wikidata_qid: Q15043573
+  depth: 6
+  top_level: Afro-Asiatic
+- glottocode: cent2318
+  name: Central Iranian PB
+  parent_glottocode: cent2317
+  wikidata_qid: null
+  depth: 6
+  top_level: Indo-European
+- glottocode: east2729
+  name: Eastern Arabic
+  parent_glottocode: arab1395
+  wikidata_qid: null
+  depth: 6
+  top_level: Afro-Asiatic
+- glottocode: east2731
+  name: East Bantu
+  parent_glottocode: narr1281
+  wikidata_qid: Q41347250
+  depth: 6
+  top_level: Atlantic-Congo
+- glottocode: east2780
+  name: East-Central Swedic
+  parent_glottocode: nort3266
+  wikidata_qid: null
+  depth: 6
+  top_level: Indo-European
+- glottocode: edea1234
+  name: Ede
+  parent_glottocode: edek1238
+  wikidata_qid: Q35368
+  depth: 6
+  top_level: Atlantic-Congo
+- glottocode: egyp1251
+  name: Egyptic Arabic
+  parent_glottocode: arab1395
+  wikidata_qid: null
+  depth: 6
+  top_level: Afro-Asiatic
+- glottocode: high1286
+  name: Upper German
+  parent_glottocode: high1289
+  wikidata_qid: Q263522
+  depth: 6
+  top_level: Indo-European
+- glottocode: indo1323
+  name: Indo-Aryan Eastern zone
+  parent_glottocode: cont1248
+  wikidata_qid: Q12593391
+  depth: 6
+  top_level: Indo-European
+- glottocode: indo1324
+  name: Indo-Aryan Northwestern zone
+  parent_glottocode: cont1248
+  wikidata_qid: Q16111018
+  depth: 6
+  top_level: Indo-European
+- glottocode: indo1325
+  name: Indo-Aryan Southern zone
+  parent_glottocode: cont1248
+  wikidata_qid: Q10856062
+  depth: 6
+  top_level: Indo-European
+- glottocode: kann1255
+  name: Nuclear Kannaoid
+  parent_glottocode: kann1259
+  wikidata_qid: null
+  depth: 6
+  top_level: Dravidian
+- glottocode: koin1234
+  name: Koineic Greek
+  parent_glottocode: cent2404
+  wikidata_qid: Q107358
+  depth: 6
+  top_level: Indo-European
+- glottocode: leva1239
+  name: Levantine-Cypriot Arabic
+  parent_glottocode: arab1395
+  wikidata_qid: null
+  depth: 6
+  top_level: Afro-Asiatic
+- glottocode: mand1434
+  name: Manding-Mokole
+  parent_glottocode: mand1433
+  wikidata_qid: null
+  depth: 6
+  top_level: Mande
+- glottocode: midd1347
+  name: Middle-Modern Dutch
+  parent_glottocode: macr1270
+  wikidata_qid: null
+  depth: 6
+  top_level: Indo-European
+- glottocode: midd1352
+  name: Middle-Modern Persian
+  parent_glottocode: sout3157
+  wikidata_qid: null
+  depth: 6
+  top_level: Indo-European
+- glottocode: midl1245
+  name: Midlands Indo-Aryan
+  parent_glottocode: cont1248
+  wikidata_qid: null
+  depth: 6
+  top_level: Indo-European
+- glottocode: nort3191
+  name: North African Arabic
+  parent_glottocode: arab1395
+  wikidata_qid: Q1194795
+  depth: 6
+  top_level: Afro-Asiatic
+- glottocode: nucl1276
+  name: Nuclear Pashto
+  parent_glottocode: pash1269
+  wikidata_qid: null
+  depth: 6
+  top_level: Indo-European
+- glottocode: nucl1811
+  name: Nuclear Mranmaic
+  parent_glottocode: mran1234
+  wikidata_qid: null
+  depth: 6
+  top_level: Sino-Tibetan
+- glottocode: omot1245
+  name: Omo-Tana
+  parent_glottocode: main1283
+  wikidata_qid: Q1519102
+  depth: 6
+  top_level: Afro-Asiatic
+- glottocode: poli1262
+  name: Polish-Silesian
+  parent_glottocode: lech1241
+  wikidata_qid: null
+  depth: 6
+  top_level: Indo-European
+- glottocode: roma1334
+  name: Romance
+  parent_glottocode: impe1234
+  wikidata_qid: Q19814
+  depth: 6
+  top_level: Indo-European
+- glottocode: sapa1255
+  name: Sapa-Southwestern Tai
+  parent_glottocode: wenm1239
+  wikidata_qid: null
+  depth: 6
+  top_level: Tai-Kadai
+- glottocode: sinh1247
+  name: Sinhalaic
+  parent_glottocode: sinh1245
+  wikidata_qid: null
+  depth: 6
+  top_level: Indo-European
+- glottocode: tami1294
+  name: Tamil-Irula
+  parent_glottocode: tami1293
+  wikidata_qid: null
+  depth: 6
+  top_level: Dravidian
+- glottocode: angl1265
+  name: Anglic
+  parent_glottocode: angl1264
+  wikidata_qid: Q1346342
+  depth: 7
+  top_level: Indo-European
+- glottocode: apab1234
+  name: Apabhramsic
+  parent_glottocode: midl1245
+  wikidata_qid: Q616419
+  depth: 7
+  top_level: Indo-European
+- glottocode: east2653
+  name: Eastern Omo-Tana
+  parent_glottocode: omot1245
+  wikidata_qid: Q56774
+  depth: 7
+  top_level: Afro-Asiatic
+- glottocode: east2714
+  name: Eastern Romance
+  parent_glottocode: roma1334
+  wikidata_qid: Q147576
+  depth: 7
+  top_level: Indo-European
+- glottocode: east2738
+  name: Eastern Ede
+  parent_glottocode: edea1234
+  wikidata_qid: Q137793649
+  depth: 7
+  top_level: Atlantic-Congo
+- glottocode: east2781
+  name: East Swedic
+  parent_glottocode: east2780
+  wikidata_qid: Q10728516
+  depth: 7
+  top_level: Indo-European
+- glottocode: egyp1254
+  name: Egypto-Sudanic Arabic
+  parent_glottocode: egyp1251
+  wikidata_qid: Q135994328
+  depth: 7
+  top_level: Afro-Asiatic
+- glottocode: indo1310
+  name: Indo-Aryan Northern zone
+  parent_glottocode: midl1245
+  wikidata_qid: Q946077
+  depth: 7
+  top_level: Indo-European
+- glottocode: ital1285
+  name: Italo-Western Romance
+  parent_glottocode: roma1334
+  wikidata_qid: Q112608
+  depth: 7
+  top_level: Indo-European
+- glottocode: jude1277
+  name: Judeo-Muslim Sanaani Arabic
+  parent_glottocode: arab1393
+  wikidata_qid: null
+  depth: 7
+  top_level: Afro-Asiatic
+- glottocode: mand1435
+  name: Manding
+  parent_glottocode: mand1434
+  wikidata_qid: Q35772
+  depth: 7
+  top_level: Mande
+- glottocode: mara1416
+  name: Marathic
+  parent_glottocode: indo1325
+  wikidata_qid: null
+  depth: 7
+  top_level: Indo-European
+- glottocode: midd1349
+  name: Middle-Modern High German
+  parent_glottocode: high1286
+  wikidata_qid: null
+  depth: 7
+  top_level: Indo-European
+- glottocode: mode1257
+  name: Modern Dutch
+  parent_glottocode: midd1347
+  wikidata_qid: null
+  depth: 7
+  top_level: Indo-European
+- glottocode: mode1259
+  name: Modern Southwestern Iranian
+  parent_glottocode: midd1352
+  wikidata_qid: Q56356571
+  depth: 7
+  top_level: Indo-European
+- glottocode: mode1266
+  name: Modern Koineic Greek
+  parent_glottocode: koin1234
+  wikidata_qid: null
+  depth: 7
+  top_level: Indo-European
+- glottocode: nort3177
+  name: Northwestern Iranian
+  parent_glottocode: cent2318
+  wikidata_qid: Q390576
+  depth: 7
+  top_level: Indo-European
+- glottocode: nort3203
+  name: Northeast Savanna Bantu
+  parent_glottocode: east2731
+  wikidata_qid: Q7057832
+  depth: 7
+  top_level: Atlantic-Congo
+- glottocode: oriy1254
+  name: Oriya-Gauda-Kamrupa
+  parent_glottocode: indo1323
+  wikidata_qid: null
+  depth: 7
+  top_level: Indo-European
+- glottocode: shau1239
+  name: Shaurasenic
+  parent_glottocode: midl1245
+  wikidata_qid: Q3632376
+  depth: 7
+  top_level: Indo-European
+- glottocode: sind1278
+  name: Sindhi-Lahnda
+  parent_glottocode: indo1324
+  wikidata_qid: null
+  depth: 7
+  top_level: Indo-European
+- glottocode: sout3184
+  name: Southwestern Tai
+  parent_glottocode: sapa1255
+  wikidata_qid: Q10889250
+  depth: 7
+  top_level: Tai-Kadai
+- glottocode: sout3387
+  name: Southern Bantu
+  parent_glottocode: east2731
+  wikidata_qid: Q980498
+  depth: 7
+  top_level: Atlantic-Congo
+- glottocode: tami1297
+  name: Tamil-Kodagu
+  parent_glottocode: tami1294
+  wikidata_qid: Q25494510
+  depth: 7
+  top_level: Dravidian
+- glottocode: west3017
+  name: Western Middle Arabic
+  parent_glottocode: nort3191
+  wikidata_qid: null
+  depth: 7
+  top_level: Afro-Asiatic
+- glottocode: biha1245
+  name: Bihari
+  parent_glottocode: shau1239
+  wikidata_qid: Q135305
+  depth: 8
+  top_level: Indo-European
+- glottocode: east1436
+  name: Eastern Pahari
+  parent_glottocode: indo1310
+  wikidata_qid: Q12593394
+  depth: 8
+  top_level: Indo-European
+- glottocode: east2425
+  name: East Manding
+  parent_glottocode: mand1435
+  wikidata_qid: null
+  depth: 8
+  top_level: Mande
+- glottocode: east2726
+  name: Eastern Hindi
+  parent_glottocode: shau1239
+  wikidata_qid: Q4126648
+  depth: 8
+  top_level: Indo-European
+- glottocode: fars1254
+  name: Farsic-Caucasian Tat
+  parent_glottocode: mode1259
+  wikidata_qid: Q9168
+  depth: 8
+  top_level: Indo-European
+- glottocode: gaud1237
+  name: Gauda-Kamrupa
+  parent_glottocode: oriy1254
+  wikidata_qid: Q4179137
+  depth: 8
+  top_level: Indo-European
+- glottocode: glob1241
+  name: Global Dutch
+  parent_glottocode: mode1257
+  wikidata_qid: null
+  depth: 8
+  top_level: Indo-European
+- glottocode: grea1289
+  name: Great Lakes Bantu
+  parent_glottocode: nort3203
+  wikidata_qid: Q5599420
+  depth: 8
+  top_level: Atlantic-Congo
+- glottocode: guja1255
+  name: Gujarati-Rajasthani
+  parent_glottocode: apab1234
+  wikidata_qid: null
+  depth: 8
+  top_level: Indo-European
+- glottocode: indo1322
+  name: Indo-Aryan Central zone
+  parent_glottocode: shau1239
+  wikidata_qid: Q10979187
+  depth: 8
+  top_level: Indo-European
+- glottocode: ital1286
+  name: Italo-Dalmatian
+  parent_glottocode: ital1285
+  wikidata_qid: Q3313381
+  depth: 8
+  top_level: Indo-European
+- glottocode: lahn1241
+  name: Greater Panjabic
+  parent_glottocode: sind1278
+  wikidata_qid: Q2656685
+  depth: 8
+  top_level: Indo-European
+- glottocode: laki1246
+  name: Laki-Kurdish
+  parent_glottocode: nort3177
+  wikidata_qid: null
+  depth: 8
+  top_level: Indo-European
+- glottocode: late1254
+  name: Later Anglic
+  parent_glottocode: angl1265
+  wikidata_qid: null
+  depth: 8
+  top_level: Indo-European
+- glottocode: macr1269
+  name: Macro-Oriya
+  parent_glottocode: oriy1254
+  wikidata_qid: Q7102899
+  depth: 8
+  top_level: Indo-European
+- glottocode: magh1239
+  name: Maghrebi
+  parent_glottocode: west3017
+  wikidata_qid: null
+  depth: 8
+  top_level: Afro-Asiatic
+- glottocode: mara1422
+  name: Marathi-Konkani
+  parent_glottocode: mara1416
+  wikidata_qid: Q6429506
+  depth: 8
+  top_level: Indo-European
+- glottocode: mode1258
+  name: Modern High German
+  parent_glottocode: midd1349
+  wikidata_qid: Q454476
+  depth: 8
+  top_level: Indo-European
+- glottocode: nort3209
+  name: Northeast Coastal Bantu
+  parent_glottocode: nort3203
+  wikidata_qid: Q7057848
+  depth: 8
+  top_level: Atlantic-Congo
+- glottocode: nort3361
+  name: Northern Romanian
+  parent_glottocode: east2714
+  wikidata_qid: null
+  depth: 8
+  top_level: Indo-European
+- glottocode: nucl1783
+  name: Nuclear Modern Greek
+  parent_glottocode: mode1266
+  wikidata_qid: null
+  depth: 8
+  top_level: Indo-European
+- glottocode: nucl1826
+  name: Nuclear Southern Bantu
+  parent_glottocode: sout3387
+  wikidata_qid: null
+  depth: 8
+  top_level: Atlantic-Congo
+- glottocode: sind1279
+  name: Sindhic
+  parent_glottocode: sind1278
+  wikidata_qid: Q7522212
+  depth: 8
+  top_level: Indo-European
+- glottocode: sout3186
+  name: Southeastern Ede
+  parent_glottocode: east2738
+  wikidata_qid: Q137793651
+  depth: 8
+  top_level: Atlantic-Congo
+- glottocode: sput1235
+  name: Southwestern Thai PH
+  parent_glottocode: sout3184
+  wikidata_qid: null
+  depth: 8
+  top_level: Tai-Kadai
+- glottocode: suda1235
+  name: Sudanese-Chadian Arabic
+  parent_glottocode: egyp1254
+  wikidata_qid: Q131427113
+  depth: 8
+  top_level: Afro-Asiatic
+- glottocode: tami1298
+  name: Tamil-Malayalam
+  parent_glottocode: tami1297
+  wikidata_qid: null
+  depth: 8
+  top_level: Dravidian
+- glottocode: west2813
+  name: Western Romance
+  parent_glottocode: ital1285
+  wikidata_qid: Q2714388
+  depth: 8
+  top_level: Indo-European
+- glottocode: afri1273
+  name: Afrikaansic
+  parent_glottocode: glob1241
+  wikidata_qid: null
+  depth: 9
+  top_level: Indo-European
+- glottocode: baye1239
+  name: Bairisch
+  parent_glottocode: mode1258
+  wikidata_qid: null
+  depth: 9
+  top_level: Indo-European
+- glottocode: coas1317
+  name: Coastal NEC Bantu
+  parent_glottocode: nort3209
+  wikidata_qid: null
+  depth: 9
+  top_level: Atlantic-Congo
+- glottocode: dims1234
+  name: Dimsuffix Southern Bantu
+  parent_glottocode: nucl1826
+  wikidata_qid: null
+  depth: 9
+  top_level: Atlantic-Congo
+- glottocode: east2727
+  name: Eastern Panjabic
+  parent_glottocode: lahn1241
+  wikidata_qid: null
+  depth: 9
+  top_level: Indo-European
+- glottocode: east2865
+  name: Eastern Romanian
+  parent_glottocode: nort3361
+  wikidata_qid: null
+  depth: 9
+  top_level: Indo-European
+- glottocode: east2897
+  name: East Sudanic Arabic
+  parent_glottocode: suda1235
+  wikidata_qid: null
+  depth: 9
+  top_level: Afro-Asiatic
+- glottocode: fars1255
+  name: Farsic
+  parent_glottocode: fars1254
+  wikidata_qid: Q12639554
+  depth: 9
+  top_level: Indo-European
+- glottocode: gaud1238
+  name: Gauda-Banga
+  parent_glottocode: gaud1237
+  wikidata_qid: Q3554758
+  depth: 9
+  top_level: Indo-European
+- glottocode: guja1256
+  name: Gujaratic
+  parent_glottocode: guja1255
+  wikidata_qid: Q5617043
+  depth: 9
+  top_level: Indo-European
+- glottocode: hind1274
+  name: Hindko-Siraiki
+  parent_glottocode: lahn1241
+  wikidata_qid: null
+  depth: 9
+  top_level: Indo-European
+- glottocode: ital1287
+  name: Italian Romance
+  parent_glottocode: ital1286
+  wikidata_qid: Q3356483
+  depth: 9
+  top_level: Indo-European
+- glottocode: kamt1240
+  name: Kamrupa
+  parent_glottocode: gaud1237
+  wikidata_qid: null
+  depth: 9
+  top_level: Indo-European
+- glottocode: kurd1259
+  name: Kurdish
+  parent_glottocode: laki1246
+  wikidata_qid: Q36368
+  depth: 9
+  top_level: Indo-European
+- glottocode: laot1235
+  name: Lao-Thai
+  parent_glottocode: sput1235
+  wikidata_qid: null
+  depth: 9
+  top_level: Tai-Kadai
+- glottocode: mait1254
+  name: Magadhan
+  parent_glottocode: biha1245
+  wikidata_qid: null
+  depth: 9
+  top_level: Indo-European
+- glottocode: mala1541
+  name: Malayalamoid
+  parent_glottocode: tami1298
+  wikidata_qid: Q6741581
+  depth: 9
+  top_level: Dravidian
+- glottocode: malt1259
+  name: Malta-Tunisian Arabic
+  parent_glottocode: magh1239
+  wikidata_qid: null
+  depth: 9
+  top_level: Afro-Asiatic
+- glottocode: merc1242
+  name: Middle-Modern English
+  parent_glottocode: late1254
+  wikidata_qid: null
+  depth: 9
+  top_level: Indo-European
+- glottocode: nucl1747
+  name: Nuclear Yoruba
+  parent_glottocode: sout3186
+  wikidata_qid: Q137793665
+  depth: 9
+  top_level: Atlantic-Congo
+- glottocode: oldm1248
+  name: Old-Modern Marathi
+  parent_glottocode: mara1422
+  wikidata_qid: null
+  depth: 9
+  top_level: Indo-European
+- glottocode: shif1234
+  name: Shifted Western Romance
+  parent_glottocode: west2813
+  wikidata_qid: Q954321
+  depth: 9
+  top_level: Indo-European
+- glottocode: sind1282
+  name: Sindhi-Kachchi
+  parent_glottocode: sind1279
+  wikidata_qid: null
+  depth: 9
+  top_level: Indo-European
+- glottocode: tami1299
+  name: Tamiloid
+  parent_glottocode: tami1298
+  wikidata_qid: null
+  depth: 9
+  top_level: Dravidian
+- glottocode: uppe1464
+  name: Upper Franconian
+  parent_glottocode: mode1258
+  wikidata_qid: Q635271
+  depth: 9
+  top_level: Indo-European
+- glottocode: west2812
+  name: Western Hindi
+  parent_glottocode: indo1322
+  wikidata_qid: Q12600937
+  depth: 9
+  top_level: Indo-European
+- glottocode: west2842
+  name: Western Lakes Bantu
+  parent_glottocode: grea1289
+  wikidata_qid: null
+  depth: 9
+  top_level: Atlantic-Congo
+- glottocode: assa1262
+  name: Eastern Kamrupa
+  parent_glottocode: kamt1240
+  wikidata_qid: null
+  depth: 10
+  top_level: Indo-European
+- glottocode: bhoj1246
+  name: Bhojpuric
+  parent_glottocode: mait1254
+  wikidata_qid: null
+  depth: 10
+  top_level: Indo-European
+- glottocode: cent2427
+  name: Central Italian Romance
+  parent_glottocode: ital1287
+  wikidata_qid: null
+  depth: 10
+  top_level: Indo-European
+- glottocode: east2744
+  name: Eastern Bengali
+  parent_glottocode: gaud1238
+  wikidata_qid: null
+  depth: 10
+  top_level: Indo-European
+- glottocode: east2745
+  name: Eastern Farsic
+  parent_glottocode: fars1255
+  wikidata_qid: null
+  depth: 10
+  top_level: Indo-European
+- glottocode: glob1243
+  name: Global German
+  parent_glottocode: uppe1464
+  wikidata_qid: null
+  depth: 10
+  top_level: Indo-European
+- glottocode: hind1270
+  name: Hindustani
+  parent_glottocode: west2812
+  wikidata_qid: Q11051
+  depth: 10
+  top_level: Indo-European
+- glottocode: kivu1239
+  name: Kivu
+  parent_glottocode: west2842
+  wikidata_qid: null
+  depth: 10
+  top_level: Atlantic-Congo
+- glottocode: lucu1239
+  name: Lucumi-Yoruba
+  parent_glottocode: nucl1747
+  wikidata_qid: null
+  depth: 10
+  top_level: Atlantic-Congo
+- glottocode: macr1271
+  name: Macro-English
+  parent_glottocode: merc1242
+  wikidata_qid: null
+  depth: 10
+  top_level: Indo-European
+- glottocode: mode1268
+  name: Modern Marathi
+  parent_glottocode: oldm1248
+  wikidata_qid: null
+  depth: 10
+  top_level: Indo-European
+- glottocode: ngun1280
+  name: Nguni-Tsonga-Copi
+  parent_glottocode: dims1234
+  wikidata_qid: null
+  depth: 10
+  top_level: Atlantic-Congo
+- glottocode: nort3208
+  name: Northwestern Shifted Romance
+  parent_glottocode: shif1234
+  wikidata_qid: null
+  depth: 10
+  top_level: Indo-European
+- glottocode: saba1282
+  name: Sabaki-Swahili
+  parent_glottocode: coas1317
+  wikidata_qid: Q2209395
+  depth: 10
+  top_level: Atlantic-Congo
+- glottocode: sada1243
+  name: Sadanic
+  parent_glottocode: mait1254
+  wikidata_qid: Q109546827
+  depth: 10
+  top_level: Indo-European
+- glottocode: sako1234
+  name: Sakon Nakhon
+  parent_glottocode: laot1235
+  wikidata_qid: null
+  depth: 10
+  top_level: Tai-Kadai
+- glottocode: sira1271
+  name: Siraikic
+  parent_glottocode: hind1274
+  wikidata_qid: null
+  depth: 10
+  top_level: Indo-European
+- glottocode: soth1248
+  name: Sotho-Tswana (S.30)
+  parent_glottocode: dims1234
+  wikidata_qid: Q2038386
+  depth: 10
+  top_level: Atlantic-Congo
+- glottocode: sout3182
+  name: Southeastern Bengali
+  parent_glottocode: gaud1238
+  wikidata_qid: null
+  depth: 10
+  top_level: Indo-European
+- glottocode: sout3183
+  name: Southwestern Shifted Romance
+  parent_glottocode: shif1234
+  wikidata_qid: Q749533
+  depth: 10
+  top_level: Indo-European
+- glottocode: tami1300
+  name: Tamil-Paliyan
+  parent_glottocode: tami1299
+  wikidata_qid: null
+  depth: 10
+  top_level: Dravidian
+- glottocode: gall1280
+  name: Gallo-Rhaetian
+  parent_glottocode: nort3208
+  wikidata_qid: Q5886200
+  depth: 11
+  top_level: Indo-European
+- glottocode: guin1259
+  name: Guinea Coast Creole English
+  parent_glottocode: macr1271
+  wikidata_qid: Q134588875
+  depth: 11
+  top_level: Indo-European
+- glottocode: ngun1276
+  name: Nguni (S.40)
+  parent_glottocode: ngun1280
+  wikidata_qid: Q961559
+  depth: 11
+  top_level: Atlantic-Congo
+- glottocode: nort3233
+  name: Northern Sotho
+  parent_glottocode: soth1248
+  wikidata_qid: Q33890
+  depth: 11
+  top_level: Atlantic-Congo
+- glottocode: rwan1241
+  name: West Highlands Kivu
+  parent_glottocode: kivu1239
+  wikidata_qid: Q3217514
+  depth: 11
+  top_level: Atlantic-Congo
+- glottocode: sadr1250
+  name: Sadri-Panchpargania
+  parent_glottocode: sada1243
+  wikidata_qid: null
+  depth: 11
+  top_level: Indo-European
+- glottocode: swah1254
+  name: Swahili (G.40)
+  parent_glottocode: saba1282
+  wikidata_qid: Q7838
+  depth: 11
+  top_level: Atlantic-Congo
+- glottocode: taji1250
+  name: Tajikic
+  parent_glottocode: east2745
+  wikidata_qid: null
+  depth: 11
+  top_level: Indo-European
+- glottocode: west2838
+  name: West Ibero-Romance
+  parent_glottocode: sout3183
+  wikidata_qid: Q1377152
+  depth: 11
+  top_level: Indo-European
+- glottocode: west2997
+  name: Western Sotho-Tswana
+  parent_glottocode: soth1248
+  wikidata_qid: null
+  depth: 11
+  top_level: Atlantic-Congo
+- glottocode: cast1243
+  name: Castilic
+  parent_glottocode: west2838
+  wikidata_qid: Q71924
+  depth: 12
+  top_level: Indo-European
+- glottocode: cent2406
+  name: Central Sotho-Tswana
+  parent_glottocode: west2997
+  wikidata_qid: null
+  depth: 12
+  top_level: Atlantic-Congo
+- glottocode: gali1263
+  name: Galician Romance
+  parent_glottocode: west2838
+  wikidata_qid: Q9080204
+  depth: 12
+  top_level: Indo-European
+- glottocode: momb1256
+  name: Mombasa-Lamu-Inland Swahili
+  parent_glottocode: swah1254
+  wikidata_qid: null
+  depth: 12
+  top_level: Atlantic-Congo
+- glottocode: nucl1827
+  name: Nuclear Nguni
+  parent_glottocode: ngun1276
+  wikidata_qid: null
+  depth: 12
+  top_level: Atlantic-Congo
+- glottocode: oila1234
+  name: Oil
+  parent_glottocode: gall1280
+  wikidata_qid: Q37351
+  depth: 12
+  top_level: Indo-European
+- glottocode: sada1242
+  name: India-Nepal-Bangladesh Sadri
+  parent_glottocode: sadr1250
+  wikidata_qid: null
+  depth: 12
+  top_level: Indo-European
+- glottocode: sepe1241
+  name: Sepedic
+  parent_glottocode: nort3233
+  wikidata_qid: null
+  depth: 12
+  top_level: Atlantic-Congo
+- glottocode: west2851
+  name: West African Creole English
+  parent_glottocode: guin1259
+  wikidata_qid: Q134588879
+  depth: 12
+  top_level: Indo-European
+- glottocode: cent2283
+  name: Central Oil
+  parent_glottocode: oila1234
+  wikidata_qid: null
+  depth: 13
+  top_level: Indo-European
+- glottocode: coas1331
+  name: Coastal Nigerian Krio
+  parent_glottocode: west2851
+  wikidata_qid: null
+  depth: 13
+  top_level: Indo-European
+- glottocode: macr1272
+  name: Macro-Portuguese
+  parent_glottocode: gali1263
+  wikidata_qid: null
+  depth: 13
+  top_level: Indo-European
+- glottocode: ngun1267
+  name: Southern Ndebele-Lowland
+  parent_glottocode: nucl1827
+  wikidata_qid: null
+  depth: 13
+  top_level: Atlantic-Congo
+- glottocode: seso1234
+  name: Sesotho-Lozi
+  parent_glottocode: cent2406
+  wikidata_qid: null
+  depth: 13
+  top_level: Atlantic-Congo
+- glottocode: braz1247
+  name: Brazil-Portugal Portuguese
+  parent_glottocode: macr1272
+  wikidata_qid: null
+  depth: 14
+  top_level: Indo-European
+- glottocode: macr1273
+  name: Macro-French
+  parent_glottocode: cent2283
+  wikidata_qid: null
+  depth: 14
+  top_level: Indo-European
+- glottocode: nige1262
+  name: Nigerian-Ghanaian Krio
+  parent_glottocode: coas1331
+  wikidata_qid: null
+  depth: 14
+  top_level: Indo-European
+- glottocode: glob1239
+  name: Global French
+  parent_glottocode: macr1273
+  wikidata_qid: null
+  depth: 15
+  top_level: Indo-European

@@ -53,3 +53,7 @@ Every fact table also has: `source_id`, `locator`, `retrieved_at` (UTC ISO), `li
 Other outputs: `bundles/{glottocode}.json` (under 50 KB), `tree.json` (format described in its `format` field), `geo/*.geojson`, `coverage.md`, `manifest.json` (sha256 and licenses of every output), `NOTICE.md` and the verbatim Unicode license for CLDR.
 
 CLDR codes are tied to Glottocodes only through a unique ISO 639-3 match, or a two-letter code that Wikidata (P218) ties to exactly one Glottocode. Script-qualified (`sr_Latn`) and region variants (`en-GB`) are not languoids and are listed in coverage.md.
+
+## Phase 1 scope list
+
+`content/scope/phase-1-languages.yaml` lists the 100 languages of the first slice, mapped to Glottolog 5.3 (only names and ranks come from a local third-party chart; no figures). Contested entries have `glottocode: null` until linguist-reviewer decides; `mechanical_candidate` and `candidates` hold the options. `tests/pipeline/test_scope.py` validates it; the existence check against `data/build/languoids.parquet` skips when data/build is absent.
