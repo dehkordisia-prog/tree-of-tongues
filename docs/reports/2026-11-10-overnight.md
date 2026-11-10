@@ -154,6 +154,8 @@ What to look at:
     - "5 sources" means five figures (each with its own year); two of Turkish's five cite Ethnologue editions. Count figures, or count distinct works?
     - In an opened language such as Turkish, its own disc sits among its dialect circles in the same color and can read as one more dialect. A lighter disc or a small label would fix it; ux-designer can propose one.
 
+12. **Language tags in the profiles (D-027, for you and linguist-reviewer):** every non-English phrase now carries a language tag so fonts and screen readers handle it (c641659). Small calls to confirm: the Orkhon line is tagged `oui` (Glottolog's ISO for Old Turkic, which ISO names Old Uighur); Kashgari's headword uses `trk` (Turkic as a group), since the source names no dialect; "swyn" in a 12th-century gloss is tagged Middle English, though it sits on the Old English boundary; romanized Persian and Tajik in parentheses after the native script are left untagged as reader aids (say if you want `fa-Latn` and `tg-Latn`).
+
 ## Blocked
 1. **Renderer benchmark (D-006): needs you.** `scripts/bench.mjs` opens a visible Chromium with the GPU for each of 10 runs (tree in PixiJS and deck.gl, normal and stress, plus the map; desktop and a 4x-throttled phone proxy). Claude Code stopped it before the first run finished because memory ran critically low. I must not restart it unattended. To run it, close other apps and run:
    ```powershell
