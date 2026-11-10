@@ -34,17 +34,11 @@ const variants = [
 
 const slug = (p) => (p === "/" ? "home" : p.replace(/^\//, "").replace(/\//g, "-"));
 
-const server = spawn(
-  process.execPath,
-  [
-    path.join(ROOT, "node_modules/sirv-cli/bin.js"),
-    "apps/web/build/client",
-    "--port",
-    String(PORT),
-    "--quiet",
-  ],
-  { cwd: ROOT, stdio: "ignore" },
-);
+// Same server as `pnpm --filter web preview`: the built app plus pipeline data at /data/.
+const server = spawn(process.execPath, [path.join(ROOT, "scripts/serve.mjs"), String(PORT)], {
+  cwd: ROOT,
+  stdio: "ignore",
+});
 
 async function waitForServer() {
   for (let i = 0; i < 50; i++) {

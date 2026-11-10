@@ -29,6 +29,7 @@
     "eslint-plugin-react-hooks": "7.1.1",
     "globals": "17.14.0",
     "prettier": "3.9.10",
+    "sirv": "3.0.2",
     "sirv-cli": "3.0.1",
     "typescript": "6.0.3",
     "typescript-eslint": "8.72.1"

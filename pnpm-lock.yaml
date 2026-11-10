@@ -193,6 +193,9 @@ importers:
       prettier:
         specifier: 3.9.10
         version: 3.9.10
+      sirv:
+        specifier: 3.0.2
+        version: 3.0.2
       sirv-cli:
         specifier: 3.0.1
         version: 3.0.1
@@ -290,9 +293,9 @@ importers:
       jsdom:
         specifier: 31.0.0
         version: 31.0.0
-      sirv-cli:
-        specifier: 3.0.1
-        version: 3.0.1
+      sirv:
+        specifier: 3.0.2
+        version: 3.0.2
       tailwindcss:
         specifier: 4.3.5
         version: 4.3.5
