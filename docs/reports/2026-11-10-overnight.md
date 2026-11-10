@@ -147,6 +147,11 @@ What to look at:
 
 10. **Names of disputed places (D-024, with D-019):** country names now come from CLDR 49's default English, Persian and Turkish names, for example "Palestinian Territories" and "Falkland Islands". CLDR also has short and variant forms (Chromium shows "Palestine" and "Falkland Islands (Islas Malvinas)"). Which form should the atlas use for disputed places? It is a one-line change.
 
+11. **Tree speaker glyph (D-025):** inner disc for first-language speakers, ring for total, a band when sources disagree, dashed when the kind is not stated, dotted fixed-size when there is no figure. Please check three calls:
+    - Size clamps: 100 million or more fills a language's space, under about 2.8 million all look the same size. Acceptable, or prefer a different scale?
+    - "5 sources" means five figures (each with its own year); two of Turkish's five cite Ethnologue editions. Count figures, or count distinct works?
+    - In an opened language such as Turkish, its own disc sits among its dialect circles in the same color and can read as one more dialect. A lighter disc or a small label would fix it; ux-designer can propose one.
+
 ## Blocked
 1. **Renderer benchmark (D-006): needs you.** `scripts/bench.mjs` opens a visible Chromium with the GPU for each of 10 runs (tree in PixiJS and deck.gl, normal and stress, plus the map; desktop and a 4x-throttled phone proxy). Claude Code stopped it before the first run finished because memory ran critically low. I must not restart it unattended. To run it, close other apps and run:
    ```powershell
