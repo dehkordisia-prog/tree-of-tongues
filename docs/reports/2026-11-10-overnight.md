@@ -14,6 +14,11 @@ Owner: Siavash. Written by Claude (orchestrator). Updated as work lands; newest 
 | Phase 1 | in progress on `phase-1`: scope list, pipeline indexes, app shell with routes, Inspector, search, profile rendering, tree glyph and Lumper/Splitter section are done; the three gold-standard profiles are reviewed drafts awaiting you. Not started: map production polish, country and macrolanguage routes, Words (ASJP) and Sounds (Commons audio) tabs, Persian and Turkish UI text (needs your wording) |
 | Start here in the morning | Questions for you (12 items, the Persian model first), then Blocked (benchmark and one rebuild) |
 
+## Owner decisions (10 November, after reading the report)
+Recorded as D-028 to D-033 in docs/DECISIONS.md. They answer question 1 (Persian model and Farsic labels), question 3 (Nastaliq digits), two items of question 6 ("Persian" as the macrolanguage name, "Alias: Farsi" in search) and the writers' question on Wikipedia and Wiktionary as interim sources. The other questions are still open.
+
+Morning restart: the local rebuild (Blocked 2) was retried with a memory guard and stopped for low memory before writing anything; data/build is unchanged. The benchmark (Blocked 1) was not started.
+
 ## How to open the app
 ```powershell
 cd tree-of-tongues
