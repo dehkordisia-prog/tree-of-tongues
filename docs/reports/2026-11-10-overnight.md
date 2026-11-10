@@ -125,6 +125,8 @@ What to look at:
 
 9. **Northern Sotho's display name:** Glottolog calls the language Pedi and the family Northern Sotho; Wikidata calls it Northern Sotho with aliases Sepedi and Pedi. Which name to use is a live question in South Africa. linguist-reviewer suggests "Northern Sotho (Sepedi)" with both names recorded. Today the scope list shows "Northern Sotho" with Pedi and Sepedi as alternates. Your call.
 
+10. **Names of disputed places (D-024, with D-019):** country names now come from CLDR 49's default English, Persian and Turkish names, for example "Palestinian Territories" and "Falkland Islands". CLDR also has short and variant forms (Chromium shows "Palestine" and "Falkland Islands (Islas Malvinas)"). Which form should the atlas use for disputed places? It is a one-line change.
+
 ## Blocked
 1. **Renderer benchmark (D-006): needs you.** `scripts/bench.mjs` opens a visible Chromium with the GPU for each of 10 runs (tree in PixiJS and deck.gl, normal and stress, plus the map; desktop and a 4x-throttled phone proxy). Claude Code stopped it before the first run finished because memory ran critically low. I must not restart it unattended. To run it, close other apps and run:
    ```powershell

@@ -12,6 +12,7 @@ import { familyById, familyColor, type FamilyId } from "@/design/tokens";
 import { ROOT_TO_FAMILY } from "@/canvas/map/families";
 import { directionOf } from "@/i18n/direction";
 import { useLocale } from "@/i18n/locale";
+import { regionName } from "@/i18n/regions";
 import { shellStore, useShell } from "@/state/shell";
 import { useShellHref } from "@/state/useShellHref";
 import type { Lens, Tab } from "@/state/url";
@@ -261,13 +262,8 @@ function reasonText(
 
 export function useRegionName(): (iso: string) => string {
   const locale = useLocale();
-  return (iso) => {
-    try {
-      return new Intl.DisplayNames([locale, "en"], { type: "region" }).of(iso.toUpperCase()) ?? iso;
-    } catch {
-      return iso;
-    }
-  };
+  // Pinned CLDR 49 names, not Intl.DisplayNames: see src/i18n/regions.ts (hydration #418).
+  return (iso) => regionName(locale, iso);
 }
 
 export function GoDeeper({ cards }: { cards: DeeperCard[] }) {

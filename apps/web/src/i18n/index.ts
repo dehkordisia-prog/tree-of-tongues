@@ -10,6 +10,7 @@ import { initReactI18next } from "react-i18next";
 
 import { DEFAULT_LOCALE, LOCALES, type Locale } from "./direction";
 import en from "./en.json";
+import { loadRegionNames } from "./regions";
 
 export const i18n = i18next.createInstance();
 
@@ -32,9 +33,13 @@ const loaders: Record<Exclude<Locale, "en">, () => Promise<{ default: object }>>
 
 /** Make sure the resource bundle for a locale is registered. English is always present. */
 export async function loadLocale(locale: Locale): Promise<void> {
-  if (locale === "en" || i18n.hasResourceBundle(locale, "translation")) return;
-  const { default: bundle } = await loaders[locale]();
-  i18n.addResourceBundle(locale, "translation", bundle, true, true);
+  if (locale === "en") return;
+  const regions = loadRegionNames(locale);
+  if (!i18n.hasResourceBundle(locale, "translation")) {
+    const { default: bundle } = await loaders[locale]();
+    i18n.addResourceBundle(locale, "translation", bundle, true, true);
+  }
+  await regions;
 }
 
 export { DEFAULT_LOCALE, LOCALES } from "./direction";

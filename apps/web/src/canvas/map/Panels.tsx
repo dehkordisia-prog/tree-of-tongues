@@ -5,6 +5,7 @@ import { createElement, useMemo, type ComponentPropsWithoutRef, type ElementType
 import { Link } from "react-router";
 
 import { useLocale } from "@/i18n/locale";
+import { regionNameOrNull } from "@/i18n/regions";
 
 import type { Bundle, CountryInfo, DisputedInfo, TerritoryIndex } from "./data";
 import { statusLabel, type Join } from "./policy";
@@ -26,22 +27,10 @@ export function Txt<T extends ElementType = "span">({ as, ...rest }: TxtProps<T>
 
 export function useRegionName(): (code: string, fallback?: string) => { text: string; lang?: string } {
   const locale = useLocale();
-  const names = useMemo(() => {
-    try {
-      return new Intl.DisplayNames([locale], { type: "region" });
-    } catch {
-      return null;
-    }
-  }, [locale]);
+  // Pinned CLDR 49 names (src/i18n/regions.ts), so every runtime shows the same string.
   return (code, fallback) => {
-    let text: string | undefined;
-    try {
-      text = names?.of(code);
-    } catch {
-      text = undefined;
-    }
-    const resolved = text && text !== code ? text : undefined;
-    if (resolved) return { text: resolved, lang: locale === "en" ? undefined : locale };
+    const text = regionNameOrNull(locale, code);
+    if (text) return { text, lang: locale === "en" ? undefined : locale };
     return { text: fallback ?? code, lang: fallback ? "en" : undefined };
   };
 }
