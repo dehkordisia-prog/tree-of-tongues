@@ -3,8 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "react-router dev",
-    "build": "react-router build",
+    "dev": "node ../../scripts/fetch-fonts.mjs && react-router dev",
+    "build": "node ../../scripts/fetch-fonts.mjs && react-router build",
     "preview": "sirv build/client --port 4173",
     "typecheck": "react-router typegen && tsc",
     "test": "vitest run"

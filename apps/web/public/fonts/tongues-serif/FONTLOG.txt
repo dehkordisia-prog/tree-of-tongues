@@ -1,0 +1,21 @@
+Tongues Serif font log
+========================
+
+Modified by the Tree of Tongues project: subset for the web and renamed, as required by the Reserved Font Name clause.
+
+Original: Adobe Source Serif 4, release 4.005R.
+Release page: https://github.com/adobe-fonts/source-serif/releases/tag/4.005R
+Source archive: https://github.com/adobe-fonts/source-serif/releases/download/4.005R/source-serif-4.005_Desktop.zip
+Source archive sha256: 549fdb8f9a682bd06944298621404969f6de77c2e422ff3b8244a1dcd6a0c425
+Variable fonts used: source-serif-4.005_Desktop/VAR/SourceSerif4Variable-Roman.ttf
+
+Changes
+- Subset into unicode-range slices (Latin, Latin Extended, Cyrillic, Greek, Vietnamese).
+- Hinting removed; only English name records kept; web-useful OpenType features kept.
+- Optical size axis fixed at opsz 36; weight axis kept (200 to 900).
+- Renamed to Tongues Serif. Name IDs 1, 3, 4, 6, 25 and all variable-font instance and
+  STAT names no longer contain the Reserved Font Name. OS/2 vendor ID set to TOT.
+- Copyright (ID 0), trademark (ID 7) and license (IDs 13 and 14) are unchanged from upstream.
+
+License: SIL Open Font License 1.1, see OFL.txt (verbatim from upstream).
+Built by scripts/build_fonts.py with fontTools 4.68.0, brotli 1.2.1.

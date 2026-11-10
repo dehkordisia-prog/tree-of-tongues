@@ -16,7 +16,8 @@
     "lint:content": "node scripts/lint-content.mjs --all",
     "check:a11y": "playwright test --project=a11y",
     "check:perf": "pnpm build && lhci autorun",
-    "format": "prettier --write . && uv run ruff format ."
+    "fonts": "node scripts/fetch-fonts.mjs",
+    "format":"prettier --write . && uv run ruff format ."
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",

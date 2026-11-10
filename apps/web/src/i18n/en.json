@@ -1,0 +1,38 @@
+{
+  "app": {
+    "title": "Tree of Tongues",
+    "tagline": "An atlas of the world's languages. Phase 0: foundations."
+  },
+  "nav": {
+    "backToStart": "Back to the start",
+    "workbenches": "Workbenches",
+    "interfaceLanguage": "Interface language"
+  },
+  "workbench": {
+    "design": { "label": "Design system", "note": "Tokens, type and scripts" },
+    "tree": { "label": "Tree spike", "note": "Every Glottolog languoid, zoomable" },
+    "map": { "label": "Map spike", "note": "Language points and countries" }
+  },
+  "design": {
+    "title": "Design system",
+    "placeholder": "Tokens and type are on the way."
+  },
+  "specimen": {
+    "latin": "Latin",
+    "turkish": "Turkish",
+    "persianNaskh": "Persian, Naskh",
+    "persianNastaliq": "Persian, Nastaliq",
+    "devanagari": "Devanagari",
+    "han": "Han",
+    "ipa": "IPA",
+    "turkishCasing": "Turkish casing",
+    "source": "Source",
+    "face": "Face",
+    "projectSample": "Project-authored sample.",
+    "casingDefault": "Default rules (wrong for Turkish)",
+    "casingTurkish": "Turkish rules",
+    "casingCss": "CSS text-transform with lang",
+    "casingUpper": "Uppercase",
+    "casingLower": "Lowercase"
+  }
+}

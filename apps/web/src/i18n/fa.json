@@ -1,0 +1,17 @@
+{
+  "_meta": { "status": "awaiting owner review (Siavash)" },
+  "app": {
+    "tagline": "اطلس زبان‌های جهان. فاز ۰: بنیادها."
+  },
+  "nav": {
+    "backToStart": "بازگشت به آغاز",
+    "workbenches": "کارگاه‌ها",
+    "interfaceLanguage": "زبان رابط"
+  },
+  "workbench": {
+    "design": { "label": "سامانهٔ طراحی" }
+  },
+  "design": {
+    "title": "سامانهٔ طراحی"
+  }
+}

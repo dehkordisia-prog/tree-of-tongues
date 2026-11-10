@@ -1,0 +1,17 @@
+{
+  "_meta": { "status": "awaiting owner review (Siavash)" },
+  "app": {
+    "tagline": "Dünya dillerinin atlası. Aşama 0: temeller."
+  },
+  "nav": {
+    "backToStart": "Başa dön",
+    "workbenches": "Çalışma alanları",
+    "interfaceLanguage": "Arayüz dili"
+  },
+  "workbench": {
+    "design": { "label": "Tasarım sistemi" }
+  },
+  "design": {
+    "title": "Tasarım sistemi"
+  }
+}

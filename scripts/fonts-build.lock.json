@@ -1,0 +1,77 @@
+{
+  "_comment": "Inputs for scripts/build_fonts.py (Tongues Sans and Tongues Serif). Separate from fonts.lock.json, which pins npm packages for scripts/fetch-fonts.mjs. 'families' pins each Adobe release zip, the variable font files inside it and the licence text by sha256. 'toolchain' pins the fontTools and brotli versions the outputs were built with. 'outputs' holds the sha256 of every committed woff2 (rewrite with --lock, verify with --check).",
+  "toolchain": {
+    "fonttools": "4.68.0",
+    "brotli": "1.2.1"
+  },
+  "families": [
+    {
+      "id": "tongues-sans",
+      "upstream": "Source Sans 3",
+      "version": "3.052",
+      "release": "3.052R",
+      "release_url": "https://github.com/adobe-fonts/source-sans/releases/tag/3.052R",
+      "zip": {
+        "url": "https://github.com/adobe-fonts/source-sans/releases/download/3.052R/VF-source-sans-3.052R.zip",
+        "sha256": "d8e2ac355e06e6a0f0e0a0b1ac0c2451afa707584d7bb9d6b11ef9e4b749904c"
+      },
+      "members": [
+        {
+          "path": "VF/SourceSans3VF-Upright.ttf",
+          "style": "normal",
+          "sha256": "1147db9a3f0edd4956068de77930148acce2742dd76d57f7239b2b1c687ac63f"
+        },
+        {
+          "path": "VF/SourceSans3VF-Italic.ttf",
+          "style": "italic",
+          "sha256": "c34791f4f889af43d84e2f84ebeb02e6eed07058aca21e6729d26e6436d18965"
+        }
+      ],
+      "license": {
+        "note": "The VF zip ships no licence file; this is LICENSE.md at tag 3.052R.",
+        "url": "https://raw.githubusercontent.com/adobe-fonts/source-sans/3.052R/LICENSE.md",
+        "sha256": "89ad2c4f66dd29127527493e729c31e731f111cf10faf5774c3db9275ed0c22c"
+      }
+    },
+    {
+      "id": "tongues-serif",
+      "upstream": "Source Serif 4",
+      "version": "4.005",
+      "release": "4.005R",
+      "release_url": "https://github.com/adobe-fonts/source-serif/releases/tag/4.005R",
+      "zip": {
+        "url": "https://github.com/adobe-fonts/source-serif/releases/download/4.005R/source-serif-4.005_Desktop.zip",
+        "sha256": "549fdb8f9a682bd06944298621404969f6de77c2e422ff3b8244a1dcd6a0c425"
+      },
+      "members": [
+        {
+          "path": "source-serif-4.005_Desktop/VAR/SourceSerif4Variable-Roman.ttf",
+          "style": "normal",
+          "sha256": "14d360ee1b76655da9276628b229e11671bc1f5d1083636144db6677d452cf55"
+        }
+      ],
+      "license_member": "source-serif-4.005_Desktop/LICENSE.md",
+      "license": {
+        "note": "LICENSE.md inside the release zip.",
+        "sha256": "75784a295293a8992f5a8d99210566e0064a012e6dab6731305e3787f15896c7"
+      }
+    }
+  ],
+  "outputs": {
+    "tongues-sans/tongues-sans-cyrillic-ext-wght-normal.woff2": "ac324140601339222425ea5d1861b7e2dc79b13bcbb0f054e95dd6c624d186b5",
+    "tongues-sans/tongues-sans-cyrillic-wght-normal.woff2": "2185098dca773a49558c8638a5f6a85a3f09c8e8c14baa750b23f2f919ba22c8",
+    "tongues-sans/tongues-sans-greek-ext-wght-normal.woff2": "62f53aeb04d58d77e770ca69a436ef7baa611c9a36310f778d83ae111232cf2f",
+    "tongues-sans/tongues-sans-greek-wght-normal.woff2": "79efc039d43f797f8420bfebd398c7add2d1cd6c8f788529ecf94bb2617cd0ca",
+    "tongues-sans/tongues-sans-latin-ext-wght-italic.woff2": "de0a8d94f8aa952485b182ad22ee57c58c0cbd327934ac222c728407505cc121",
+    "tongues-sans/tongues-sans-latin-ext-wght-normal.woff2": "c60f66ee310295a5368737014f38621eb4dfa3f8aa0131c77cce75b813ddfdbc",
+    "tongues-sans/tongues-sans-latin-wght-italic.woff2": "310dacef00a072d33ac9038e50da789f839b8e0d8d2b234ca1973b6b6f680882",
+    "tongues-sans/tongues-sans-latin-wght-normal.woff2": "b217cc97c9792c8747f681a2e739c9da32213dd59c03776ce3bdfd3c40131571",
+    "tongues-sans/tongues-sans-vietnamese-wght-normal.woff2": "d33b0d2b697ea61def89edc5c70bdd43380bc6c05ee76fb82b106dcb9a7922f7",
+    "tongues-serif/tongues-serif-cyrillic-ext-wght-normal.woff2": "884d9030020a98eb8eb729d43f998820bc82e5c3f552ea271aab371903c26152",
+    "tongues-serif/tongues-serif-cyrillic-wght-normal.woff2": "bc5324660adf04efc116fb18afea4249fb72a3349d100d16c6a8719c949859bf",
+    "tongues-serif/tongues-serif-greek-wght-normal.woff2": "d898af1649a1f395565a3c64668a47923da067cd5008209a14cc53bb3ef7ca8e",
+    "tongues-serif/tongues-serif-latin-ext-wght-normal.woff2": "8b6a8738bc2305a02f27926bb8970c56f074e9341a285a5b421bf85bff8a2812",
+    "tongues-serif/tongues-serif-latin-wght-normal.woff2": "a72ee5db687d84d96d14f30303b70540327d4f927b09bb31d60466a75509a606",
+    "tongues-serif/tongues-serif-vietnamese-wght-normal.woff2": "6247f7e172e13e100d380879e9f33b1bd59c67dad6da27534497ab0d31cde2cd"
+  }
+}

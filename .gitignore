@@ -10,7 +10,7 @@ __pycache__/
 .ruff_cache/
 .env
 .env.*
-data/raw/
+data/raw/*
 data/build/
 .claude/settings.local.json
 playwright-report/
@@ -20,3 +20,12 @@ test-results/
 # Third-party reference images stay local (the repo is public)
 reference/*
 !reference/README.md
+
+# Han font slices are fetched at build by scripts/fetch-fonts.mjs (D-015); the stylesheet and OFL stay.
+apps/web/public/fonts/noto-sans-sc/*.woff2
+
+# Raw download manifest is committed; its contents (data/raw/<source>/) are not.
+!data/raw/MANIFEST.yaml
+
+# Playwright MCP session artifacts
+.playwright-mcp/

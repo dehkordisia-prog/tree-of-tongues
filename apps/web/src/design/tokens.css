@@ -1,0 +1,216 @@
+/*
+ * Design tokens for Tree of Tongues (docs/DESIGN.md).
+ * tokens.ts holds the same values for canvases; src/design/tokens.test.ts fails if they drift.
+ *
+ * Theming: every color is light-dark(parchment, night). The used color-scheme decides:
+ *   no data-theme on <html>    follows prefers-color-scheme
+ *   data-theme="night"         forces the observatory theme
+ *   data-theme="parchment"     forces the light theme
+ * Motion: prefers-reduced-motion or data-motion="reduce" (on <html> or any subtree) turns flights
+ * into crossfades and removes movement.
+ */
+
+:root {
+  color-scheme: light dark;
+}
+:root[data-theme="night"] {
+  color-scheme: dark;
+}
+:root[data-theme="parchment"] {
+  color-scheme: light;
+}
+
+:root {
+  /* UI colors: light-dark(parchment, night) */
+  --tt-canvas: light-dark(#F5EEDC, #0A0F1E);
+  --tt-surface: light-dark(#FBF6EA, #121A2E);
+  --tt-raised: light-dark(#FFFDF7, #1A2440);
+  --tt-line: light-dark(#DCCFB0, #2A3656);
+  --tt-line-strong: light-dark(#8C7A5B, #6B79A3);
+  --tt-ink: light-dark(#22180E, #E8ECF6);
+  --tt-ink-muted: light-dark(#5A4A36, #A9B3CC);
+  --tt-link: light-dark(#1F4FA8, #9CC2FF);
+  --tt-accent: light-dark(#845600, #FFD166);
+  --tt-focus: light-dark(#1A3FB0, #FFD166);
+  --tt-danger: light-dark(#A8261B, #FF8A80);
+  --tt-conf-high: light-dark(#1E7A3C, #7EE0A1);
+  --tt-conf-medium: light-dark(#845600, #F2C333);
+  --tt-conf-low: light-dark(#5A4A36, #A9B3CC);
+  --tt-conf-contested: light-dark(#9C2A7A, #FF9EC4);
+  --tt-badge-recording: light-dark(#1E7A3C, #7EE0A1);
+  --tt-badge-reconstruction: light-dark(#845600, #F2C333);
+  --tt-badge-synthetic: light-dark(#5B3FB0, #B9A8FF);
+
+  /* Family colors. Plain name: marks (3:1 or more on canvas). -ink: text labels (4.5:1 or more). */
+  --tt-fam-indo-european: light-dark(#A21600, #FD5150);
+  --tt-fam-indo-european-ink: light-dark(#A21600, #FD5150);
+  --tt-fam-sino-tibetan: light-dark(#2731BE, #568DFB);
+  --tt-fam-sino-tibetan-ink: light-dark(#2731BE, #568DFB);
+  --tt-fam-afro-asiatic: light-dark(#B67A06, #F2C333);
+  --tt-fam-afro-asiatic-ink: light-dark(#916104, #F2C333);
+  --tt-fam-austronesian: light-dark(#CC5C84, #FD92C2);
+  --tt-fam-austronesian-ink: light-dark(#B1446D, #FD92C2);
+  --tt-fam-niger-congo: light-dark(#BE4E09, #FA871F);
+  --tt-fam-niger-congo-ink: light-dark(#B44803, #FA871F);
+  --tt-fam-dravidian: light-dark(#00628A, #6ECFF8);
+  --tt-fam-dravidian-ink: light-dark(#00628A, #6ECFF8);
+  --tt-fam-turkic: light-dark(#6A4AD0, #AD9FFF);
+  --tt-fam-turkic-ink: light-dark(#6A4AD0, #AD9FFF);
+  --tt-fam-japonic: light-dark(#278974, #71F6E4);
+  --tt-fam-japonic-ink: light-dark(#0A7964, #71F6E4);
+  --tt-fam-koreanic: light-dark(#A737A4, #D85AD2);
+  --tt-fam-koreanic-ink: light-dark(#A737A4, #D85AD2);
+  --tt-fam-kra-dai: light-dark(#015C0C, #ABE98E);
+  --tt-fam-kra-dai-ink: light-dark(#015C0C, #ABE98E);
+  --tt-fam-uralic: light-dark(#85624D, #C5A487);
+  --tt-fam-uralic-ink: light-dark(#85624D, #C5A487);
+  --tt-fam-other: light-dark(#57595C, #8D8D8E);
+  --tt-fam-other-ink: light-dark(#57595C, #8D8D8E);
+
+  /* Elevation. Night relies on a top highlight and a halo, because shadows vanish on ink. */
+  --tt-shadow-raised:
+    inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.06)),
+    0 1px 2px 0 light-dark(rgb(60 40 10 / 0.12), rgb(0 0 0 / 0.5)),
+    0 2px 8px 0 light-dark(rgb(60 40 10 / 0.08), rgb(0 0 0 / 0.35));
+  --tt-shadow-overlay:
+    inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0.8), rgb(255 255 255 / 0.08)),
+    0 8px 24px -4px light-dark(rgb(60 40 10 / 0.18), rgb(0 0 0 / 0.6)),
+    0 0 0 1px light-dark(rgb(60 40 10 / 0.06), rgb(156 194 255 / 0.08));
+  --tt-scrim: light-dark(rgb(34 24 14 / 0.4), rgb(4 6 14 / 0.7));
+
+  /* Focus and targets */
+  --tt-focus-width: 3px;
+  --tt-focus-offset: 2px;
+  --tt-target-min: 2.75rem; /* 44 px */
+
+  /* Motion. Durations in ms; easings as cubic-bezier; see tokens.ts for springs. */
+  --tt-dur-ui-fast: 200ms;
+  --tt-dur-ui: 280ms;
+  --tt-dur-ui-slow: 400ms;
+  --tt-dur-flight-short: 600ms;
+  --tt-dur-flight: 900ms;
+  --tt-dur-flight-long: 1200ms;
+  --tt-dur-crossfade: 200ms;
+  --tt-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --tt-ease-enter: cubic-bezier(0, 0, 0.2, 1);
+  --tt-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --tt-ease-flight: cubic-bezier(0.65, 0, 0.35, 1);
+  /* Multiply distances by this. 0 under reduced motion: things fade, they do not travel. */
+  --tt-motion-distance: 1;
+}
+
+/* Reduced motion: flights collapse into a crossfade, UI keeps opacity only, nothing travels. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --tt-dur-ui: 200ms;
+    --tt-dur-ui-slow: 200ms;
+    --tt-dur-flight-short: 200ms;
+    --tt-dur-flight: 200ms;
+    --tt-dur-flight-long: 200ms;
+    --tt-motion-distance: 0;
+  }
+}
+[data-motion="reduce"] {
+  --tt-dur-ui: 200ms;
+  --tt-dur-ui-slow: 200ms;
+  --tt-dur-flight-short: 200ms;
+  --tt-dur-flight: 200ms;
+  --tt-dur-flight-long: 200ms;
+  --tt-motion-distance: 0;
+}
+
+/*
+ * Tailwind 4 theme. `inline` makes utilities read the --tt-* variables directly, so light-dark()
+ * resolves on the element that uses them. Default Tailwind colors are removed on purpose:
+ * use tokens (bg-canvas, text-ink, border-line-strong, bg-fam-turkic, text-fam-turkic-ink).
+ */
+@theme inline {
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  --color-canvas: var(--tt-canvas);
+  --color-surface: var(--tt-surface);
+  --color-raised: var(--tt-raised);
+  --color-line: var(--tt-line);
+  --color-line-strong: var(--tt-line-strong);
+  --color-ink: var(--tt-ink);
+  --color-ink-muted: var(--tt-ink-muted);
+  --color-link: var(--tt-link);
+  --color-accent: var(--tt-accent);
+  --color-focus: var(--tt-focus);
+  --color-danger: var(--tt-danger);
+  --color-conf-high: var(--tt-conf-high);
+  --color-conf-medium: var(--tt-conf-medium);
+  --color-conf-low: var(--tt-conf-low);
+  --color-conf-contested: var(--tt-conf-contested);
+  --color-badge-recording: var(--tt-badge-recording);
+  --color-badge-reconstruction: var(--tt-badge-reconstruction);
+  --color-badge-synthetic: var(--tt-badge-synthetic);
+  --color-fam-indo-european: var(--tt-fam-indo-european);
+  --color-fam-indo-european-ink: var(--tt-fam-indo-european-ink);
+  --color-fam-sino-tibetan: var(--tt-fam-sino-tibetan);
+  --color-fam-sino-tibetan-ink: var(--tt-fam-sino-tibetan-ink);
+  --color-fam-afro-asiatic: var(--tt-fam-afro-asiatic);
+  --color-fam-afro-asiatic-ink: var(--tt-fam-afro-asiatic-ink);
+  --color-fam-austronesian: var(--tt-fam-austronesian);
+  --color-fam-austronesian-ink: var(--tt-fam-austronesian-ink);
+  --color-fam-niger-congo: var(--tt-fam-niger-congo);
+  --color-fam-niger-congo-ink: var(--tt-fam-niger-congo-ink);
+  --color-fam-dravidian: var(--tt-fam-dravidian);
+  --color-fam-dravidian-ink: var(--tt-fam-dravidian-ink);
+  --color-fam-turkic: var(--tt-fam-turkic);
+  --color-fam-turkic-ink: var(--tt-fam-turkic-ink);
+  --color-fam-japonic: var(--tt-fam-japonic);
+  --color-fam-japonic-ink: var(--tt-fam-japonic-ink);
+  --color-fam-koreanic: var(--tt-fam-koreanic);
+  --color-fam-koreanic-ink: var(--tt-fam-koreanic-ink);
+  --color-fam-kra-dai: var(--tt-fam-kra-dai);
+  --color-fam-kra-dai-ink: var(--tt-fam-kra-dai-ink);
+  --color-fam-uralic: var(--tt-fam-uralic);
+  --color-fam-uralic-ink: var(--tt-fam-uralic-ink);
+  --color-fam-other: var(--tt-fam-other);
+  --color-fam-other-ink: var(--tt-fam-other-ink);
+
+  --shadow-raised: var(--tt-shadow-raised);
+  --shadow-overlay: var(--tt-shadow-overlay);
+
+  --spacing-gutter: clamp(1rem, 4vw, 2.5rem);
+  --spacing-target: var(--tt-target-min);
+
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 20px;
+  --radius-pill: 9999px;
+
+  --ease-standard: var(--tt-ease-standard);
+  --ease-enter: var(--tt-ease-enter);
+  --ease-exit: var(--tt-ease-exit);
+  --ease-flight: var(--tt-ease-flight);
+}
+
+/* Type. Font stacks come from src/design/fonts.css (script-typographer); these are fallbacks only. */
+@theme {
+  --font-display: Georgia, "Times New Roman", serif;
+  --font-ui: system-ui, sans-serif;
+  --font-ipa: "Charis SIL", "Doulos SIL", "Gentium Plus", serif;
+
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.4;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.45;
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+  --text-lead: 1.125rem;
+  --text-lead--line-height: 1.55;
+  --text-title-sm: 1.25rem;
+  --text-title-sm--line-height: 1.35;
+  --text-title: 1.5625rem;
+  --text-title--line-height: 1.3;
+  --text-headline: clamp(1.75rem, 1.4rem + 1.5vw, 2.25rem);
+  --text-headline--line-height: 1.2;
+  --text-hero: clamp(2.25rem, 1.6rem + 3vw, 3.5rem);
+  --text-hero--line-height: 1.1;
+}

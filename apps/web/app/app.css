@@ -1,19 +1,113 @@
 @import "tailwindcss";
+@import "../src/design/tokens.css";
 
-/* Placeholder until the design tokens land in src/design/ (Phase 0, step 2). */
-html,
-body {
-  background: #0b1020;
-  color: #e8ebf5;
-  color-scheme: dark;
+/* Base layer: tokens applied to bare elements. Logical properties only (RTL ships from day one). */
+@layer base {
+  html {
+    background-color: var(--tt-canvas);
+    color: var(--tt-ink);
+    font-family: var(--font-ui);
+    font-size: 100%;
+    line-height: 1.6;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    min-block-size: 100dvb;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-wrap: balance;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  a {
+    color: var(--tt-link);
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    transition: text-decoration-thickness var(--tt-dur-ui-fast) var(--tt-ease-standard);
+  }
+  a:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  :focus-visible {
+    outline: var(--tt-focus-width) solid var(--tt-focus);
+    outline-offset: var(--tt-focus-offset);
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background-color: var(--tt-accent);
+    color: var(--tt-canvas);
+  }
+
+  code,
+  kbd {
+    font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+    font-size: 0.9em;
+  }
 }
 
-a {
-  color: #9cc2ff;
-  text-decoration: underline;
+@layer components {
+  /* Buttons: 44 px targets, pill shape, token colors. Logical padding. */
+  .tt-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-block-size: var(--tt-target-min);
+    min-inline-size: var(--tt-target-min);
+    padding-inline: 1.125rem;
+    border: 1.5px solid var(--tt-line-strong);
+    border-radius: 9999px;
+    background-color: var(--tt-raised);
+    color: var(--tt-ink);
+    font: inherit;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    box-shadow: var(--tt-shadow-raised);
+    transition:
+      background-color var(--tt-dur-ui-fast) var(--tt-ease-standard),
+      border-color var(--tt-dur-ui-fast) var(--tt-ease-standard);
+  }
+  .tt-button:hover {
+    border-color: var(--tt-ink-muted);
+    background-color: var(--tt-surface);
+  }
+  .tt-button:active {
+    background-color: var(--tt-canvas);
+  }
+  .tt-button-quiet {
+    background-color: transparent;
+    box-shadow: none;
+  }
 }
 
-:focus-visible {
-  outline: 3px solid #ffd166;
-  outline-offset: 2px;
+/* English copy shown inside an RTL page keeps its punctuation on the right side:
+   each block takes its direction from its own first strong character. Layout still mirrors. */
+.tt-bidi-plain :is(p, h1, h2, h3, h4, li, dt, dd, label, a):not([dir]) {
+  unicode-bidi: plaintext;
+}
+
+/* No animation runs unless asked; and none survives reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
 }

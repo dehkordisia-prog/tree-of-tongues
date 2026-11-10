@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { createRoutesStub } from "react-router";
 import { describe, expect, it } from "vitest";
 
+import "@/i18n";
 import Home from "./home";
 
 describe("Home", () => {
@@ -9,6 +10,7 @@ describe("Home", () => {
     const Stub = createRoutesStub([{ path: "/", Component: Home }]);
     render(<Stub initialEntries={["/"]} />);
     const nav = await screen.findByRole("navigation", { name: "Workbenches" });
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Tree of Tongues");
     const hrefs = Array.from(nav.querySelectorAll("a")).map((a) => a.getAttribute("href"));
     expect(hrefs).toEqual(["/design", "/spike/tree", "/spike/map"]);
   });
