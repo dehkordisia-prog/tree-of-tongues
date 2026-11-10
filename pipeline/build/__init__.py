@@ -60,13 +60,13 @@ def build(
     languoid_rows = tables.build_languoids(gl, gl_retrieved, licenses, unique_qid)
 
     cldr_names = {loc: readers.read_cldr_language_names(cldr_raw, loc) for loc in ("en", "fa", "tr")}
-    xref_rows, name_rows, iso3_map, iso1_map = tables.build_xrefs_and_names(
+    xref_rows, name_rows, iso3_map, iso1_map, iso1_via = tables.build_xrefs_and_names(
         languoid_rows, gl, gl_retrieved, by_gc, cldr_names, licenses
     )
 
     territory_info, terr_retrieved = readers.read_cldr_territories(cldr_raw)
     territory_rows, unmapped_territory = tables.build_territories(
-        territory_info, terr_retrieved, iso3_map, iso1_map, licenses
+        territory_info, terr_retrieved, iso3_map, iso1_map, licenses, iso1_via
     )
 
     ambiguous = {gc for gc, q in candidates.items() if len(q) > 1}
@@ -136,7 +136,9 @@ def build(
     search_stats = search.build_search(build_dir, tabs, territory_names, cldr_names, scope_path, licenses)
 
     unmapped = unmapped_cldr(cldr_names, territory_info, iso3_map, iso1_map)
+    in_scope_nodes = search.scope_nodes(scope_path)[0]
     stats = {
+        "cldr_weak": cldr_weak_codes(tabs, in_scope_nodes),
         "bundle_count": bundle_count,
         "bundle_max_bytes": bundle_max,
         "tree_bytes": tree_bytes,
@@ -159,6 +161,33 @@ def build(
     printable["wikidata_report"] = {k: len(v) for k, v in wd_report.items() if k != "qid_targets"}
     printable["retired_nodes_in_glottolog"] = len(gl.retired)
     return {"tables": {k: v.height for k, v in tabs.items()}, **printable}
+
+
+def cldr_weak_codes(tabs: dict[str, pl.DataFrame], in_scope: set[str]) -> list[dict]:
+    """CLDR codes whose Glottocode came through an ISO-fallback Wikidata item, with row counts."""
+    weak = tables.MAPPED_VIA_FALLBACK
+    terr = tabs["territories"].filter(pl.col("mapped_via") == weak)
+    names = tabs["names"].filter(pl.col("mapped_via") == weak)
+    langs = {r["glottocode"]: r["name"] for r in tabs["languoids"].select("glottocode", "name").to_dicts()}
+    out: dict[str, dict] = {}
+    for r in terr.to_dicts():
+        e = out.setdefault(
+            r["cldr_code"], {"glottocode": r["glottocode"], "territory_rows": 0, "name_rows": 0}
+        )
+        e["territory_rows"] += 1
+    for r in names.to_dicts():
+        code = r["locator"].rsplit("/", 1)[-1].split("-alt-")[0]
+        e = out.setdefault(code, {"glottocode": r["glottocode"], "territory_rows": 0, "name_rows": 0})
+        e["name_rows"] += 1
+    return [
+        {
+            "code": code,
+            **e,
+            "name": langs.get(e["glottocode"], ""),
+            "in_scope": e["glottocode"] in in_scope,
+        }
+        for code, e in sorted(out.items())
+    ]
 
 
 def unmapped_cldr(
@@ -331,6 +360,41 @@ def coverage_report(tabs: dict[str, pl.DataFrame], stats: dict, iso3_map: dict) 
         "",
     ]
 
+    weak = stats["cldr_weak"]
+    lines += [
+        f"### CLDR codes mapped through an ISO-fallback Wikidata item ({len(weak)})",
+        "",
+        "A two-letter CLDR code reached its Glottocode through the ISO 639-1 value (P218) of a Wikidata item "
+        "that was itself attached to the node only by ISO 639-3 match. That item may cover more than the "
+        "Glottolog node. Rows are kept, `mapped_via = wikidata_p218_iso_fallback`, confidence low, with the "
+        f'note "{common.CLDR_FALLBACK_NOTE}". In-scope nodes get the same flag.',
+        "",
+        f"Territory rows flagged: {terr.filter(pl.col('mapped_via') == tables.MAPPED_VIA_FALLBACK).height}; "
+        f"name rows flagged: {names.filter(pl.col('mapped_via') == tables.MAPPED_VIA_FALLBACK).height}.",
+        "",
+        "| CLDR code | Glottocode | Glottolog name | In scope | Territory rows | Name rows |",
+        "| --- | --- | --- | --- | ---: | ---: |",
+    ]
+    for w in weak:
+        lines.append(
+            f"| {w['code']} | {w['glottocode']} | {w['name']} | {'yes' if w['in_scope'] else 'no'} | "
+            f"{w['territory_rows']} | {w['name_rows']} |"
+        )
+    lines.append("")
+
+    retired_n = lang.filter(pl.col("retired")).height
+    lines += [
+        "### Retired nodes",
+        "",
+        f"{retired_n} Glottolog Bookkeeping nodes stay in languoids.parquet (`retired = true`) and in bundles "
+        "(`languoid.retired`), but are left out of both search tiers.",
+        "",
+        "Retired nodes that the scope file names (not searchable; the scope owner should pick a live node): "
+        + (", ".join(stats["search"]["retired_in_scope"]) or "none")
+        + ".",
+        "",
+    ]
+
     lines += ["## Names", "", "| Locale | Languoids with a name | Name rows |", "| --- | ---: | ---: |"]
     for loc in ("en", "fa", "tr"):
         sub = names.filter(pl.col("lang") == loc)
@@ -416,7 +480,8 @@ def coverage_report(tabs: dict[str, pl.DataFrame], stats: dict, iso3_map: dict) 
         f"- Bundles: {stats['bundle_count']}, largest {stats['bundle_max_bytes']} bytes (limit {outputs.BUNDLE_MAX_BYTES})",
         f"- tree.json: {stats['tree_bytes']} bytes",
         f"- territory_index.json: {stats['territory_index_territories']} territories",
-        "- search: " + ", ".join(f"{k}={v}" for k, v in sorted(stats["search"].items())),
+        "- search: "
+        + ", ".join(f"{k}={v}" for k, v in sorted(stats["search"].items()) if k != "retired_in_scope"),
         "- Geo features: " + ", ".join(f"{k}={v}" for k, v in sorted(stats["geo"].items())),
         "",
     ]

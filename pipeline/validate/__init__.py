@@ -298,7 +298,15 @@ def _check_territory_index(build_dir: Path, tabs: dict[str, pl.DataFrame], repor
     elif prov["confidence"] not in common.CONFIDENCE:
         report.fail("territory_index.json: bad confidence")
     expected = {
-        (r["iso3166"], r["glottocode"], r["population_share"], r["official_status"]) for r in terr.to_dicts()
+        (
+            r["iso3166"],
+            r["glottocode"],
+            r["population_share"],
+            r["official_status"],
+            r["mapped_via"] == "wikidata_p218_iso_fallback",
+            r["mapped_via"],
+        )
+        for r in terr.to_dicts()
     }
     actual = set()
     for code, items in doc["territories"].items():
@@ -306,8 +314,8 @@ def _check_territory_index(build_dir: Path, tabs: dict[str, pl.DataFrame], repor
         report.check(
             shares == sorted(shares, reverse=True), f"territory_index.json: {code} is not sorted by share"
         )
-        for gc, share, status in items:
-            actual.add((code, gc, share, status))
+        for gc, share, status, weak, via in items:
+            actual.add((code, gc, share, status, weak, via))
     report.check(actual == expected, "territory_index.json: rows differ from the territories table")
 
 
@@ -361,9 +369,14 @@ def _check_search(
                     report.fail(f"search tier{tier}: {ident} has a bad alias entry {a}")
     report.check(not (ids_by_tier[0] & ids_by_tier[1]), "search: an id appears in both tiers")
     if "languoids" in tabs:
-        want = set(tabs["languoids"]["glottocode"].to_list())
-        got = {i for i in ids_by_tier[0] | ids_by_tier[1] if i in want}
-        report.check(got == want, f"search: {len(want - got)} languoids are in neither tier")
+        langs = tabs["languoids"]
+        want = set(langs.filter(~pl.col("retired"))["glottocode"].to_list())
+        retired = set(langs.filter(pl.col("retired"))["glottocode"].to_list())
+        found = ids_by_tier[0] | ids_by_tier[1]
+        report.check(want <= found, f"search: {len(want - found)} live languoids are in neither tier")
+        report.check(
+            not (retired & found), f"search: retired nodes are searchable: {sorted(retired & found)[:5]}"
+        )
 
 
 def validate(build_dir: Path, licenses_path: Path = common.LICENSES_PATH) -> list[str]:

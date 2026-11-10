@@ -51,6 +51,9 @@ export const S = {
   provenance: "Provenance",
   noIndex: "The country to language index is not built. Run uv run pipeline build.",
   noLanguagesForCountry: "No language rows in CLDR for this territory.",
+  weakMappingMark: "(uncertain match)",
+  weakMappingNote:
+    "Uncertain match: CLDR's code reached this language through a Wikidata item that may cover more than it. Confidence low.",
   contestedNote:
     "Natural Earth records a claim or self-administration here. The atlas shows it without taking a position.",
   neutralTitle: "Disputed or breakaway area",

@@ -233,6 +233,12 @@ def build_search(
             cur = langs[cur]["parent_glottocode"]
         return out
 
+    retired = {gc for gc, r in langs.items() if r["retired"]}
+    # A scope entry may name a retired node (e.g. a contested candidate). It is still not searchable;
+    # the build reports it so the scope owner can see it.
+    retired_in_scope = sorted(retired & (in_scope | listed_families))
+    in_scope = in_scope - retired
+    listed_families = listed_families - retired
     tier1_nodes = in_scope | listed_families
     for gc in sorted(tier1_nodes):
         tier1_nodes = tier1_nodes | set(ancestors(gc))
@@ -252,10 +258,10 @@ def build_search(
     # candidate signal only. Membership would need a sourced table, which is not ingested yet.
     by_code: dict[str, set[str]] = defaultdict(set)
     for gc, lang in langs.items():
-        if lang["level"] == "family" and lang["iso639_3"]:
+        if lang["level"] == "family" and lang["iso639_3"] and gc not in retired:
             by_code[lang["iso639_3"]].add(gc)
     for r in tabs["xrefs"].filter(pl.col("scheme") == "iso639-3").to_dicts():
-        if langs[r["glottocode"]]["level"] == "family":
+        if langs[r["glottocode"]]["level"] == "family" and r["glottocode"] not in retired:
             by_code[r["code"]].add(r["glottocode"])
     iso1_of: dict[str, set[str]] = defaultdict(set)  # gc -> ISO 639-1 codes the build holds for the node
     for r in tabs["xrefs"].filter(pl.col("scheme") == "iso639-1").to_dicts():
@@ -302,11 +308,14 @@ def build_search(
     countries = _country_docs(codes, territory_names)
 
     tier1 = [docs[gc] for gc in sorted(tier1_nodes)] + countries
-    tier2 = [docs[gc] for gc in sorted(docs) if gc not in tier1_nodes]
+    # Retired (Bookkeeping) nodes stay in languoids.parquet and bundles but are not searchable.
+    tier2 = [docs[gc] for gc in sorted(docs) if gc not in tier1_nodes and gc not in retired]
     for doc in macro:
         (tier1 if set(doc["candidate_glottocodes"]) & tier1_nodes else tier2).append(doc)
     stats = _write(build_dir, tier1, tier2, licenses)
     stats["countries_without_english_name"] = len(codes) - len(countries)
+    stats["retired_excluded"] = len(retired)
+    stats["retired_in_scope"] = retired_in_scope
     return stats
 
 

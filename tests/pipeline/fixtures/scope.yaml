@@ -24,6 +24,7 @@ languages:
   confidence: contested
   candidates:
   - glottocode: test0006
+  - glottocode: test0013  # retired: named by the scope, still not searchable
 families:
 - glottocode: test0001
 - glottocode: test0007

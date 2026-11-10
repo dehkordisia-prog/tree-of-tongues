@@ -14,16 +14,16 @@ files:
   version: 49.0.0
   cldr_path: cldr-core/supplemental/territoryInfo.json
   retrieved_at: '2026-01-01T00:00:00Z'
-  sha256: 0b2790174ac20cda60560b3a6b5543e5db769207fc49436a08182e7d5ae86c3c
-  bytes: 621
+  sha256: b86f751351d84856503f1dec87df12488102c774250a8754f1a714222f7dbbfb
+  bytes: 674
 - path: cldr-49/2026-01-01/cldr-localenames-full__main__en__languages.json
   source_id: cldr-49
   url: https://example.invalid/fixture
   version: 49.0.0
   cldr_path: cldr-localenames-full/main/en/languages.json
   retrieved_at: '2026-01-01T00:00:00Z'
-  sha256: b7231f507d35b287319aa9dab623ed5eebeec63a76c51486f7590847a30f56bc
-  bytes: 263
+  sha256: 24a65b834bec150b519c07baedeaa5c3ce6e0c72f3e42dc23f4652359d3bffc3
+  bytes: 285
 - path: cldr-49/2026-01-01/cldr-localenames-full__main__en__territories.json
   source_id: cldr-49
   url: https://example.invalid/fixture
@@ -38,8 +38,8 @@ files:
   version: 49.0.0
   cldr_path: cldr-localenames-full/main/fa/languages.json
   retrieved_at: '2026-01-01T00:00:00Z'
-  sha256: 7c51dc395cc23fc304cb2f509056f9125395c646b00edd66015863d18b8a2ed3
-  bytes: 156
+  sha256: 469f2457fd46789fff40c9ebede69bcd05f7d900eacf50e5a3732aaee14cb003
+  bytes: 183
 - path: cldr-49/2026-01-01/cldr-localenames-full__main__fa__territories.json
   source_id: cldr-49
   url: https://example.invalid/fixture
@@ -54,8 +54,8 @@ files:
   version: 49.0.0
   cldr_path: cldr-localenames-full/main/tr/languages.json
   retrieved_at: '2026-01-01T00:00:00Z'
-  sha256: 5d1a39deb83922fa32b2c8b872ec00e35b408d928dbaea100f49c21339736cd8
-  bytes: 155
+  sha256: 00869e544e21e5d4349605b94f024b2371c60c0ac8bc66485a74038e3ba48ea8
+  bytes: 179
 - path: cldr-49/2026-01-01/cldr-localenames-full__main__tr__territories.json
   source_id: cldr-49
   url: https://example.invalid/fixture
@@ -121,8 +121,8 @@ files:
   version: rolling
   query_file: pipeline/fetch/queries/languoids.rq
   retrieved_at: '2026-01-01T00:00:00Z'
-  sha256: 7a058a3cd19bc1b2d25ccfcb9f99a9a84818500ff9d7b6ad0afcdcc91af95df4
-  bytes: 4680
+  sha256: bde8b7ee0539785f3dfe286669edb83196dfcd3f0fbb0806fd0f379330fb2388
+  bytes: 4496
 - path: wikidata/2026-01-01/speakers-0000.json
   source_id: wikidata
   url: https://query.wikidata.org/sparql

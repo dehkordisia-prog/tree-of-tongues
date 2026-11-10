@@ -77,3 +77,6 @@ def latest_raw_dir(raw_dir: Path, source_id: str) -> Path:
     if not dated:
         raise SystemExit(f"No raw data for {source_id} under {base}. Run `pipeline fetch` first.")
     return dated[-1]
+
+
+CLDR_FALLBACK_NOTE = "CLDR code mapped through a Wikidata item that may cover more than this Glottolog node"

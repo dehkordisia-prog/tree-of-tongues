@@ -104,7 +104,7 @@ def test_speaker_confidence_and_references(built):
 
 def test_territories_and_unmapped_codes(built):
     terr = table(built, "territories")
-    assert terr.height == 3
+    assert terr.height == 4  # ZZ: qaa, qab, qf; YY: qaa
     row = terr.filter((pl.col("glottocode") == "test0002") & (pl.col("iso3166") == "ZZ")).to_dicts()[0]
     assert row["population_share"] == 60.0 and row["official_status"] == "official" and row["year"] is None
     assert row["confidence"] == "medium"
@@ -214,8 +214,14 @@ def test_build_stops_when_source_missing_from_licenses(tmp_path):
 def test_territory_index_matches_territories_table(built):
     doc = json.loads((built / "territory_index.json").read_text(encoding="utf-8"))
     assert doc["provenance"]["source_id"] == "cldr-49" and doc["provenance"]["license"] == "Unicode-3.0"
-    assert doc["territories"]["ZZ"] == [["test0002", 60.0, "official"], ["test0004", 10.5, None]]
-    assert doc["territories"]["YY"] == [["test0002", 100.0, None]]
+    assert doc["territories"]["ZZ"] == [
+        ["test0002", 60.0, "official", False, "glottolog_iso639_3"],
+        ["test0004", 10.5, None, False, "glottolog_iso639_3"],
+        ["test0005", 2.0, None, True, "wikidata_p218_iso_fallback"],
+    ]
+    assert doc["territories"]["YY"] == [["test0002", 100.0, None, False, "glottolog_iso639_3"]]
+    assert doc["provenance"]["confidence"] == "medium"
+    assert doc["provenance"]["weak_mapping_note"] == common.CLDR_FALLBACK_NOTE
 
 
 def test_validate_catches_territory_index_drift(built, tmp_path):
@@ -239,11 +245,13 @@ def test_search_tiers_split_scope_from_everything_else(built):
     assert not set(t1) & set(t2)
     # scope languages, every candidate of contested entries, listed families and ancestors
     assert {"test0002", "test0008", "test0009", "test0006", "test0001", "test0007"} <= set(t1)
-    assert set(t2) == {"test0003", "test0004", "test0005", "test0010", "test0011", "test0012", "test0013"}
+    # retired (Bookkeeping) nodes test0011 and test0013 are not searchable
+    assert set(t2) == {"test0003", "test0004", "test0005", "test0010", "test0012"}
     assert t1["test0002"]["in_scope"] is True and "in_scope" not in t1["test0001"]
     assert {"ZZ", "YY"} <= set(t1) and t1["ZZ"]["kind"] == "country" and t1["ZZ"]["name"] == "Zedland"
     assert t1["ZZ"]["alt"] == ["Zed"] and {x["lang"] for x in t1["ZZ"]["localized"]} == {"fa", "tr"}
-    assert set(table(built, "languoids")["glottocode"]) <= set(t1) | set(t2)
+    live = table(built, "languoids").filter(~pl.col("retired"))
+    assert set(live["glottocode"]) <= set(t1) | set(t2)
 
 
 def test_search_documents_carry_names_and_sources(built):
@@ -432,3 +440,80 @@ def test_deprecated_p1394_is_recorded_in_notes(built):
     spk = {r["speaker_id"]: r for r in table(built, "speakers").to_dicts()}
     assert "deprecated P1394 value" in spk["wd:Q9008-GGG"]["notes"]
     assert "Q9008 on" in (built / "coverage.md").read_text(encoding="utf-8")
+
+
+WEAK = "wikidata_p218_iso_fallback"
+
+
+def test_cldr_rows_through_an_iso_fallback_item_are_flagged_low(built):
+    terr = table(built, "territories")
+    weak = terr.filter(pl.col("mapped_via") == WEAK).to_dicts()
+    assert [(r["glottocode"], r["cldr_code"]) for r in weak] == [("test0005", "qf")]
+    assert weak[0]["confidence"] == "low" and common.CLDR_FALLBACK_NOTE in weak[0]["notes"]
+    strong = terr.filter(pl.col("mapped_via") != WEAK)
+    assert set(strong["confidence"]) == {"medium"} and set(strong["mapped_via"]) == {"glottolog_iso639_3"}
+    names = table(built, "names")
+    wn = names.filter(pl.col("mapped_via") == WEAK)
+    assert wn.height == 3 and set(wn["glottocode"]) == {"test0005"} and set(wn["confidence"]) == {"low"}
+    assert all(common.CLDR_FALLBACK_NOTE in n for n in wn["notes"])
+    assert set(wn["source_id"]) == {"cldr-49"}
+    # non-CLDR names and CLDR names through Glottolog's own ISO code are not flagged
+    assert (
+        names.filter(pl.col("source_id") != "cldr-49")["mapped_via"].null_count()
+        == names.filter(pl.col("source_id") != "cldr-49").height
+    )
+    direct = names.filter((pl.col("source_id") == "cldr-49") & (pl.col("glottocode") == "test0002"))
+    assert set(direct["mapped_via"]) == {"glottolog_iso639_3"} and set(direct["confidence"]) == {"high"}
+
+
+def test_weak_rows_reach_bundle_and_coverage(built):
+    bundle = json.loads((built / "bundles" / "test0005.json").read_text(encoding="utf-8"))
+    blocks = bundle["territories"]
+    assert len(blocks) == 1 and blocks[0]["confidence"] == "low"
+    assert blocks[0]["items"][0]["mapped_via"] == WEAK
+    assert common.CLDR_FALLBACK_NOTE in blocks[0]["notes"]
+    flagged = [n for n in bundle["names"]["items"] if n["mapped_via"] == WEAK]
+    assert flagged and all(n["confidence"] == "low" for n in flagged)
+    cov = (built / "coverage.md").read_text(encoding="utf-8")
+    assert "mapped through an ISO-fallback Wikidata item (1)" in cov
+    assert "| qf | test0005 | Loneish | no | 1 | 3 |" in cov
+
+
+def test_weak_flag_applies_to_in_scope_nodes_too():
+    from pipeline.build import cldr_weak_codes
+
+    tabs = {
+        "territories": pl.DataFrame({"cldr_code": ["hy"], "glottocode": ["test0005"], "mapped_via": [WEAK]}),
+        "names": pl.DataFrame(
+            {"glottocode": [], "locator": [], "mapped_via": []},
+            schema={"glottocode": pl.String, "locator": pl.String, "mapped_via": pl.String},
+        ),
+        "languoids": pl.DataFrame({"glottocode": ["test0005"], "name": ["Loneish"]}),
+    }
+    out = cldr_weak_codes(tabs, {"test0005"})
+    assert out[0]["code"] == "hy" and out[0]["in_scope"] is True
+
+
+def test_retired_nodes_are_flagged_and_not_searchable(built):
+    langs = {r["glottocode"]: r for r in table(built, "languoids").to_dicts()}
+    assert {gc for gc, r in langs.items() if r["retired"]} == {"test0011", "test0013"}
+    for gc in ("test0011", "test0013"):
+        bundle = json.loads((built / "bundles" / f"{gc}.json").read_text(encoding="utf-8"))
+        assert bundle["languoid"]["retired"] is True
+        assert gc not in search_docs(built, 1) and gc not in search_docs(built, 2)
+    cov = (built / "coverage.md").read_text(encoding="utf-8")
+    assert "scope file names (not searchable; the scope owner should pick a live node): test0013" in cov
+    live = json.loads((built / "bundles" / "test0002.json").read_text(encoding="utf-8"))
+    assert live["languoid"]["retired"] is False
+
+
+def test_validate_catches_a_retired_node_in_search(built, tmp_path):
+    bad = tmp_path / "bad_retired"
+    shutil.copytree(built, bad)
+    path = bad / "search" / "tier2.json"
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    doc["documents"].append({**doc["documents"][0], "id": "test0011", "glottocode": "test0011"})
+    doc["count"] = len(doc["documents"])
+    doc["documents"].sort(key=lambda d: d["id"])
+    path.write_text(json.dumps(doc, ensure_ascii=False), encoding="utf-8")
+    assert any("retired" in f or "manifest" in f or "tier2" in f for f in validate(bad))

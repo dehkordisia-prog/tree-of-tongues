@@ -19,6 +19,7 @@ NAME_TYPES = ("endonym", "exonym", "alias")
 SPEAKER_KINDS = ("L1", "L2", "total", "unknown")
 ATTACHED_VIA = ("wikidata_p1394_to_family", "wikidata_iso_match")
 RANKS = ("preferred", "normal", "deprecated")
+MAPPED_VIA = ("glottolog_iso639_3", "wikidata_p218", "wikidata_p218_iso_fallback")
 XREF_SCHEMES = ("iso639-3", "iso639-1", "wikidata", "cldr")
 
 
@@ -52,6 +53,7 @@ LANGUOIDS = pa.DataFrameSchema(
         "is_macrolanguage": pa.Column(pl.Boolean, nullable=True),
         "is_isolate": pa.Column(pl.Boolean, nullable=True),
         "category": pa.Column(pl.String, nullable=True),
+        "retired": pa.Column(pl.Boolean, nullable=False),
         **_prov(),
     },
     strict=True,
@@ -65,6 +67,7 @@ NAMES = pa.DataFrameSchema(
         "lang": pa.Column(pl.String, nullable=True),
         "script": pa.Column(pl.String, pa.Check.str_matches(r"^[A-Z][a-z]{3}$"), nullable=True),
         "type": pa.Column(pl.String, pa.Check.isin(NAME_TYPES), nullable=False),
+        "mapped_via": pa.Column(pl.String, pa.Check.isin(MAPPED_VIA), nullable=True),
         **_prov(),
     },
     strict=True,
@@ -114,6 +117,7 @@ TERRITORIES = pa.DataFrameSchema(
         "territory_population": pa.Column(pl.Int64, pa.Check.ge(0), nullable=True),
         "official_status": pa.Column(pl.String, nullable=True),
         "year": pa.Column(pl.Int32, nullable=True),
+        "mapped_via": pa.Column(pl.String, pa.Check.isin(MAPPED_VIA), nullable=False),
         **_prov(),
     },
     strict=True,

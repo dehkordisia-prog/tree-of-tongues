@@ -36,6 +36,7 @@ PL_TYPES: dict[str, pl.DataType] = {
     "longitude": pl.Float64,
     "is_macrolanguage": pl.Boolean,
     "is_isolate": pl.Boolean,
+    "retired": pl.Boolean,
     "value": pl.Float64,
     "value_low": pl.Float64,
     "value_high": pl.Float64,
@@ -161,6 +162,7 @@ def build_languoids(
                 "is_macrolanguage": None,  # Glottolog does not carry this; left null, never guessed.
                 "is_isolate": lang["is_isolate"],
                 "category": category["value"] if category else None,
+                "retired": gc in gl.retired,
                 **_prov(sid, locator, retrieved_at, licenses, "high"),
             }
         )
@@ -354,8 +356,8 @@ def build_xrefs_and_names(
     by_gc: dict[str, list[tuple[str, dict]]],
     cldr_names: dict[str, tuple[dict[str, str], str]],
     licenses: dict[str, dict],
-) -> tuple[list[dict], list[dict], dict[str, list[str]], dict[str, list[str]]]:
-    """Return (xref rows, name rows, iso3 -> glottocodes, iso1 -> glottocodes)."""
+) -> tuple[list[dict], list[dict], dict[str, list[str]], dict[str, list[str]], dict[str, str]]:
+    """Return (xref rows, name rows, iso3 -> glottocodes, iso1 -> glottocodes, iso1 -> mapped_via)."""
     xrefs: list[dict] = []
     names: list[dict] = []
     gl_sid, wd_sid, cldr_sid = common.GLOTTOLOG, common.WIKIDATA, common.CLDR
@@ -364,6 +366,8 @@ def build_xrefs_and_names(
     iso3_map: dict[str, set[str]] = defaultdict(set)
     iso1_map: dict[str, set[str]] = defaultdict(set)
     own_codes: dict[str, set[str]] = defaultdict(set)
+    iso1_direct: set[tuple[str, str]] = set()
+    iso1_fallback: set[tuple[str, str]] = set()
 
     for row in languoid_rows:
         if row["iso639_3"]:
@@ -426,13 +430,14 @@ def build_xrefs_and_names(
                     # claim in xrefs but is not used to attach CLDR data.)
                     if levels.get(gc) == "language":
                         iso1_map[code].add(gc)
+                        (iso1_fallback if entry.get("iso_fallback") else iso1_direct).add((code, gc))
             for code in sorted(entry["iso3"]):
                 xrefs.append({**base, "scheme": "iso639-3", "code": code, "locator": f"{qid}#P220"})
                 if not shared and not via_family and not demoted:
                     own_codes[gc].add(code)
 
     # --- names
-    def add(gc, text, lang, kind, prov):
+    def add(gc, text, lang, kind, prov, mapped_via=None):
         names.append(
             {
                 "glottocode": gc,
@@ -440,6 +445,7 @@ def build_xrefs_and_names(
                 "lang": lang,
                 "script": detect_script(text),
                 "type": kind,
+                "mapped_via": mapped_via,
                 **prov,
             }
         )
@@ -508,6 +514,7 @@ def build_xrefs_and_names(
                         ),
                     )
     # CLDR names resolve through the same code maps used for territories.
+    iso1_via = _iso1_via(iso1_map, iso1_direct, iso1_fallback)
     for locale, (table, retrieved) in sorted(cldr_names.items()):
         for code, text in sorted(table.items()):
             base = code.split("-alt-")[0]
@@ -516,6 +523,11 @@ def build_xrefs_and_names(
             if not gcs:
                 continue
             gc = gcs[0]
+            via = cldr_mapped_via(base, iso1_via)
+            weak = via == MAPPED_VIA_FALLBACK
+            note = "CLDR alternate form" if is_alt else None
+            if weak:
+                note = "; ".join(filter(None, [note, CLDR_FALLBACK_NOTE]))
             add(
                 gc,
                 text,
@@ -526,16 +538,40 @@ def build_xrefs_and_names(
                     f"cldr-localenames-full/main/{locale}/languages.json#/main/{locale}/localeDisplayNames/languages/{code}",
                     retrieved,
                     licenses,
-                    "high",
-                    "CLDR alternate form" if is_alt else None,
+                    "low" if weak else "high",
+                    note,
                 ),
+                via,
             )
     return (
         xrefs,
         names,
         {k: sorted(v) for k, v in iso3_map.items()},
         {k: sorted(v) for k, v in iso1_map.items()},
+        iso1_via,
     )
+
+
+MAPPED_VIA_ISO3 = "glottolog_iso639_3"
+MAPPED_VIA_P218 = "wikidata_p218"
+MAPPED_VIA_FALLBACK = "wikidata_p218_iso_fallback"
+CLDR_FALLBACK_NOTE = common.CLDR_FALLBACK_NOTE
+
+
+def _iso1_via(iso1_map: dict, direct: set, fallback: set) -> dict[str, str]:
+    """For each two-letter code with exactly one Glottocode: the path it took (direct beats fallback)."""
+    via: dict[str, str] = {}
+    for code, gcs in iso1_map.items():
+        if len(gcs) != 1:
+            continue
+        key = (code, next(iter(gcs)))
+        via[code] = MAPPED_VIA_P218 if key in direct or key not in fallback else MAPPED_VIA_FALLBACK
+    return via
+
+
+def cldr_mapped_via(code: str, iso1_via: dict[str, str]) -> str:
+    """Path from a mapped simple CLDR code to its Glottocode. Call only when resolve_cldr found one."""
+    return iso1_via.get(code, MAPPED_VIA_P218) if len(code) == 2 else MAPPED_VIA_ISO3
 
 
 def resolve_cldr(code: str, iso3_map: dict, iso1_map: dict) -> list[str]:
@@ -548,7 +584,12 @@ def resolve_cldr(code: str, iso3_map: dict, iso1_map: dict) -> list[str]:
 
 
 def build_territories(
-    territory_info: dict, retrieved: str, iso3_map: dict, iso1_map: dict, licenses: dict[str, dict]
+    territory_info: dict,
+    retrieved: str,
+    iso3_map: dict,
+    iso1_map: dict,
+    licenses: dict[str, dict],
+    iso1_via: dict[str, str] | None = None,
 ) -> tuple[list[dict], list[dict]]:
     """Return (territory rows, unmapped entries). Unmapped codes are reported, never guessed."""
     rows: list[dict] = []
@@ -566,6 +607,9 @@ def build_territories(
                 unmapped.append({"code": code, "country": country, "reason": reason})
                 continue
             share = lp.get("_populationPercent")
+            via = cldr_mapped_via(code, iso1_via or {})
+            weak = via == MAPPED_VIA_FALLBACK
+            base_note = "CLDR estimate; percent of the territory population; CLDR gives no year"
             rows.append(
                 {
                     "glottocode": gcs[0],
@@ -575,13 +619,14 @@ def build_territories(
                     "territory_population": int(pop) if pop is not None else None,
                     "official_status": lp.get("_officialStatus"),
                     "year": None,  # CLDR does not date these estimates
+                    "mapped_via": via,
                     **_prov(
                         common.CLDR,
                         locator,
                         retrieved,
                         licenses,
-                        "medium",
-                        "CLDR estimate; percent of the territory population; CLDR gives no year",
+                        "low" if weak else "medium",
+                        f"{base_note}; {CLDR_FALLBACK_NOTE}" if weak else base_note,
                     ),
                 }
             )

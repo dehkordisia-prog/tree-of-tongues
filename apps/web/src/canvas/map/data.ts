@@ -285,7 +285,9 @@ export interface Bundle {
 
 export interface TerritoryIndex {
   provenance: { source_id: string; locator_template: string; retrieved_at: string; confidence: string; notes: string | null } | null;
-  territories: Record<string, [string, number, string | null][]>;
+  /** [glottocode, share, official status, weak mapping, mapped via]. Weak: the CLDR code reached this
+   *  Glottocode through a Wikidata item that may cover more than the node (pipeline/README.md). */
+  territories: Record<string, [string, number, string | null, boolean?, string?][]>;
 }
 
 export interface LoadedData {

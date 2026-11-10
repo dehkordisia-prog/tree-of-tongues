@@ -313,7 +313,7 @@ export function CountryPanel({ info, name, index, languageName, onPickLanguage }
                   </tr>
                 </thead>
                 <tbody>
-                  {rows.map(([glottocode, share, status]) => {
+                  {rows.map(([glottocode, share, status, weak]) => {
                     const label = languageName(glottocode);
                     return (
                       <tr key={glottocode}>
@@ -324,6 +324,11 @@ export function CountryPanel({ info, name, index, languageName, onPickLanguage }
                             </button>
                           ) : (
                             glottocode
+                          )}
+                          {weak && (
+                            <Txt as="span" className="ms-1 text-ink-muted">
+                              {S.weakMappingMark}
+                            </Txt>
                           )}
                         </td>
                         <td className={`${td} tabular-nums`}>{formatShare(share)}</td>
@@ -338,6 +343,11 @@ export function CountryPanel({ info, name, index, languageName, onPickLanguage }
           <Txt as="p" className="mt-2 text-small">
             {S.sourceCldr}
           </Txt>
+          {rows.some((r) => r[3]) && (
+            <Txt as="p" className="mt-1 text-small text-ink-muted">
+              {S.weakMappingNote}
+            </Txt>
+          )}
         </>
       )}
       <GoDeeper />

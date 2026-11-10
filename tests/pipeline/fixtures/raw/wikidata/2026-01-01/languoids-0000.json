@@ -132,6 +132,10 @@
      "type": "literal",
      "value": "Loneish language",
      "xml:lang": "en"
+    },
+    "iso1": {
+     "type": "literal",
+     "value": "qf"
     }
    },
    {

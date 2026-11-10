@@ -71,6 +71,7 @@ def territory_blocks(rows: list[dict]) -> list[dict]:
                 "population_share": t["population_share"],
                 "official_status": t["official_status"],
                 "year": t["year"],
+                "mapped_via": t["mapped_via"],
             }
             if t["locator"] != TERRITORY_LOCATOR.format(iso3166=t["iso3166"], cldr_code=t["cldr_code"]):
                 item["locator"] = t["locator"]
@@ -175,6 +176,7 @@ def build_bundles(
                     "endangerment": r["endangerment"],
                     "is_isolate": r["is_isolate"],
                     "category": r["category"],
+                    "retired": r["retired"],
                     **prov(r),
                 },
                 "lineage": lineage,
@@ -190,6 +192,7 @@ def build_bundles(
                             "lang": n["lang"],
                             "script": n["script"],
                             "type": n["type"],
+                            "mapped_via": n["mapped_via"],
                             **prov(n),
                         }
                         for n in nm[:name_cap]
@@ -433,17 +436,28 @@ def build_geo(
 # --------------------------------------------------------------------------- territory index
 
 TERRITORY_INDEX_FORMAT = (
-    "territories[iso3166] is a list of [glottocode, population_share, official_status] sorted by share, "
-    "descending (null shares last). Copied from the territories table (CLDR territoryInfo); nothing is "
-    "averaged or merged. `provenance` applies to every row; the row's own locator is `locator_template` "
-    "formatted with the territory code and the CLDR language code (see the bundle for the code)."
+    "territories[iso3166] is a list of [glottocode, population_share, official_status, weak_mapping, "
+    "mapped_via] sorted by share, descending (null shares last). Copied from the territories table (CLDR "
+    "territoryInfo); nothing is averaged or merged. weak_mapping is true when the CLDR code reached the "
+    "Glottocode through a Wikidata item found by ISO 639-3 match, which may cover more than this Glottolog "
+    "node; such a row has confidence low and `weak_mapping_note` applies to it. mapped_via is one of "
+    "glottolog_iso639_3, wikidata_p218, wikidata_p218_iso_fallback. `provenance` applies to every row except "
+    "that weak_mapping rows have confidence low; the row's own locator is `locator_template` formatted with "
+    "the territory code and the CLDR language code (see the bundle for the code)."
 )
 
 
 def build_territory_index(build_dir: Path, tabs: dict[str, pl.DataFrame], licenses: dict[str, dict]) -> int:
     """Reverse index from CLDR territory code to languoids. Returns the number of territories."""
     rows = tabs["territories"].to_dicts()
-    groups = {(r["source_id"], r["retrieved_at"], r["confidence"], r["notes"], r["license"]) for r in rows}
+    weak_via = "wikidata_p218_iso_fallback"
+    strong = [r for r in rows if r["mapped_via"] != weak_via]
+    groups = {(r["source_id"], r["retrieved_at"], r["confidence"], r["notes"], r["license"]) for r in strong}
+    for r in rows:
+        if r["mapped_via"] == weak_via and (
+            r["confidence"] != "low" or common.CLDR_FALLBACK_NOTE not in (r["notes"] or "")
+        ):
+            raise SystemExit(f"STOP: weak territory row is not marked low with the note: {r['glottocode']}")
     if len(groups) > 1:
         raise SystemExit(f"STOP: territory rows have {len(groups)} provenance groups; the index needs one")
     for r in rows:
@@ -451,13 +465,21 @@ def build_territory_index(build_dir: Path, tabs: dict[str, pl.DataFrame], licens
             raise SystemExit(f"STOP: territory locator does not fit the template: {r['locator']}")
     by_territory: dict[str, list[list]] = defaultdict(list)
     for r in rows:
-        by_territory[r["iso3166"]].append([r["glottocode"], r["population_share"], r["official_status"]])
+        by_territory[r["iso3166"]].append(
+            [
+                r["glottocode"],
+                r["population_share"],
+                r["official_status"],
+                r["mapped_via"] == weak_via,
+                r["mapped_via"],
+            ]
+        )
     territories = {
         code: sorted(items, key=lambda i: (i[1] is None, -(i[1] or 0), i[0]))
         for code, items in sorted(by_territory.items())
     }
     provenance = None
-    if rows:
+    if strong:
         source_id, retrieved_at, confidence, notes, license_ = next(iter(groups))
         provenance = {
             "source_id": source_id,
@@ -466,6 +488,7 @@ def build_territory_index(build_dir: Path, tabs: dict[str, pl.DataFrame], licens
             "confidence": confidence,
             "notes": notes,
             "license": license_,
+            "weak_mapping_note": common.CLDR_FALLBACK_NOTE,
         }
     dump_json(
         {"format": TERRITORY_INDEX_FORMAT, "provenance": provenance, "territories": territories},
