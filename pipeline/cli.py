@@ -35,6 +35,7 @@ def build_parser() -> argparse.ArgumentParser:
         elif name == "build":
             stage_parser.add_argument("--raw-dir", help="raw input directory (default data/raw)")
             stage_parser.add_argument("--build-dir", help="output directory (default data/build)")
+            stage_parser.add_argument("--scope", help="Phase 1 scope list (default content/scope/...)")
         elif name == "validate":
             stage_parser.add_argument("--build-dir", help="directory to validate (default data/build)")
             stage_parser.add_argument("--licenses", help="LICENSES.yaml to check source ids against")

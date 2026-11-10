@@ -16,3 +16,10 @@ test0005-level,test0005,level,language,level-language
 test0005-category,test0005,category,Spoken_L1_Language,category-Spoken_L1_Language
 test0006-level,test0006,level,language,level-language
 test0006-category,test0006,category,Spoken_L1_Language,category-Spoken_L1_Language
+test0007-level,test0007,level,family,level-family
+test0007-category,test0007,category,Family,category-Family
+test0008-level,test0008,level,language,level-language
+test0008-category,test0008,category,Spoken_L1_Language,category-Spoken_L1_Language
+test0008-classification,test0008,classification,test0007,
+test0009-level,test0009,level,family,level-family
+test0009-category,test0009,category,Family,category-Family

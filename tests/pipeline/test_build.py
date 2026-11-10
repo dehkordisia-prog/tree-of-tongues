@@ -15,12 +15,13 @@ from pipeline.cli import main
 from pipeline.validate import validate
 
 FIXTURE_RAW = Path(__file__).parent / "fixtures" / "raw"
+FIXTURE_SCOPE = Path(__file__).parent / "fixtures" / "scope.yaml"
 
 
 @pytest.fixture(scope="module")
 def built(tmp_path_factory) -> Path:
     out = tmp_path_factory.mktemp("build")
-    build(FIXTURE_RAW, out)
+    build(FIXTURE_RAW, out, scope_path=FIXTURE_SCOPE)
     return out
 
 
@@ -75,7 +76,7 @@ def test_shared_glottocode_is_contested_in_xrefs(built):
 
 def test_speaker_rows_are_never_merged_or_averaged(built):
     spk = table(built, "speakers")
-    assert spk.height == 5  # 6 raw statements, one skipped (Glottocode not in Glottolog)
+    assert spk.height == 7  # 8 raw statements, one skipped (Glottocode not in Glottolog)
     assert spk["speaker_id"].n_unique() == spk.height
     english = spk.filter(pl.col("glottocode") == "test0002")
     assert sorted(english["value"]) == [600000.0, 900000.0, 1000000.0]
@@ -151,21 +152,30 @@ def test_bundles_tree_and_geo(built):
 
 def test_build_is_reproducible(tmp_path):
     a, b = tmp_path / "a", tmp_path / "b"
-    build(FIXTURE_RAW, a)
-    build(FIXTURE_RAW, b)
+    build(FIXTURE_RAW, a, scope_path=FIXTURE_SCOPE)
+    build(FIXTURE_RAW, b, scope_path=FIXTURE_SCOPE)
     sums_a = {p.relative_to(a).as_posix(): common.sha256_file(p) for p in a.rglob("*") if p.is_file()}
     sums_b = {p.relative_to(b).as_posix(): common.sha256_file(p) for p in b.rglob("*") if p.is_file()}
     assert sums_a == sums_b and len(sums_a) > 10
 
 
-def test_validate_ignores_derived_but_not_other_unlisted_files(built, tmp_path):
+def test_validate_fails_on_any_unlisted_file(built, tmp_path):
     copy = tmp_path / "copy"
     shutil.copytree(built, copy)
+    assert validate(copy) == []
     (copy / "derived").mkdir()
     (copy / "derived" / "territory_index.json").write_text("{}\n")
-    assert validate(copy) == []
+    assert any("manifest/disk mismatch" in f for f in validate(copy))
+    shutil.rmtree(copy / "derived")
     (copy / "stray.json").write_text("{}\n")
     assert any("manifest/disk mismatch" in f for f in validate(copy))
+
+
+def test_manifest_lists_territory_index_and_search_tiers(built):
+    doc = json.loads((built / "manifest.json").read_text(encoding="utf-8"))
+    listed = {o["path"]: o for o in doc["outputs"]}
+    for rel in ("territory_index.json", "search/tier1.json", "search/tier2.json"):
+        assert rel in listed and listed[rel]["source_ids"]
 
 
 def test_validate_catches_unknown_source_and_orphans(built, tmp_path):
@@ -199,3 +209,135 @@ def test_build_stops_when_source_missing_from_licenses(tmp_path):
     licenses.write_text("schema_version: 1\nsources: []\nassets: []\n", encoding="utf-8")
     with pytest.raises(SystemExit, match=r"no entry in data/LICENSES.yaml"):
         build(FIXTURE_RAW, tmp_path / "out", licenses)
+
+
+def test_territory_index_matches_territories_table(built):
+    doc = json.loads((built / "territory_index.json").read_text(encoding="utf-8"))
+    assert doc["provenance"]["source_id"] == "cldr-49" and doc["provenance"]["license"] == "Unicode-3.0"
+    assert doc["territories"]["ZZ"] == [["test0002", 60.0, "official"], ["test0004", 10.5, None]]
+    assert doc["territories"]["YY"] == [["test0002", 100.0, None]]
+
+
+def test_validate_catches_territory_index_drift(built, tmp_path):
+    bad = tmp_path / "bad_ti"
+    shutil.copytree(built, bad)
+    path = bad / "territory_index.json"
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    doc["territories"]["ZZ"][0][1] = 61.0
+    path.write_text(json.dumps(doc), encoding="utf-8")
+    assert any("territory_index.json" in f for f in validate(bad))
+
+
+def search_docs(built: Path, tier: int) -> dict[str, dict]:
+    doc = json.loads((built / "search" / f"tier{tier}.json").read_text(encoding="utf-8"))
+    assert doc["count"] == len(doc["documents"])
+    return {d["id"]: d for d in doc["documents"]}
+
+
+def test_search_tiers_split_scope_from_everything_else(built):
+    t1, t2 = search_docs(built, 1), search_docs(built, 2)
+    assert not set(t1) & set(t2)
+    # scope languages, every candidate of contested entries, listed families and ancestors
+    assert {"test0002", "test0008", "test0009", "test0006", "test0001", "test0007"} <= set(t1)
+    assert set(t2) == {"test0003", "test0004", "test0005"}
+    assert t1["test0002"]["in_scope"] is True and "in_scope" not in t1["test0001"]
+    assert {"ZZ", "YY"} <= set(t1) and t1["ZZ"]["kind"] == "country" and t1["ZZ"]["name"] == "Zedland"
+    assert t1["ZZ"]["alt"] == ["Zed"] and {x["lang"] for x in t1["ZZ"]["localized"]} == {"fa", "tr"}
+    assert set(table(built, "languoids")["glottocode"]) <= set(t1) | set(t2)
+
+
+def test_search_documents_carry_names_and_sources(built):
+    doc = search_docs(built, 1)["test0002"]
+    assert doc["name"] == "Testish Standard" and doc["glottolog_name"] == "Testish"
+    assert doc["display_name_source"].endswith("phase-1-languages.yaml")
+    assert doc["iso639_3"] == "qaa" and doc["family"] == "test0001"
+    assert doc["endonyms"] == [{"name": "Testish", "lang": "qaa", "script": "Latn"}]
+    assert {"Testisch", "Tst", "Old Tongue"} <= set(doc["alt"])
+    assert doc["aliases"] == [{"name": "Test Farsi", "alias": True}]
+    assert {x["lang"] for x in doc["localized"]} == {"fa", "tr"}
+    assert set(doc["source_ids"]) == {"cldr-49", "glottolog-5.3", "wikidata"}
+    kinds = {d["kind"] for tier in (1, 2) for d in search_docs(built, tier).values()}
+    assert kinds <= {"language", "dialect", "family", "country", "macrolanguage-candidate"}
+
+
+def test_macrolanguage_candidates_come_from_family_level_iso_codes(built):
+    macro = search_docs(built, 1)["qaf"]
+    assert macro["kind"] == "macrolanguage-candidate" and macro["candidate_glottocodes"] == ["test0009"]
+
+
+def test_farsi_only_as_flagged_alias(built):
+    from pipeline.build.search import _language_doc, has_farsi
+
+    for tier in (1, 2):
+        for d in search_docs(built, tier).values():
+            assert not has_farsi(d["name"])
+    lang = {
+        "glottocode": "test0002",
+        "level": "language",
+        "name": "Western Farsi",
+        "iso639_3": None,
+        "wikidata_qid": None,
+        "parent_glottocode": None,
+    }
+    base = {"lang": None, "script": "Latn", "locator": "a"}
+    rows = [
+        {**base, "name": "Farsi", "type": "alias", "source_id": "glottolog-5.3"},
+        {**base, "name": "Iranian Persian", "lang": "en", "type": "exonym", "source_id": "wikidata"},
+    ]
+    doc = _language_doc(lang, rows)
+    assert doc["name"] == "Iranian Persian" and doc["glottolog_name"] == "Western Farsi"
+    assert {"name": "Farsi", "alias": True} in doc["aliases"]
+    assert {"name": "Western Farsi", "alias": True} in doc["aliases"]
+    assert "Farsi" not in doc.get("alt", [])
+
+
+def test_validate_catches_farsi_outside_aliases(built, tmp_path):
+    bad = tmp_path / "bad_farsi"
+    shutil.copytree(built, bad)
+    path = bad / "search" / "tier2.json"
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    doc["documents"][0]["alt"] = ["Farsi"]
+    path.write_text(json.dumps(doc), encoding="utf-8")
+    assert any("Farsi outside aliases" in f for f in validate(bad))
+
+
+def test_wikidata_family_attachment_is_a_claim_not_a_name(built):
+    # Q9011 is a language item that Wikidata puts on the family test0009 (no language node has its ISO code)
+    langs = {r["glottocode"]: r for r in table(built, "languoids").to_dicts()}
+    assert langs["test0009"]["wikidata_qid"] is None and langs["test0009"]["name"] == "Persish Group"
+    names = table(built, "names").filter(pl.col("glottocode") == "test0009")
+    wd = names.filter(pl.col("source_id") == "wikidata")
+    assert wd["type"].to_list() == ["alias"] and wd["confidence"].to_list() == ["low"]
+    spk = {r["speaker_id"]: r for r in table(built, "speakers").to_dicts()}
+    row = spk["wd:Q9011-HHH"]
+    assert row["glottocode"] == "test0009" and row["attached_via"] == "wikidata_p1394_to_family"
+    assert row["confidence"] == "low" and "not a figure for the family" in row["notes"]
+    tree = json.loads((built / "tree.json").read_text(encoding="utf-8"))
+    node = next(n for n in tree["nodes"] if n[0] == "test0009")
+    assert node[5] is None and node[7] is None  # the tree does not size a family by a language item
+    bundle = json.loads((built / "bundles" / "test0009.json").read_text(encoding="utf-8"))
+    assert bundle["speakers"][0]["attached_via"] == "wikidata_p1394_to_family"
+    assert search_docs(built, 1)["test0009"]["name"] == "Persish Group"
+
+
+def test_qid_stays_on_the_language_node_when_family_shares_it(built):
+    langs = {r["glottocode"]: r for r in table(built, "languoids").to_dicts()}
+    assert langs["test0004"]["wikidata_qid"] == "Q9004" and langs["test0001"]["wikidata_qid"] is None
+    x = table(built, "xrefs").filter((pl.col("scheme") == "wikidata") & (pl.col("code") == "Q9004"))
+    assert x["glottocode"].to_list() == ["test0004"]
+    assert "Q9004" in (built / "coverage.md").read_text(encoding="utf-8")
+
+
+def test_iso_match_fallback_for_retired_and_parent_glottocodes(built):
+    langs = {r["glottocode"]: r for r in table(built, "languoids").to_dicts()}
+    assert langs["test0008"]["wikidata_qid"] == "Q9008"  # P1394 pointed at the parent family test0007
+    assert langs["test0005"]["wikidata_qid"] == "Q9009"  # P1394 pointed at the retired node retr1234
+    assert langs["test0007"]["wikidata_qid"] is None
+    spk = {r["speaker_id"]: r for r in table(built, "speakers").to_dicts()}
+    assert spk["wd:Q9008-GGG"]["glottocode"] == "test0008"
+    assert spk["wd:Q9008-GGG"]["attached_via"] == "wikidata_iso_match"
+    x = table(built, "xrefs").filter((pl.col("code") == "Q9009") & (pl.col("scheme") == "wikidata"))
+    assert "ISO 639-3 match" in x["notes"][0] and "retr1234" in x["notes"][0]
+    cov = (built / "coverage.md").read_text(encoding="utf-8")
+    assert "Q9008" in cov and "Q9009" in cov and "retr1234" in cov
+    assert "wd:Q9099-FFF" not in spk  # an item that reached no node is skipped, not guessed

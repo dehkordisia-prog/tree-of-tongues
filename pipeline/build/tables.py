@@ -167,20 +167,97 @@ def build_languoids(
     return rows
 
 
+VIA_FAMILY = "wikidata_p1394_to_family"
+VIA_ISO = "wikidata_iso_match"
+
+
 def resolve_wikidata(
-    wd_langs: dict[tuple[str, str], dict], known: set[str]
-) -> tuple[dict[str, str | None], dict[str, set[str]], dict[str, list[tuple[str, dict]]], int]:
-    """Return (glottocode -> unique QID or None, glottocode -> candidate QIDs, per-glottocode entries, unknown count)."""
-    by_gc: dict[str, list[tuple[str, dict]]] = defaultdict(list)
-    unknown = set()
+    wd_langs: dict[tuple[str, str], dict],
+    known: set[str],
+    levels: dict[str, str] | None = None,
+    lang_by_iso: dict[str, list[str]] | None = None,
+) -> tuple[dict[str, str | None], dict[str, set[str]], dict[str, list[tuple[str, dict]]], int, dict]:
+    """Attach Wikidata items to Glottolog nodes.
+
+    Returns (glottocode -> unique QID or None, glottocode -> candidate QIDs, per-glottocode entries,
+    count of Glottocodes unknown to Glottolog, report).
+
+    Rules, applied per item (QID):
+    1. P1394 names a language-level node: the item goes there. Other P1394 nodes of the same item (its
+       family, say) are dropped and listed in report["qid_conflicts"]. A QID never sits on two nodes.
+    2. No P1394 node is language-level (the Glottocode is retired, or it is the language's parent): if the
+       item's ISO 639-3 codes (P220) point to exactly one language-level node, the item goes there with
+       method "ISO match" and is listed in report["iso_matches"]. Never guessed beyond that.
+    3. Otherwise the item stays on its P1394 node. If that node is a family and the item is a language
+       item (it carries an ISO 639-3 code), the entry is marked `via_family`: Wikidata's claim about a
+       language, not a fact about the family. Its label is then an alias at most.
+    Each returned entry carries `method`, `original` (P1394 values) and `via_family`.
+    """
+    levels = levels or {}
+    lang_by_iso = lang_by_iso or {}
+    items: dict[str, dict] = defaultdict(lambda: {"entries": {}, "iso3": set()})
     for (gc, qid), entry in sorted(wd_langs.items()):
-        if gc not in known:
-            unknown.add(gc)
-            continue
-        by_gc[gc].append((qid, entry))
-    unique = {gc: (items[0][0] if len(items) == 1 else None) for gc, items in by_gc.items()}
-    candidates = {gc: {q for q, _ in items} for gc, items in by_gc.items()}
-    return unique, candidates, by_gc, len(unknown)
+        items[qid]["entries"][gc] = entry
+        items[qid]["iso3"] |= set(entry["iso3"])
+
+    by_gc: dict[str, list[tuple[str, dict]]] = defaultdict(list)
+    unknown: set[str] = set()
+    report: dict = {"qid_conflicts": [], "iso_matches": [], "via_family": []}
+    qid_targets: dict[str, list[str]] = {}
+    for qid in sorted(items):
+        info = items[qid]
+        gcs = sorted(info["entries"])
+        merged = {
+            "iso3": set(info["iso3"]),
+            "iso1": {c for e in info["entries"].values() for c in e["iso1"]},
+            "labels": {},
+            "retrieved_at": min(e["retrieved_at"] for e in info["entries"].values()),
+        }
+        for e in info["entries"].values():
+            for lang, labels in e["labels"].items():
+                merged["labels"].setdefault(lang, set()).update(labels)
+        known_nodes = [g for g in gcs if g in known]
+        unknown.update(g for g in gcs if g not in known)
+        lang_nodes = [g for g in known_nodes if levels.get(g) == "language"]
+        method, via_family = "P1394", False
+        if lang_nodes:
+            targets = lang_nodes
+            dropped = [g for g in known_nodes if g not in lang_nodes]
+            if dropped:
+                report["qid_conflicts"].append(
+                    {"qid": qid, "kept": lang_nodes, "dropped": dropped, "reason": "language-level node wins"}
+                )
+        else:
+            iso_hits = sorted({g for code in info["iso3"] for g in lang_by_iso.get(code, [])})
+            only_family_or_retired = all(levels.get(g) == "family" for g in known_nodes)
+            if len(iso_hits) == 1 and only_family_or_retired:
+                targets, method = iso_hits, "ISO match"
+                report["iso_matches"].append(
+                    {
+                        "qid": qid,
+                        "target": iso_hits[0],
+                        "p1394": gcs,
+                        "p1394_known": known_nodes,
+                        "iso639_3": sorted(info["iso3"]),
+                    }
+                )
+            else:
+                targets = known_nodes
+                via_family = bool(info["iso3"]) and any(levels.get(g) == "family" for g in known_nodes)
+                if via_family:
+                    report["via_family"].append(
+                        {"qid": qid, "nodes": known_nodes, "iso639_3": sorted(info["iso3"])}
+                    )
+        qid_targets[qid] = targets
+        for gc in targets:
+            by_gc[gc].append((qid, {**merged, "method": method, "via_family": via_family, "original": gcs}))
+    unique = {
+        gc: (items_[0][0] if len(items_) == 1 and not items_[0][1]["via_family"] else None)
+        for gc, items_ in by_gc.items()
+    }
+    candidates = {gc: {q for q, _ in items_} for gc, items_ in by_gc.items()}
+    report["qid_targets"] = qid_targets
+    return unique, candidates, dict(by_gc), len(unknown), report
 
 
 def build_xrefs_and_names(
@@ -216,16 +293,34 @@ def build_xrefs_and_names(
     for gc, items in by_gc.items():
         shared = len(items) > 1
         for qid, entry in items:
+            via_family = entry.get("via_family", False)
+            iso_match = entry.get("method") == "ISO match"
             conf = "contested" if shared else "medium"
-            note = f"Glottocode {gc} is claimed by {len(items)} Wikidata items" if shared else None
+            notes_parts = []
+            if shared:
+                notes_parts.append(f"Glottocode {gc} is claimed by {len(items)} Wikidata items")
+            if via_family:
+                conf = "contested" if shared else "low"
+                notes_parts.append(
+                    f"{qid} is a language item that Wikidata attaches to the family {gc} via P1394 "
+                    "(Wikidata's claim, not a fact about the family)"
+                )
+            if iso_match:
+                notes_parts.append(
+                    f"{qid} reached {gc} by ISO 639-3 match; its P1394 values are {', '.join(entry['original'])}"
+                )
+            note = "; ".join(notes_parts) or None
+            locator_p1394 = f"{qid}#P1394"
             base = {
                 "glottocode": gc,
-                **_prov(wd_sid, f"{qid}#P1394", entry["retrieved_at"], licenses, conf, note),
+                **_prov(wd_sid, locator_p1394, entry["retrieved_at"], licenses, conf, note),
             }
+            if iso_match:
+                base["locator"] = f"{qid}#P220"
             xrefs.append({**base, "scheme": "wikidata", "code": qid})
             for code in sorted(entry["iso1"]):
                 xrefs.append({**base, "scheme": "iso639-1", "code": code, "locator": f"{qid}#P218"})
-                if not shared:
+                if not shared and not via_family:
                     own_codes[gc].add(code)
                     # CLDR mapping is our inference, so it only lands on language-level languoids.
                     # (Wikidata's Persian item points at a Glottolog family; that stays a Wikidata
@@ -234,7 +329,7 @@ def build_xrefs_and_names(
                         iso1_map[code].add(gc)
             for code in sorted(entry["iso3"]):
                 xrefs.append({**base, "scheme": "iso639-3", "code": code, "locator": f"{qid}#P220"})
-                if not shared:
+                if not shared and not via_family:
                     own_codes[gc].add(code)
 
     # --- names
@@ -284,14 +379,25 @@ def build_xrefs_and_names(
         if len(items) != 1:
             continue  # ambiguous item: do not attach labels to the wrong languoid
         qid, entry = items[0]
+        via_family = entry.get("via_family", False)
         for lang, labels in sorted(entry["labels"].items()):
             for label in sorted(labels):
+                # A language item attached to a family never names the family: its labels are aliases.
                 add(
                     gc,
                     label,
                     lang,
-                    name_type(lang, own_codes[gc]),
-                    _prov(wd_sid, f"{qid}#label@{lang}", entry["retrieved_at"], licenses, "medium"),
+                    "alias" if via_family else name_type(lang, own_codes[gc]),
+                    _prov(
+                        wd_sid,
+                        f"{qid}#label@{lang}",
+                        entry["retrieved_at"],
+                        licenses,
+                        "low" if via_family else "medium",
+                        f"label of {qid}, a language item that Wikidata attaches to this family via P1394"
+                        if via_family
+                        else None,
+                    ),
                 )
     # CLDR names resolve through the same code maps used for territories.
     for locale, (table, retrieved) in sorted(cldr_names.items()):
@@ -396,16 +502,47 @@ def speaker_kind(part_labels: list[str | None]) -> str:
 
 
 def build_speakers(
-    statements: list[dict], ambiguous: set[str], known: set[str], licenses: dict[str, dict]
+    statements: list[dict],
+    ambiguous: set[str],
+    known: set[str],
+    licenses: dict[str, dict],
+    by_gc: dict[str, list[tuple[str, dict]]] | None = None,
 ) -> tuple[list[dict], int]:
+    """One row per Wikidata statement. `by_gc` (from resolve_wikidata) says where each item was attached.
+
+    attached_via is null when the statement sits on the node its item names through P1394. It is
+    `wikidata_p1394_to_family` when a language item is attached to a family (Wikidata's claim about the
+    language), and `wikidata_iso_match` when the item reached its node by ISO 639-3 match.
+    """
+    placed: dict[str, list[tuple[str, dict]]] = defaultdict(list)
+    for target, items in (by_gc or {}).items():
+        for qid, entry in items:
+            placed[qid].append((target, entry))
     rows = []
     skipped = 0
     for st in statements:
         gc = st["glottocode"]
+        entry = None
+        targets = placed.get(st["qid"])
+        if targets:
+            chosen = next((t for t in targets if t[0] == gc), targets[0])
+            gc, entry = chosen
         if gc not in known:
             skipped += 1
             continue
+        attached_via = None
         notes = []
+        if entry and entry.get("via_family"):
+            attached_via = VIA_FAMILY
+            notes.append(
+                f"{st['qid']} is a language item that Wikidata attaches to the family {gc} via P1394; "
+                "Wikidata's claim about the language, not a figure for the family"
+            )
+        elif entry and entry.get("method") == "ISO match":
+            attached_via = VIA_ISO
+            notes.append(
+                f"{st['qid']} reached {gc} by ISO 639-3 match; its P1394 values are {', '.join(entry['original'])}"
+            )
         years = sorted({y for y in (readers.year_of(t) for t in st["times"]) if y is not None})
         year = years[0] if len(years) == 1 else None
         if len(years) > 1:
@@ -424,6 +561,8 @@ def build_speakers(
             rank, conf = st["rank"].replace("Rank", "").lower(), "low"
         else:
             rank, conf = st["rank"].replace("Rank", "").lower(), "medium"
+        if attached_via == VIA_FAMILY:
+            conf = "low"
         if gc in ambiguous:
             conf = "low"
             notes.append("Glottocode is claimed by several Wikidata items")
@@ -448,6 +587,7 @@ def build_speakers(
                 "references": json.dumps(refs, sort_keys=True, ensure_ascii=False, separators=(",", ":")),
                 "has_reference": has_ref,
                 "disagrees_gt_25pct": False,
+                "attached_via": attached_via,
                 **_prov(
                     common.WIKIDATA,
                     f"statement/{st['statement']}",

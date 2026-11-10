@@ -17,6 +17,7 @@ ISO_UTC_PATTERN = r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$"
 LEVELS = ("family", "language", "dialect")
 NAME_TYPES = ("endonym", "exonym", "alias")
 SPEAKER_KINDS = ("L1", "L2", "total", "unknown")
+ATTACHED_VIA = ("wikidata_p1394_to_family", "wikidata_iso_match")
 RANKS = ("preferred", "normal", "deprecated")
 XREF_SCHEMES = ("iso639-3", "iso639-1", "wikidata", "cldr")
 
@@ -97,6 +98,7 @@ SPEAKERS = pa.DataFrameSchema(
         "references": pa.Column(pl.String, nullable=False),
         "has_reference": pa.Column(pl.Boolean, nullable=False),
         "disagrees_gt_25pct": pa.Column(pl.Boolean, nullable=False),
+        "attached_via": pa.Column(pl.String, pa.Check.isin(ATTACHED_VIA), nullable=True),
         **_prov(),
     },
     strict=True,

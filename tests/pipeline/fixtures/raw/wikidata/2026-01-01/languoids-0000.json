@@ -95,6 +95,77 @@
      "value": "Not in Glottolog",
      "xml:lang": "en"
     }
+   },
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9008"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "test0007"
+    },
+    "iso": {
+     "type": "literal",
+     "value": "qae"
+    },
+    "label_en": {
+     "type": "literal",
+     "value": "Kidish language",
+     "xml:lang": "en"
+    }
+   },
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9009"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "retr1234"
+    },
+    "iso": {
+     "type": "literal",
+     "value": "qac"
+    },
+    "label_en": {
+     "type": "literal",
+     "value": "Loneish language",
+     "xml:lang": "en"
+    }
+   },
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9004"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "test0001"
+    },
+    "iso": {
+     "type": "literal",
+     "value": "qab"
+    }
+   },
+   {
+    "item": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q9011"
+    },
+    "glottocode": {
+     "type": "literal",
+     "value": "test0009"
+    },
+    "iso": {
+     "type": "literal",
+     "value": "qaf"
+    },
+    "label_en": {
+     "type": "literal",
+     "value": "Persish",
+     "xml:lang": "en"
+    }
    }
   ]
  }

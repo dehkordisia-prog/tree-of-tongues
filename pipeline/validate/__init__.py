@@ -3,7 +3,9 @@
 Checks: pandera schemas for every table; provenance columns non-null; every source_id (and the
 license beside it) matches data/LICENSES.yaml; foreign keys resolve; composite keys are unique;
 speaker rows are one-per-source-statement (never duplicated, merged or averaged); bundles exist,
-parse and stay under 50 KB; tree.json is consistent; manifest.json checksums match the files.
+parse and stay under 50 KB; tree.json is consistent; territory_index.json matches the territories table; the two search tiers
+hold well-formed documents, cover every languoid once and keep the word Farsi to aliases (D-004);
+manifest.json lists every file on disk with matching checksums.
 """
 
 from __future__ import annotations
@@ -16,9 +18,9 @@ import pandera.errors
 import polars as pl
 
 from pipeline import common, schemas
+from pipeline.build.search import has_farsi
 
 BUNDLE_MAX_BYTES = 50 * 1024
-DERIVED_DIR = "derived"
 FACT_TABLES = ("languoids", "names", "xrefs", "speakers", "territories")
 
 
@@ -233,14 +235,10 @@ def _check_manifest(build_dir: Path, licenses: dict[str, dict], report: Report) 
         for sid in out["source_ids"]:
             if sid not in licenses:
                 report.fail(f"manifest: {out['path']} cites source {sid} not in LICENSES.yaml")
-    # derived/ holds indexes that scripts compute from pipeline outputs only (for now
-    # scripts/build-territory-index.mjs). They add no facts and are not pipeline outputs, so they
-    # are outside the manifest. Phase 1 moves the territory index into the pipeline.
     actual = {
-        rel
+        p.relative_to(build_dir).as_posix()
         for p in build_dir.rglob("*")
         if p.is_file() and p.name != "manifest.json"
-        if not (rel := p.relative_to(build_dir).as_posix()).startswith(DERIVED_DIR + "/")
     }
     report.check(
         actual == listed,
@@ -282,6 +280,92 @@ def _check_geo(build_dir: Path, tabs: dict[str, pl.DataFrame], report: Report) -
             )
 
 
+def _check_territory_index(build_dir: Path, tabs: dict[str, pl.DataFrame], report: Report) -> None:
+    path = build_dir / "territory_index.json"
+    if not path.exists():
+        report.fail("missing territory_index.json")
+        return
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    prov = doc.get("provenance")
+    terr = tabs.get("territories")
+    if terr is None or terr.height == 0:
+        report.check(doc.get("territories") == {}, "territory_index.json: rows without a territories table")
+        return
+    if not prov or not all(
+        prov.get(k) for k in ("source_id", "locator_template", "retrieved_at", "confidence", "license")
+    ):
+        report.fail("territory_index.json: provenance block is incomplete")
+    elif prov["confidence"] not in common.CONFIDENCE:
+        report.fail("territory_index.json: bad confidence")
+    expected = {
+        (r["iso3166"], r["glottocode"], r["population_share"], r["official_status"]) for r in terr.to_dicts()
+    }
+    actual = set()
+    for code, items in doc["territories"].items():
+        shares = [i[1] for i in items if i[1] is not None]
+        report.check(
+            shares == sorted(shares, reverse=True), f"territory_index.json: {code} is not sorted by share"
+        )
+        for gc, share, status in items:
+            actual.add((code, gc, share, status))
+    report.check(actual == expected, "territory_index.json: rows differ from the territories table")
+
+
+SEARCH_KINDS = ("language", "dialect", "family", "country", "macrolanguage-candidate")
+SEARCH_KEYS = {
+    "id", "kind", "name", "glottolog_name", "glottocode", "level", "iso639_3", "wikidata_qid", "parent",
+    "family", "endonyms", "localized", "alt", "aliases", "in_scope", "candidate_glottocodes", "source_ids",
+    "display_name_source",
+}  # fmt: skip
+
+
+def _check_search(
+    build_dir: Path, tabs: dict[str, pl.DataFrame], licenses: dict[str, dict], report: Report
+) -> None:
+    ids_by_tier: list[set[str]] = []
+    for tier in (1, 2):
+        path = build_dir / "search" / f"tier{tier}.json"
+        if not path.exists():
+            report.fail(f"missing search/tier{tier}.json")
+            ids_by_tier.append(set())
+            continue
+        doc = json.loads(path.read_text(encoding="utf-8"))
+        docs = doc.get("documents", [])
+        report.check(doc.get("tier") == tier and doc.get("count") == len(docs), f"search tier{tier}: header")
+        ids = [d.get("id") for d in docs]
+        report.check(
+            ids == sorted(ids) and len(set(ids)) == len(ids), f"search tier{tier}: ids not unique and sorted"
+        )
+        ids_by_tier.append(set(ids))
+        codes = set(tabs["languoids"]["glottocode"].to_list()) if "languoids" in tabs else set()
+        for d in docs:
+            ident = d.get("id", "?")
+            extra = set(d) - SEARCH_KEYS
+            if extra or d.get("kind") not in SEARCH_KINDS or not d.get("name") or not d.get("id"):
+                report.fail(f"search tier{tier}: bad document {ident} (extra keys {sorted(extra)})")
+                continue
+            src = d.get("source_ids")
+            if not src or not set(src) <= set(licenses):
+                report.fail(f"search tier{tier}: {ident} has missing or unknown source_ids")
+            if d["kind"] in ("language", "dialect", "family") and d["id"] not in codes:
+                report.fail(f"search tier{tier}: {ident} is not a languoid")
+            if has_farsi(d["name"]):
+                report.fail(f"search tier{tier}: display name of {ident} contains Farsi (D-004)")
+            plain = [e["name"] for key in ("endonyms", "localized") for e in d.get(key, [])] + d.get(
+                "alt", []
+            )
+            if any(has_farsi(t) for t in plain):
+                report.fail(f"search tier{tier}: {ident} has Farsi outside aliases (D-004)")
+            for a in d.get("aliases", []):
+                if a.get("alias") is not True or not has_farsi(a.get("name", "")):
+                    report.fail(f"search tier{tier}: {ident} has a bad alias entry {a}")
+    report.check(not (ids_by_tier[0] & ids_by_tier[1]), "search: an id appears in both tiers")
+    if "languoids" in tabs:
+        want = set(tabs["languoids"]["glottocode"].to_list())
+        got = {i for i in ids_by_tier[0] | ids_by_tier[1] if i in want}
+        report.check(got == want, f"search: {len(want - got)} languoids are in neither tier")
+
+
 def validate(build_dir: Path, licenses_path: Path = common.LICENSES_PATH) -> list[str]:
     report = Report()
     licenses = common.load_licenses(licenses_path)
@@ -292,6 +376,8 @@ def validate(build_dir: Path, licenses_path: Path = common.LICENSES_PATH) -> lis
     _check_bundles(build_dir, tabs, licenses, report)
     _check_tree(build_dir, tabs, report)
     _check_geo(build_dir, tabs, report)
+    _check_territory_index(build_dir, tabs, report)
+    _check_search(build_dir, tabs, licenses, report)
     _check_manifest(build_dir, licenses, report)
     return report.failures
 

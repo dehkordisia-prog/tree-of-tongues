@@ -5,3 +5,6 @@ test0003,Testish Coastal,Eurasia,,,test0003,,dialect,
 test0004,Otherish,Africa;Eurasia,-5.0,30.0,test0004,qab,language,false
 test0005,Loneish,,,,test0005,qac,language,true
 test0006,Twinish,,1.0,2.0,test0006,qad,language,false
+test0007,Famish,,,,test0007,,family,
+test0008,Kidish,Eurasia,3.0,4.0,test0008,qae,language,false
+test0009,Persish Group,,,,test0009,,family,

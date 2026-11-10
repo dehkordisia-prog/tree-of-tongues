@@ -37,6 +37,9 @@ CLDR_FILES = (
     "cldr-localenames-full/main/en/languages.json",
     "cldr-localenames-full/main/fa/languages.json",
     "cldr-localenames-full/main/tr/languages.json",
+    "cldr-localenames-full/main/en/territories.json",
+    "cldr-localenames-full/main/fa/territories.json",
+    "cldr-localenames-full/main/tr/territories.json",
 )
 # Natural Earth publishes the same 5.1.1 vectors as GeoJSON in its official GitHub repository
 # (nvkelso/natural-earth-vector, tag v5.1.1). We use that to avoid a GDAL/shapefile dependency.

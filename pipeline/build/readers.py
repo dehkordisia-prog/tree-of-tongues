@@ -145,6 +145,13 @@ def read_cldr_language_names(raw: RawSet, locale: str) -> tuple[dict[str, str], 
     return data["main"][locale]["localeDisplayNames"]["languages"], raw.retrieved_at(name)
 
 
+def read_cldr_territory_names(raw: RawSet, locale: str) -> tuple[dict[str, str], str]:
+    """CLDR territory display names: code -> name. Keys like `HK-alt-short` hold alternate forms."""
+    name = f"cldr-localenames-full__main__{locale}__territories.json"
+    data = json.loads(raw.path(name).read_text(encoding="utf-8"))
+    return data["main"][locale]["localeDisplayNames"]["territories"], raw.retrieved_at(name)
+
+
 # --------------------------------------------------------------------------- Wikidata
 
 

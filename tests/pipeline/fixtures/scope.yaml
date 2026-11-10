@@ -1,0 +1,30 @@
+# Fictional scope list for the pipeline fixture (codes test0001...). Same shape as content/scope/phase-1-languages.yaml.
+languages:
+- rank: 1
+  chart_name: Testish
+  display_name: Testish Standard
+  glottocode: test0002
+  alternate_names:
+  - Old Tongue
+  - Test Farsi
+  confidence: high
+- rank: 2
+  chart_name: Contestish
+  display_name: Contestish
+  glottocode: test0008
+  confidence: contested
+  mechanical_candidate: test0009
+  candidates:
+  - glottocode: test0009
+  - glottocode: test0008
+- rank: 3
+  chart_name: Undecided
+  display_name: Undecided
+  glottocode: null
+  confidence: contested
+  candidates:
+  - glottocode: test0006
+families:
+- glottocode: test0001
+- glottocode: test0007
+- glottocode: test0009

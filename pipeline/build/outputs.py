@@ -206,6 +206,7 @@ def build_bundles(
                         "rank": s["rank"],
                         "references": json.loads(s["references"]),
                         "disagrees_gt_25pct": s["disagrees_gt_25pct"],
+                        "attached_via": s["attached_via"],
                         **prov(s),
                     }
                     for s in sp
@@ -243,7 +244,8 @@ TREE_FORMAT = (
     "Tuple layout is given by columns: [glottocode, parent_index (-1 = root), level (0 family, 1 language, "
     "2 dialect), name, child_count, l1_max, l1_source_index, any_max, any_source_index]. "
     "l1_max is the largest non-deprecated speaker figure whose kind is L1 (null if none); any_max is the largest "
-    "non-deprecated figure of any kind, including kind 'unknown' (null if none). Neither is averaged or "
+    "non-deprecated figure of any kind, including kind 'unknown' (null if none). Figures that Wikidata "
+    "attaches to a family through a language item (speakers.attached_via) are left out. Neither is averaged or "
     "merged; each points into `sources` by index (null if the figure is null). Figures are source claims, "
     "not facts: open the bundle for source, year and every competing figure."
 )
@@ -259,7 +261,13 @@ def build_tree(build_dir: Path, tabs: dict[str, pl.DataFrame]) -> int:
             child_count[index[p]] += 1
     best_l1: dict[str, tuple[float, str]] = {}
     best_any: dict[str, tuple[float, str]] = {}
-    for s in tabs["speakers"].filter(pl.col("rank") != "deprecated").to_dicts():
+    # Language items that Wikidata attaches to a family are Wikidata's claim about the language; the
+    # tree never shows them as the family's figure.
+    figures = tabs["speakers"].filter(
+        (pl.col("rank") != "deprecated")
+        & (pl.col("attached_via") != "wikidata_p1394_to_family").fill_null(True)
+    )
+    for s in figures.to_dicts():
         if s["value"] is None:
             continue
         for best, ok in ((best_any, True), (best_l1, s["kind"] == "L1")):
@@ -421,3 +429,47 @@ def build_geo(
     dump_json(doc, geo / "languages.geojson")
     counts["languages.geojson"] = len(pts)
     return counts
+
+
+# --------------------------------------------------------------------------- territory index
+
+TERRITORY_INDEX_FORMAT = (
+    "territories[iso3166] is a list of [glottocode, population_share, official_status] sorted by share, "
+    "descending (null shares last). Copied from the territories table (CLDR territoryInfo); nothing is "
+    "averaged or merged. `provenance` applies to every row; the row's own locator is `locator_template` "
+    "formatted with the territory code and the CLDR language code (see the bundle for the code)."
+)
+
+
+def build_territory_index(build_dir: Path, tabs: dict[str, pl.DataFrame], licenses: dict[str, dict]) -> int:
+    """Reverse index from CLDR territory code to languoids. Returns the number of territories."""
+    rows = tabs["territories"].to_dicts()
+    groups = {(r["source_id"], r["retrieved_at"], r["confidence"], r["notes"], r["license"]) for r in rows}
+    if len(groups) > 1:
+        raise SystemExit(f"STOP: territory rows have {len(groups)} provenance groups; the index needs one")
+    for r in rows:
+        if r["locator"] != TERRITORY_LOCATOR.format(iso3166=r["iso3166"], cldr_code=r["cldr_code"]):
+            raise SystemExit(f"STOP: territory locator does not fit the template: {r['locator']}")
+    by_territory: dict[str, list[list]] = defaultdict(list)
+    for r in rows:
+        by_territory[r["iso3166"]].append([r["glottocode"], r["population_share"], r["official_status"]])
+    territories = {
+        code: sorted(items, key=lambda i: (i[1] is None, -(i[1] or 0), i[0]))
+        for code, items in sorted(by_territory.items())
+    }
+    provenance = None
+    if rows:
+        source_id, retrieved_at, confidence, notes, license_ = next(iter(groups))
+        provenance = {
+            "source_id": source_id,
+            "locator_template": TERRITORY_LOCATOR,
+            "retrieved_at": retrieved_at,
+            "confidence": confidence,
+            "notes": notes,
+            "license": license_,
+        }
+    dump_json(
+        {"format": TERRITORY_INDEX_FORMAT, "provenance": provenance, "territories": territories},
+        build_dir / "territory_index.json",
+    )
+    return len(territories)

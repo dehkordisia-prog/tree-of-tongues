@@ -28,6 +28,15 @@ files:
   retrieved_at: '2026-11-10T01:41:28Z'
   sha256: 6180f817207decbc0f9cd0deb34ed0bad3256ff4d03c3c4252706285e8636b88
   bytes: 21049
+- path: cldr-49/2026-11-10/cldr-localenames-full__main__en__territories.json
+  source_id: cldr-49
+  url: https://raw.githubusercontent.com/unicode-org/cldr-json/49.0.0/cldr-json/cldr-localenames-full/main/en/territories.json
+  version: 49.0.0
+  tag: 49.0.0
+  cldr_path: cldr-localenames-full/main/en/territories.json
+  retrieved_at: '2026-11-10T04:15:00Z'
+  sha256: 1326fb3bcdf8b8cf63df73ea02ea7f8bf7a8362cbb60bd12bcdb53f3ad22bf04
+  bytes: 10190
 - path: cldr-49/2026-11-10/cldr-localenames-full__main__fa__languages.json
   source_id: cldr-49
   url: https://raw.githubusercontent.com/unicode-org/cldr-json/49.0.0/cldr-json/cldr-localenames-full/main/fa/languages.json
@@ -37,6 +46,15 @@ files:
   retrieved_at: '2026-11-10T01:41:28Z'
   sha256: f5344a7949ab39fe7b405959ec3ad684d14ff46ff64e73dd879e15de58322a0e
   bytes: 21612
+- path: cldr-49/2026-11-10/cldr-localenames-full__main__fa__territories.json
+  source_id: cldr-49
+  url: https://raw.githubusercontent.com/unicode-org/cldr-json/49.0.0/cldr-json/cldr-localenames-full/main/fa/territories.json
+  version: 49.0.0
+  tag: 49.0.0
+  cldr_path: cldr-localenames-full/main/fa/territories.json
+  retrieved_at: '2026-11-10T04:15:00Z'
+  sha256: e3ec519abdcbb98b7917a49e99c0cbc5c45816bce0bcf27dc18854867dcac1bb
+  bytes: 11969
 - path: cldr-49/2026-11-10/cldr-localenames-full__main__tr__languages.json
   source_id: cldr-49
   url: https://raw.githubusercontent.com/unicode-org/cldr-json/49.0.0/cldr-json/cldr-localenames-full/main/tr/languages.json
@@ -46,6 +64,15 @@ files:
   retrieved_at: '2026-11-10T01:41:28Z'
   sha256: d288817b707464b59a566ce058feef127eead2c18f2eebfca7f90607e48c29ad
   bytes: 20933
+- path: cldr-49/2026-11-10/cldr-localenames-full__main__tr__territories.json
+  source_id: cldr-49
+  url: https://raw.githubusercontent.com/unicode-org/cldr-json/49.0.0/cldr-json/cldr-localenames-full/main/tr/territories.json
+  version: 49.0.0
+  tag: 49.0.0
+  cldr_path: cldr-localenames-full/main/tr/territories.json
+  retrieved_at: '2026-11-10T04:15:00Z'
+  sha256: 4b9b52e756c79f8b4c81e7c2c5bd2c2ba9338f0c80f2dceeee53ba4561d872b5
+  bytes: 9877
 - path: glottolog-5.3/2026-11-10/glottolog-cldf-v5.3.zip
   source_id: glottolog-5.3
   url: https://zenodo.org/api/records/18840967/files/glottolog/glottolog-cldf-v5.3.zip/content

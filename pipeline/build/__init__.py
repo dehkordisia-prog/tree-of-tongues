@@ -15,14 +15,22 @@ import polars as pl
 import yaml
 
 from pipeline import common, schemas
-from pipeline.build import outputs, readers, tables
+from pipeline.build import outputs, readers, search, tables
 
 NOTICE_NAME = "NOTICE.md"
 CLDR_NOTICE_NAME = "NOTICE-cldr-49-unicode-license.txt"
 PILOT_ISO = (("eng", "English"), ("fas", "Persian (fas)"), ("pes", "Persian (pes)"), ("tur", "Turkish"))
 
 
-def build(raw_dir: Path, build_dir: Path, licenses_path: Path = common.LICENSES_PATH) -> dict:
+SCOPE_PATH = common.ROOT / "content" / "scope" / "phase-1-languages.yaml"
+
+
+def build(
+    raw_dir: Path,
+    build_dir: Path,
+    licenses_path: Path = common.LICENSES_PATH,
+    scope_path: Path = SCOPE_PATH,
+) -> dict:
     licenses = common.load_licenses(licenses_path)
     for sid in (common.GLOTTOLOG, common.CLDR, common.WIKIDATA, common.NATURAL_EARTH):
         common.require_cleared(licenses, sid)
@@ -38,7 +46,14 @@ def build(raw_dir: Path, build_dir: Path, licenses_path: Path = common.LICENSES_
     known = {lang["glottocode"] for lang in gl.languages}
 
     wd_langs = readers.read_wikidata_languoids(wd_raw)
-    unique_qid, candidates, by_gc, wd_unknown_gc = tables.resolve_wikidata(wd_langs, known)
+    levels = {lang["glottocode"]: lang["level"] for lang in gl.languages}
+    lang_by_iso: dict[str, list[str]] = {}
+    for lang in gl.languages:
+        if lang["level"] == "language" and lang["iso"]:
+            lang_by_iso.setdefault(lang["iso"], []).append(lang["glottocode"])
+    unique_qid, candidates, by_gc, wd_unknown_gc, wd_report = tables.resolve_wikidata(
+        wd_langs, known, levels, lang_by_iso
+    )
 
     languoid_rows = tables.build_languoids(gl, gl_retrieved, licenses, unique_qid)
 
@@ -54,7 +69,7 @@ def build(raw_dir: Path, build_dir: Path, licenses_path: Path = common.LICENSES_
 
     ambiguous = {gc for gc, q in candidates.items() if len(q) > 1}
     statements = readers.read_wikidata_speakers(wd_raw)
-    speaker_rows, speaker_skipped = tables.build_speakers(statements, ambiguous, known, licenses)
+    speaker_rows, speaker_skipped = tables.build_speakers(statements, ambiguous, known, licenses, by_gc)
 
     source_rows = []
     for sid in sorted(licenses):
@@ -112,6 +127,9 @@ def build(raw_dir: Path, build_dir: Path, licenses_path: Path = common.LICENSES_
     bundle_count, bundle_max = outputs.build_bundles(build_dir, tabs, licenses)
     tree_bytes = outputs.build_tree(build_dir, tabs)
     geo_counts = outputs.build_geo(build_dir, ne_raw, tabs, licenses)
+    territory_count = outputs.build_territory_index(build_dir, tabs, licenses)
+    territory_names = {loc: readers.read_cldr_territory_names(cldr_raw, loc) for loc in ("en", "fa", "tr")}
+    search_stats = search.build_search(build_dir, tabs, territory_names, cldr_names, scope_path, licenses)
 
     unmapped = unmapped_cldr(cldr_names, territory_info, iso3_map, iso1_map)
     stats = {
@@ -119,6 +137,9 @@ def build(raw_dir: Path, build_dir: Path, licenses_path: Path = common.LICENSES_
         "bundle_max_bytes": bundle_max,
         "tree_bytes": tree_bytes,
         "geo": geo_counts,
+        "territory_index_territories": territory_count,
+        "search": search_stats,
+        "wikidata_report": wd_report,
         "wikidata_glottocodes_not_in_glottolog": wd_unknown_gc,
         "wikidata_ambiguous_glottocodes": sorted(ambiguous),
         "speaker_statements_skipped": speaker_skipped,
@@ -130,7 +151,9 @@ def build(raw_dir: Path, build_dir: Path, licenses_path: Path = common.LICENSES_
     )
     write_notice(build_dir, licenses, cldr_raw)
     write_manifest(build_dir, raw_dir, licenses, (gl_raw, cldr_raw, wd_raw, ne_raw))
-    return {"tables": {k: v.height for k, v in tabs.items()}, **stats}
+    printable = {k: v for k, v in stats.items() if k != "wikidata_report"}
+    printable["wikidata_report"] = {k: len(v) for k, v in wd_report.items() if k != "qid_targets"}
+    return {"tables": {k: v.height for k, v in tabs.items()}, **printable}
 
 
 def unmapped_cldr(
@@ -160,7 +183,42 @@ def unmapped_cldr(
     return by_reason
 
 
+def wikidata_report_lines(report: dict, names: dict[str, str]) -> list[str]:
+    def label(gc: str) -> str:
+        return f"{gc} ({names.get(gc, 'retired or unknown')})"
+
+    lines = [
+        f"### QIDs found on more than one node, kept on the language-level node ({len(report['qid_conflicts'])})",
+        "",
+    ]
+    for c in report["qid_conflicts"]:
+        lines.append(
+            f"- {c['qid']}: kept on {', '.join(label(g) for g in c['kept'])}; "
+            f"dropped from {', '.join(label(g) for g in c['dropped'])}"
+        )
+    lines += ["", f"### Attached by ISO 639-3 match ({len(report['iso_matches'])})", ""]
+    for m in report["iso_matches"]:
+        lines.append(
+            f"- {m['qid']} ({', '.join(m['iso639_3'])}): P1394 {', '.join(label(g) for g in m['p1394'])}"
+            f" -> {label(m['target'])}"
+        )
+    lines += [
+        "",
+        f"### Language items left on a family as Wikidata's claim ({len(report['via_family'])})",
+        "",
+    ]
+    for v in report["via_family"]:
+        lines.append(
+            f"- {v['qid']} ({', '.join(v['iso639_3'])}) on {', '.join(label(g) for g in v['nodes'])}"
+        )
+    lines.append("")
+    return lines
+
+
 def coverage_report(tabs: dict[str, pl.DataFrame], stats: dict, iso3_map: dict) -> str:
+    by_gc_names = {
+        r["glottocode"]: r["name"] for r in tabs["languoids"].select("glottocode", "name").to_dicts()
+    }
     lang = tabs["languoids"]
     spk = tabs["speakers"]
     terr = tabs["territories"]
@@ -265,6 +323,20 @@ def coverage_report(tabs: dict[str, pl.DataFrame], stats: dict, iso3_map: dict) 
     ]
 
     lines += [
+        "## Wikidata attachment rules",
+        "",
+        "Wikidata items are attached to Glottolog nodes through P1394. Three rules keep Wikidata from "
+        "overriding Glottolog (see `resolve_wikidata`):",
+        "",
+        "1. A QID sits on one node. When an item names a language-level node and its family, the "
+        "language-level node keeps it.",
+        "2. When no P1394 node is language-level (retired Glottocode, or the language's parent), "
+        "a unique ISO 639-3 match to a language-level node is used (method `ISO match`).",
+        "3. A language item attached to a family stays there as Wikidata's claim: `languoids.wikidata_qid` "
+        "is left null, its labels are aliases, its speaker rows carry `attached_via = "
+        "wikidata_p1394_to_family`, and the tree ignores them.",
+        "",
+        *wikidata_report_lines(stats["wikidata_report"], by_gc_names),
         "## Pilot languages",
         "",
         "| ISO 639-3 | Glottocodes | Name | Speaker rows | Territory rows |",
@@ -286,6 +358,8 @@ def coverage_report(tabs: dict[str, pl.DataFrame], stats: dict, iso3_map: dict) 
         "",
         f"- Bundles: {stats['bundle_count']}, largest {stats['bundle_max_bytes']} bytes (limit {outputs.BUNDLE_MAX_BYTES})",
         f"- tree.json: {stats['tree_bytes']} bytes",
+        f"- territory_index.json: {stats['territory_index_territories']} territories",
+        "- search: " + ", ".join(f"{k}={v}" for k, v in sorted(stats["search"].items())),
         "- Geo features: " + ", ".join(f"{k}={v}" for k, v in sorted(stats["geo"].items())),
         "",
     ]
@@ -338,6 +412,10 @@ def _sources_of(rel: str) -> list[str]:
         or rel.startswith("bundles/")
         or rel in ("languoids.parquet", "xrefs.parquet", "tree.json")
     ):
+        return sorted([common.GLOTTOLOG, common.CLDR, common.WIKIDATA])
+    if rel == "territory_index.json":
+        return [common.CLDR]
+    if rel.startswith("search/"):
         return sorted([common.GLOTTOLOG, common.CLDR, common.WIKIDATA])
     if rel == CLDR_NOTICE_NAME:
         return [common.CLDR]
@@ -410,7 +488,8 @@ def write_manifest(
 def run(args: argparse.Namespace) -> int:
     raw_dir = Path(getattr(args, "raw_dir", None) or common.RAW_DIR)
     build_dir = Path(getattr(args, "build_dir", None) or common.BUILD_DIR)
-    result = build(raw_dir, build_dir)
+    scope_path = Path(getattr(args, "scope", None) or SCOPE_PATH)
+    result = build(raw_dir, build_dir, scope_path=scope_path)
     print(yaml.safe_dump(result, sort_keys=True, allow_unicode=True, width=120))
     print(f"wrote {build_dir}")
     return 0
