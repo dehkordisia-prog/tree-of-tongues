@@ -45,6 +45,11 @@ Interactive atlas of the world's languages: a zoomable family tree, a time-aware
 - pnpm dev, pnpm build, pnpm test, pnpm e2e, pnpm lint, pnpm lint:content, pnpm check:a11y, pnpm check:perf
 - uv run pipeline fetch | build | validate | audio
 
+## Git workflow
+- Each phase works on its own branch: phase-0, then phase-1 and so on.
+- Push the phase branch to GitHub after every commit.
+- Merge into main only when the phase gate in docs/ROADMAP.md passes. Never commit to main directly.
+
 ## Data rules
 - Before ingesting any source, rights-auditor records it in data/LICENSES.yaml: license, attribution, share-alike, non-commercial and no-derivatives terms, restrictions.
 - Prefer versioned dumps and APIs (CLDF releases on Zenodo, Wikidata SPARQL, CLDR JSON). Respect robots.txt and terms. No scraping of Ethnologue, Omniglot, Forvo, Seeing Speech or any site whose terms forbid it.
