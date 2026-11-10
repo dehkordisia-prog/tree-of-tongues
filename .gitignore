@@ -1,0 +1,15 @@
+node_modules/
+dist/
+build/
+.env
+.env.*
+data/raw/
+data/build/
+.claude/settings.local.json
+playwright-report/
+test-results/
+.DS_Store
+
+# Third-party reference images stay local (the repo is public)
+reference/*
+!reference/README.md
