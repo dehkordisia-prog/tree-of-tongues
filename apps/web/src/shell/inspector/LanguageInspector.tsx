@@ -21,6 +21,8 @@ import { shellStore, useShell } from "@/state/shell";
 import { useShellHref } from "@/state/useShellHref";
 import type { Tab } from "@/state/url";
 
+import type { Profile } from "@/data/profile/types";
+
 import { T, useT } from "../T";
 import { CitationChip, type CiteRow } from "./Citation";
 import { groupShort, provRow, sourceShort, speakerRow, territoryRow } from "./cite";
@@ -35,6 +37,15 @@ import {
   useRegionName,
   type UsedSource,
 } from "./parts";
+import { LumpSlot } from "./profile/Lump";
+import {
+  ProfileHook,
+  ProfileProvider,
+  ProfileSection,
+  ProfileSections,
+  ProfileSources,
+  ProfileStatus,
+} from "./profile/Profile";
 
 const KIND_KEY: Record<SpeakerKind, ParseKeys> = {
   l1: "speakers.l1",
@@ -50,41 +61,123 @@ export function LanguageInspector({ data }: { data: EntityOk }) {
   const speakers = useMemo(() => summarizeSpeakers(b.speakers ?? []), [b]);
   const level = b.languoid.level === "dialect" ? "dialect" : "language";
   const top = b.lineage[0]?.glottocode ?? null;
+  const profile = data.profile;
   return (
-    <article data-entity={data.glottocode}>
-      <InspectorHeader
-        path={`/language/${data.glottocode}`}
-        level={level}
-        top={top}
-        name={data.label}
-        endonym={endo ? { name: endo.name, lang: endo.lang, script: endo.script } : null}
-      />
-      <div className="mt-4">
-        <InspectorTabs
-          active={tab}
-          tabs={(
-            [
-              { id: "overview", panel: <Overview data={data} speakers={speakers} /> },
-              { id: "speakers", panel: <SpeakersPanel b={b} s={speakers} /> },
-              { id: "where", panel: <WherePanel b={b} /> },
-              { id: "writing", panel: <EmptyState title="empty.writing" why="empty.writingWhy" /> },
-              { id: "sounds", panel: <EmptyState title="empty.sounds" why="empty.soundsWhy" /> },
-              { id: "words", panel: <EmptyState title="empty.words" why="empty.wordsWhy" /> },
-              { id: "family", panel: <FamilyPanel data={data} /> },
-              { id: "sources", panel: <SourcesList sources={usedSources(b)} /> },
-            ] as TabDef[]
-          ).map((x) => ({
-            ...x,
-            panel: (
-              <>
-                {x.panel}
-                <GoDeeper cards={data.deeper} />
-              </>
-            ),
-          }))}
+    <ProfileProvider profile={profile}>
+      <article data-entity={data.glottocode}>
+        <InspectorHeader
+          path={`/language/${data.glottocode}`}
+          level={level}
+          top={top}
+          name={data.label}
+          endonym={endo ? { name: endo.name, lang: endo.lang, script: endo.script } : null}
         />
-      </div>
-    </article>
+        {profile && <ProfileStatus profile={profile} />}
+        <div className="mt-4">
+          <InspectorTabs
+            active={tab}
+            tabs={(
+              [
+                { id: "overview", panel: <Overview data={data} speakers={speakers} /> },
+                { id: "speakers", panel: <SpeakersPanel b={b} s={speakers} /> },
+                { id: "where", panel: <WherePanel b={b} /> },
+                ...profileTabs(profile),
+                {
+                  id: "family",
+                  panel: (
+                    <>
+                      <FamilyPanel data={data} />
+                      {profile && profile.tabs.family.length > 0 && (
+                        <div className="mt-8">
+                          <ProfileSections sections={profile.tabs.family} />
+                        </div>
+                      )}
+                    </>
+                  ),
+                },
+                {
+                  id: "sources",
+                  panel: (
+                    <>
+                      {profile && <ProfileSources profile={profile} />}
+                      <SourcesList sources={usedSources(b)} />
+                    </>
+                  ),
+                },
+              ] as TabDef[]
+            ).map((x) => ({
+              ...x,
+              panel: (
+                <>
+                  {x.panel}
+                  <GoDeeper cards={data.deeper} />
+                </>
+              ),
+            }))}
+          />
+        </div>
+      </article>
+    </ProfileProvider>
+  );
+}
+
+/**
+ * Writing, Sounds and Words: the profile prose first, then the data state. Sounds keeps its empty
+ * state under the prose, because no cleared recording exists yet. Writing and Words drop theirs
+ * when the profile has prose for the tab: their lines speak of structured data the tab then has
+ * in prose, with sources.
+ */
+export function profileTabs(profile: Profile | null): TabDef[] {
+  const tab = (
+    id: "writing" | "sounds" | "words",
+    title: ParseKeys,
+    why: ParseKeys,
+    keepEmpty: boolean,
+  ): TabDef => {
+    const prose = profile?.tabs[id] ?? [];
+    return {
+      id,
+      panel: (
+        <>
+          <ProfileSections sections={prose} />
+          {(keepEmpty || !prose.length) && <EmptyState title={title} why={why} />}
+        </>
+      ),
+    };
+  };
+  return [
+    tab("writing", "empty.writing", "empty.writingWhy", false),
+    tab("sounds", "empty.sounds", "empty.soundsWhy", true),
+    tab("words", "empty.words", "empty.wordsWhy", false),
+  ];
+}
+
+/** Overview additions in spec order: (Hook above At a glance), notes, Why linguists disagree, prose. */
+export function OverviewProfile({
+  data,
+}: {
+  data: { profile: Profile | null; lump: EntityOk["lump"]; glottocode: string };
+}) {
+  const p = data.profile;
+  return (
+    <>
+      {p?.glance && (
+        <div className="mt-6">
+          <ProfileSection section={p.glance} title="profile.glanceNotes" />
+        </div>
+      )}
+      {data.lump && <LumpSlot lump={data.lump} glottocode={data.glottocode} />}
+      {p && p.overview.length > 0 && (
+        <div className="mt-8">
+          <ProfileSections sections={p.overview} />
+        </div>
+      )}
+      {p?.curated && (
+        <div className="mt-6">
+          <ProfileSection section={p.curated} title="profile.curated" />
+        </div>
+      )}
+    </>
   );
 }
 
@@ -120,165 +213,170 @@ function Overview({ data, speakers }: { data: EntityOk; speakers: SpeakerSummary
   const qid = b.languoid.wikidata_qid;
   const glotto = provRow(b, b.languoid, { year: null });
   return (
-    <section aria-labelledby={id}>
-      <SectionTitle k="glance.title" id={id} />
-      <dl data-testid="at-a-glance">
-        <GlanceRow k="glance.ownName">
-          {endo ? (
-            <span className="inline-flex flex-wrap items-baseline gap-x-2">
-              <bdi lang={endo.lang ?? undefined}>{endo.name}</bdi>
-              <CitationChip
-                short={sourceShort(endo.source_id)}
-                what={t("glance.ownName")}
-                rows={[provRow(b, endo)]}
-              />
-            </span>
-          ) : (
+    <>
+      {data.profile?.hook && <ProfileHook section={data.profile.hook} />}
+      <section aria-labelledby={id}>
+        <SectionTitle k="glance.title" id={id} />
+        <dl data-testid="at-a-glance">
+          <GlanceRow k="glance.ownName">
+            {endo ? (
+              <span className="inline-flex flex-wrap items-baseline gap-x-2">
+                <bdi lang={endo.lang ?? undefined}>{endo.name}</bdi>
+                <CitationChip
+                  short={sourceShort(endo.source_id)}
+                  what={t("glance.ownName")}
+                  rows={[provRow(b, endo)]}
+                />
+              </span>
+            ) : (
+              <NoData />
+            )}
+          </GlanceRow>
+          <GlanceRow k="glance.ipa">
             <NoData />
-          )}
-        </GlanceRow>
-        <GlanceRow k="glance.ipa">
-          <NoData />
-        </GlanceRow>
-        <GlanceRow k="glance.family">
-          {lineage.length ? (
-            <span className="inline-flex flex-wrap items-center gap-x-1">
-              {shortLineage.map((c, i) =>
-                c ? (
-                  <span key={c.glottocode} className="inline-flex items-center gap-x-1">
-                    {i > 0 && (
-                      <span aria-hidden="true" className="tt-mirror inline-block text-ink-muted">
-                        ›
-                      </span>
-                    )}
-                    <Link
-                      to={href({ kind: "family", glottocode: c.glottocode })}
-                      className="inline-flex min-h-target items-center"
+          </GlanceRow>
+          <GlanceRow k="glance.family">
+            {lineage.length ? (
+              <span className="inline-flex flex-wrap items-center gap-x-1">
+                {shortLineage.map((c, i) =>
+                  c ? (
+                    <span key={c.glottocode} className="inline-flex items-center gap-x-1">
+                      {i > 0 && (
+                        <span aria-hidden="true" className="tt-mirror inline-block text-ink-muted">
+                          ›
+                        </span>
+                      )}
+                      <Link
+                        to={href({ kind: "family", glottocode: c.glottocode })}
+                        className="inline-flex min-h-target items-center"
+                      >
+                        <bdi>{c.name}</bdi>
+                      </Link>
+                    </span>
+                  ) : (
+                    <span key="gap" aria-hidden="true" className="text-ink-muted">
+                      › ...
+                    </span>
+                  ),
+                )}
+                <CitationChip
+                  short={sourceShort(b.languoid.source_id)}
+                  what={t("glance.family")}
+                  rows={[glotto]}
+                />
+              </span>
+            ) : (
+              <NoData />
+            )}
+          </GlanceRow>
+          <GlanceRow k="glance.speakers">
+            <SpeakersGlance b={b} s={speakers} />
+          </GlanceRow>
+          <GlanceRow k="glance.spokenIn">
+            {terr.length ? (
+              <ul>
+                {terr.slice(0, 5).map(({ block, item }) => (
+                  <li key={item.iso3166} className="flex flex-wrap items-baseline gap-x-2">
+                    <span>
+                      {region(item.iso3166)}
+                      {item.population_share !== null && (
+                        <>
+                          ,{" "}
+                          {new Intl.NumberFormat(locale, {
+                            style: "percent",
+                            maximumFractionDigits: 1,
+                          }).format(item.population_share / 100)}
+                        </>
+                      )}
+                      {item.official_status && (
+                        <span className="text-ink-muted">, {item.official_status.replace(/_/g, " ")}</span>
+                      )}
+                    </span>
+                    <CitationChip
+                      short={`${sourceShort(block.source_id)}, ${item.year ?? t("cite.noYear")}`}
+                      what={`${t("glance.spokenIn")}: ${region(item.iso3166)}`}
+                      rows={[territoryRow(b, block, item)]}
+                    />
+                  </li>
+                ))}
+                {terr.length > 5 && (
+                  <li>
+                    <button
+                      type="button"
+                      className="inline-flex min-h-target items-center text-link underline"
+                      onClick={() => shellStore.getState().setTab("where")}
                     >
-                      <bdi>{c.name}</bdi>
-                    </Link>
-                  </span>
-                ) : (
-                  <span key="gap" aria-hidden="true" className="text-ink-muted">
-                    › ...
-                  </span>
-                ),
-              )}
-              <CitationChip
-                short={sourceShort(b.languoid.source_id)}
-                what={t("glance.family")}
-                rows={[glotto]}
-              />
-            </span>
-          ) : (
+                      <T k="glance.more" o={{ count: terr.length - 5 }} />
+                    </button>
+                  </li>
+                )}
+              </ul>
+            ) : (
+              <NoData />
+            )}
+          </GlanceRow>
+          <GlanceRow k="glance.scripts">
             <NoData />
-          )}
-        </GlanceRow>
-        <GlanceRow k="glance.speakers">
-          <SpeakersGlance b={b} s={speakers} />
-        </GlanceRow>
-        <GlanceRow k="glance.spokenIn">
-          {terr.length ? (
-            <ul>
-              {terr.slice(0, 5).map(({ block, item }) => (
-                <li key={item.iso3166} className="flex flex-wrap items-baseline gap-x-2">
-                  <span>
-                    {region(item.iso3166)}
-                    {item.population_share !== null && (
-                      <>
-                        ,{" "}
-                        {new Intl.NumberFormat(locale, { style: "percent", maximumFractionDigits: 1 }).format(
-                          item.population_share / 100,
-                        )}
-                      </>
-                    )}
-                    {item.official_status && (
-                      <span className="text-ink-muted">, {item.official_status.replace(/_/g, " ")}</span>
-                    )}
-                  </span>
-                  <CitationChip
-                    short={`${sourceShort(block.source_id)}, ${item.year ?? t("cite.noYear")}`}
-                    what={`${t("glance.spokenIn")}: ${region(item.iso3166)}`}
-                    rows={[territoryRow(b, block, item)]}
-                  />
-                </li>
-              ))}
-              {terr.length > 5 && (
+          </GlanceRow>
+          <GlanceRow k="glance.status">
+            {b.languoid.endangerment ? (
+              <span className="inline-flex flex-wrap items-baseline gap-x-2">
+                <span>{b.languoid.endangerment}</span>
+                <CitationChip
+                  short={sourceShort(b.languoid.source_id)}
+                  what={t("glance.status")}
+                  rows={[glotto]}
+                />
+              </span>
+            ) : (
+              <NoData />
+            )}
+          </GlanceRow>
+          <GlanceRow k="glance.codes">
+            <ul className="grid gap-x-3" dir="ltr">
+              {iso && (
                 <li>
-                  <button
-                    type="button"
-                    className="inline-flex min-h-target items-center text-link underline"
-                    onClick={() => shellStore.getState().setTab("where")}
+                  ISO 639-3:{" "}
+                  <a
+                    href={`https://iso639-3.sil.org/code/${iso}`}
+                    rel="noreferrer noopener"
+                    target="_blank"
+                    className="inline-flex min-h-target items-center"
                   >
-                    <T k="glance.more" o={{ count: terr.length - 5 }} />
-                  </button>
+                    {iso}
+                  </a>
+                </li>
+              )}
+              <li>
+                Glottocode:{" "}
+                <a
+                  href={`https://glottolog.org/resource/languoid/id/${data.glottocode}`}
+                  rel="noreferrer noopener"
+                  target="_blank"
+                  className="inline-flex min-h-target items-center"
+                >
+                  {data.glottocode}
+                </a>
+              </li>
+              {qid && (
+                <li>
+                  Wikidata:{" "}
+                  <a
+                    href={`https://www.wikidata.org/wiki/${qid}`}
+                    rel="noreferrer noopener"
+                    target="_blank"
+                    className="inline-flex min-h-target items-center"
+                  >
+                    {qid}
+                  </a>
                 </li>
               )}
             </ul>
-          ) : (
-            <NoData />
-          )}
-        </GlanceRow>
-        <GlanceRow k="glance.scripts">
-          <NoData />
-        </GlanceRow>
-        <GlanceRow k="glance.status">
-          {b.languoid.endangerment ? (
-            <span className="inline-flex flex-wrap items-baseline gap-x-2">
-              <span>{b.languoid.endangerment}</span>
-              <CitationChip
-                short={sourceShort(b.languoid.source_id)}
-                what={t("glance.status")}
-                rows={[glotto]}
-              />
-            </span>
-          ) : (
-            <NoData />
-          )}
-        </GlanceRow>
-        <GlanceRow k="glance.codes">
-          <ul className="grid gap-x-3" dir="ltr">
-            {iso && (
-              <li>
-                ISO 639-3:{" "}
-                <a
-                  href={`https://iso639-3.sil.org/code/${iso}`}
-                  rel="noreferrer noopener"
-                  target="_blank"
-                  className="inline-flex min-h-target items-center"
-                >
-                  {iso}
-                </a>
-              </li>
-            )}
-            <li>
-              Glottocode:{" "}
-              <a
-                href={`https://glottolog.org/resource/languoid/id/${data.glottocode}`}
-                rel="noreferrer noopener"
-                target="_blank"
-                className="inline-flex min-h-target items-center"
-              >
-                {data.glottocode}
-              </a>
-            </li>
-            {qid && (
-              <li>
-                Wikidata:{" "}
-                <a
-                  href={`https://www.wikidata.org/wiki/${qid}`}
-                  rel="noreferrer noopener"
-                  target="_blank"
-                  className="inline-flex min-h-target items-center"
-                >
-                  {qid}
-                </a>
-              </li>
-            )}
-          </ul>
-        </GlanceRow>
-      </dl>
-    </section>
+          </GlanceRow>
+        </dl>
+      </section>
+      <OverviewProfile data={data} />
+    </>
   );
 }
 

@@ -3,6 +3,7 @@
 
 import { fetchBundle, type BundleResult } from "./bundle";
 import type { EntityDeps } from "./entity";
+import { loadProfile } from "./profile/load";
 import { loadScopeIndex } from "./scopeIndex";
 import { loadTreeCounts } from "./treeCounts";
 
@@ -38,6 +39,7 @@ export async function clientDeps(): Promise<EntityDeps> {
     index,
     getBundle: getBundleCached,
     dataBuilt,
+    getProfile: loadProfile,
     async counts(g) {
       const fam = index.families.find((f) => f.g === g);
       if (fam?.languages != null && fam.dialects != null) return [fam.languages, fam.dialects];

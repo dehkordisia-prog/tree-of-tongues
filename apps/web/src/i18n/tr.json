@@ -1,5 +1,8 @@
 {
-  "_meta": { "status": "awaiting owner review (Siavash)" },
+  "_meta": {
+    "status": "awaiting owner review (Siavash)",
+    "todo": "profile, lump and macro keys: to be translated, owner review. English is shown with lang=en until then."
+  },
   "app": {
     "tagline": "Dünya dillerinin atlası. Aşama 0: temeller."
   },
@@ -9,7 +12,9 @@
     "interfaceLanguage": "Arayüz dili"
   },
   "workbench": {
-    "design": { "label": "Tasarım sistemi" }
+    "design": {
+      "label": "Tasarım sistemi"
+    }
   },
   "design": {
     "title": "Tasarım sistemi"

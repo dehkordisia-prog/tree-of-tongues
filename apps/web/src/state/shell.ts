@@ -20,7 +20,7 @@ import {
   toShellHref,
   type DevFlags,
   type Lens,
-  type MacroCode,
+  type LumpGroup,
   type MapCamera,
   type Selection,
   type Tab,
@@ -60,7 +60,7 @@ export interface ShellActions {
   select(sel: Selection, opts?: { tab?: Tab; lens?: Lens; source?: SelectSource }): void;
   setLens(lens: Lens): void;
   setTab(tab: Tab): void;
-  setLumped(code: MacroCode, lumped: boolean): void;
+  setLumped(group: LumpGroup, lumped: boolean): void;
   setMapDialects(on: boolean): void;
   setLocale(locale: Locale): void;
   commitCamera(lens: Lens, cam: TreeCamera | MapCamera | null): void;

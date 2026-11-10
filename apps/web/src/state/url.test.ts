@@ -5,7 +5,7 @@ import {
   DEFAULT_STATE,
   LANGUAGE_TABS,
   FAMILY_TABS,
-  MACRO_CODES,
+  LUMP_GROUPS,
   parseShellUrl,
   toShellHref,
   type Selection,
@@ -23,7 +23,7 @@ describe("spec 2.2 examples are canonical", () => {
     "/language/west2369?tab=speakers&lang=fa",
     "/family/turk1311?tz=1.50&tc=0.10,-0.20",
     "/language/west2369?lens=map&map=4.20/32.900/53.300",
-    "/macrolanguage/fas?lump=fas",
+    "/macrolanguage/fas?lump=persian",
     "/country/ir",
     "/?lens=map&area=ne-kashmir&dialects=1",
   ];
@@ -36,7 +36,9 @@ describe("invalid values are dropped", () => {
     ["/family/turk1311?tz=abc", "/family/turk1311"],
     ["/language/stan1290?map=99/200/0", "/language/stan1290"],
     ["/?lump=xyz", "/"],
-    ["/?lump=zho,xyz,ara,zho", "/?lump=ara,zho"],
+    ["/?lump=zho,xyz,ara,zho", "/?lump=arabic,chinese"],
+    ["/?lump=persian,fas", "/?lump=persian"],
+    ["/?lump=punjabi,kurdish", "/?lump=kurdish,punjabi"],
     ["/language/stan1290?year=0", "/language/stan1290"],
     ["/language/stan1290?year=1500", "/language/stan1290"],
     ["/language/stan1290?tab=members", "/language/stan1290"],
@@ -57,7 +59,7 @@ describe("invalid values are dropped", () => {
 describe("parameter order and rounding", () => {
   it("writes params in the spec order", () => {
     expect(href("/language/stan1290?lang=tr&map=1/2/3&tz=1&dialects=1&lump=fas&tab=where&lens=map")).toBe(
-      "/language/stan1290?lens=map&tab=where&lump=fas&dialects=1&tz=1.00&map=1.00/2.000/3.000&lang=tr",
+      "/language/stan1290?lens=map&tab=where&lump=persian&dialects=1&tz=1.00&map=1.00/2.000/3.000&lang=tr",
     );
   });
   it("rounds cameras to the spec precision", () => {
@@ -114,7 +116,7 @@ describe("round trip for 200 generated states", () => {
       selection: sel,
       lens,
       tab: pick(tabs),
-      lumped: MACRO_CODES.filter(() => r() > 0.6),
+      lumped: LUMP_GROUPS.filter(() => r() > 0.6),
       area: sel === null && lens === "map" && r() > 0.5 ? "ne-kashmir" : null,
       mapDialects: r() > 0.5,
       treeCamera:

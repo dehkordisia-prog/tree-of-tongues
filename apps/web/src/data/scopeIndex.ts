@@ -39,6 +39,17 @@ export interface IndexFamily {
   dialects: number | null;
 }
 
+/** A Lumper/Splitter group (D-022, D-023), copied from lumper_groups in the scope list. */
+export interface IndexLumpGroup {
+  id: string;
+  /** The label as the scope list words it (a Glottolog node or the atlas's own grouping). */
+  label: string | null;
+  ancestor: string | null;
+  /** owner_decision from the scope list, for example "pending". */
+  ownerDecision: string | null;
+  members: { g: string; label: string }[];
+}
+
 export interface ScopeIndex {
   /** False when data/build was absent at build time (CI): only scope-list facts are present. */
   built: boolean;
@@ -50,6 +61,10 @@ export interface ScopeIndex {
   topFamilies: { g: string; name: string; languages: number }[];
   /** Pilot profiles for the world view, by glottocode, in order. */
   pilots: string[];
+  /** Lumper/Splitter groups. Optional so older fixtures stay valid. */
+  lumpGroups?: IndexLumpGroup[];
+  /** inspector_note by glottocode, for scope entries with a lumper_group. */
+  lumpNotes?: Record<string, { group: string; note: string | null }>;
 }
 
 export const EMPTY_INDEX: ScopeIndex = { built: false, labels: {}, langs: [], families: [], topFamilies: [], pilots: [] };

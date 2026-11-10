@@ -5,6 +5,7 @@
 import type { Bundle, BundleResult } from "./bundle";
 import { familyDeeper, languageDeeper, worldDeeper, type DeeperCard } from "./deeper";
 import { labelFor } from "./names";
+import type { Profile } from "./profile/types";
 import type { ScopeIndex } from "./scopeIndex";
 import type { Lens } from "@/state/url";
 
@@ -20,6 +21,26 @@ export interface SisterRow {
   glottocode: string;
   name: string;
   level: string;
+}
+
+/** The Lumper/Splitter group of a language (D-022, D-023), from the scope list. */
+export interface LumpInfo {
+  group: string;
+  /** The group label as the scope list words it. */
+  label: string | null;
+  ownerDecision: string | null;
+  /** inspector_note of this language's scope entry; null for a member without its own entry. */
+  note: string | null;
+  members: { g: string; label: string }[];
+}
+
+export function lumpFor(index: ScopeIndex, glottocode: string): LumpInfo | null {
+  const own = index.lumpNotes?.[glottocode];
+  const grp =
+    (own && index.lumpGroups?.find((x) => x.id === own.group)) ??
+    index.lumpGroups?.find((x) => x.members.some((m) => m.g === glottocode));
+  if (!grp) return null;
+  return { group: grp.id, label: grp.label, ownerDecision: grp.ownerDecision, note: own?.note ?? null, members: grp.members };
 }
 
 export interface EntityOk {
@@ -38,6 +59,9 @@ export interface EntityOk {
   /** Glottocodes with a profile in this atlas (scope list), for "Profile" flags and counts. */
   inScope: string[];
   inAtlas: number | null;
+  /** Languages: the profile prose, when content/languages/{glottocode}.md exists. */
+  profile: Profile | null;
+  lump: LumpInfo | null;
 }
 
 export interface EntityMissing {
@@ -48,6 +72,9 @@ export interface EntityMissing {
   label: string | null;
   crumbs: Crumb[];
   deeper: DeeperCard[];
+  /** The profile and the lumper group come from content/, so they show even when data/build is absent. */
+  profile: Profile | null;
+  lump: LumpInfo | null;
 }
 
 export interface EntityRedirect {
@@ -68,6 +95,8 @@ export interface EntityDeps {
   counts(glottocode: string): Promise<[number, number] | null>;
   /** Whether the pipeline output exists at all (else a missing bundle is "unavailable", not "not found"). */
   dataBuilt(): Promise<boolean>;
+  /** The built profile for a language, if it has one. */
+  getProfile?(glottocode: string): Promise<Profile | null>;
 }
 
 const levelKind = (level: string): EntityKind => (level === "family" ? "family" : "language");
@@ -105,6 +134,10 @@ export async function loadEntity(kind: EntityKind, glottocode: string, search: s
   const knownFam = index.families.find((f) => f.g === glottocode) ?? null;
   const knownLabel = known?.label ?? knownFam?.name ?? null;
   const res = await deps.getBundle(glottocode);
+  const extras = async () =>
+    kind === "language"
+      ? { profile: (await deps.getProfile?.(glottocode)) ?? null, lump: lumpFor(index, glottocode) }
+      : { profile: null, lump: null };
 
   if (res.status !== "ok") {
     const status = res.status === "missing" && (await deps.dataBuilt()) ? "not-found" : "unavailable";
@@ -113,7 +146,15 @@ export async function loadEntity(kind: EntityKind, glottocode: string, search: s
       kind === "family"
         ? familyDeeper(index, { glottocode, label: knownLabel ?? glottocode, lineage: crumbs.slice(0, -1).map((c) => ({ glottocode: c.glottocode, name: c.name })), macroareas: knownFam?.macroareas ?? [], lens })
         : languageDeeper(index, { glottocode, label: knownLabel ?? glottocode, lineage: crumbs.slice(0, -1).map((c) => ({ glottocode: c.glottocode, name: c.name })), macroarea: known?.macroarea ?? null, territories: [], lens });
-    return { status, kind, glottocode, label: knownLabel, crumbs, deeper: status === "not-found" ? worldDeeper(index, lens) : deeper };
+    return {
+      status,
+      kind,
+      glottocode,
+      label: knownLabel,
+      crumbs,
+      deeper: status === "not-found" ? worldDeeper(index, lens) : deeper,
+      ...(status === "not-found" ? { profile: null, lump: null } : await extras()),
+    };
   }
 
   const bundle = res.bundle;
@@ -142,6 +183,8 @@ export async function loadEntity(kind: EntityKind, glottocode: string, search: s
       sisters: null,
       inScope,
       inAtlas,
+      profile: null,
+      lump: null,
     };
   }
 
@@ -170,6 +213,7 @@ export async function loadEntity(kind: EntityKind, glottocode: string, search: s
     sisters,
     inScope,
     inAtlas: null,
+    ...(await extras()),
   };
 }
 

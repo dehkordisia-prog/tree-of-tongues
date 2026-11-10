@@ -9,6 +9,7 @@ export default defineConfig({
     // The scope-index plugin (vite.config.ts) is not loaded here; tests get an empty index.
     alias: {
       "virtual:tt-scope-index": fileURLToPath(new URL("./src/data/scopeIndex.empty.ts", import.meta.url)),
+      "virtual:tt-profiles": fileURLToPath(new URL("./src/data/profile/profiles.empty.ts", import.meta.url)),
     },
   },
   test: {

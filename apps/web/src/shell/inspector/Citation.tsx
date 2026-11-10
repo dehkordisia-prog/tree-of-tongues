@@ -29,6 +29,40 @@ export interface CiteRow {
 }
 
 export function CitationChip({ short, what, rows }: { short: string; what: string; rows: CiteRow[] }) {
+  const t = useT();
+  return (
+    <CitePopover label={short} ariaLabel={`${short}. ${t("cite.details", { what })}`} title={what}>
+      <ul className="mt-2 grid gap-3">
+        {rows.map((r, i) => (
+          <li key={i} className="border-t border-line pt-2 first:border-t-0 first:pt-0">
+            <CiteDetails row={r} />
+          </li>
+        ))}
+      </ul>
+    </CitePopover>
+  );
+}
+
+/**
+ * The chip and popover shell shared by data citations and profile citations: opens on click, tap,
+ * Enter or Space, and on hover after 300 ms for a mouse; Esc and the close button dismiss it.
+ */
+export function CitePopover({
+  label,
+  ariaLabel,
+  title,
+  children,
+  triggerClassName = "tt-chip relative inline-flex items-center rounded-sm px-1 text-small text-ink-muted underline decoration-dotted underline-offset-4 hover:text-ink",
+  kind = "",
+}: {
+  label: ReactNode;
+  ariaLabel: string;
+  title: ReactNode;
+  children: ReactNode;
+  triggerClassName?: string;
+  /** data-citation value: "" for data rows, "profile" for profile citations. */
+  kind?: string;
+}) {
   const [open, setOpen] = useState(false);
   const timer = useRef<number | null>(null);
   const t = useT();
@@ -56,13 +90,13 @@ export function CitationChip({ short, what, rows }: { short: string; what: strin
       }}
     >
       <Popover.Trigger
-        className="tt-chip relative inline-flex items-center rounded-sm px-1 text-small text-ink-muted underline decoration-dotted underline-offset-4 hover:text-ink"
-        aria-label={`${short}. ${t("cite.details", { what })}`}
+        className={triggerClassName}
+        aria-label={ariaLabel}
         onPointerEnter={hoverOpen}
         onPointerLeave={hoverClose}
-        data-citation=""
+        data-citation={kind}
       >
-        {short}
+        {label}
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Content
@@ -75,18 +109,12 @@ export function CitationChip({ short, what, rows }: { short: string; what: strin
           className="tt-popover z-50 max-h-[min(70dvh,32rem)] w-[min(92vw,24rem)] overflow-auto rounded-md border border-line-strong bg-raised p-4 text-small shadow-overlay"
         >
           <div className="flex items-start justify-between gap-2">
-            <p className="font-semibold">{what}</p>
+            <p className="font-semibold">{title}</p>
             <Popover.Close className="tt-icon-button -me-2 -mt-2" aria-label={t("cite.close")}>
               ×
             </Popover.Close>
           </div>
-          <ul className="mt-2 grid gap-3">
-            {rows.map((r, i) => (
-              <li key={i} className="border-t border-line pt-2 first:border-t-0 first:pt-0">
-                <CiteDetails row={r} />
-              </li>
-            ))}
-          </ul>
+          {children}
           <Popover.Arrow className="fill-[var(--tt-line-strong)]" />
         </Popover.Content>
       </Popover.Portal>

@@ -12,6 +12,28 @@ export const LENSES: readonly Lens[] = ["tree", "map"];
 export type MacroCode = "ara" | "fas" | "zho";
 export const MACRO_CODES: readonly MacroCode[] = ["ara", "fas", "zho"];
 
+/**
+ * Lumper/Splitter groups (D-023): the ids of `lumper_groups` in content/scope/phase-1-languages.yaml.
+ * `?lump=` carries these ids; a unit test keeps this list equal to the scope list. The ISO codes of
+ * D-022 (ara, fas, zho) are read as aliases, so older links open the same group.
+ */
+export const LUMP_GROUPS = [
+  "arabic",
+  "chinese",
+  "filipino",
+  "hindustani",
+  "kurdish",
+  "malay",
+  "persian",
+  "punjabi",
+] as const;
+export type LumpGroup = (typeof LUMP_GROUPS)[number];
+const LUMP_ALIASES: Readonly<Record<string, LumpGroup>> = { ara: "arabic", fas: "persian", zho: "chinese" };
+
+export function isLumpGroup(v: unknown): v is LumpGroup {
+  return typeof v === "string" && (LUMP_GROUPS as readonly string[]).includes(v);
+}
+
 export type Selection =
   | { kind: "language"; glottocode: string }
   | { kind: "family"; glottocode: string }
@@ -47,7 +69,7 @@ export interface UrlState {
   selection: Selection;
   lens: Lens;
   tab: Tab;
-  lumped: readonly MacroCode[];
+  lumped: readonly LumpGroup[];
   classification: "glottolog";
   year: null;
   area: string | null;
@@ -229,7 +251,8 @@ export function parseShellUrl(pathname: string, search: string, opts: ParseOptio
     ...new Set(
       (q.get("lump") ?? "")
         .split(",")
-        .filter((c): c is MacroCode => (MACRO_CODES as readonly string[]).includes(c)),
+        .map((c) => LUMP_ALIASES[c] ?? c)
+        .filter(isLumpGroup),
     ),
   ].sort();
   const areaParam = q.get("area");

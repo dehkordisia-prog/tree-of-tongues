@@ -272,7 +272,9 @@
     "members": "Nothing deeper in this tree.",
     "membersWhy": "Glottolog lists no members under this node.",
     "familyWhere": "No member has a location yet.",
-    "familyWhereWhy": "Glottolog gives no coordinates for these languoids."
+    "familyWhereWhy": "Glottolog gives no coordinates for these languoids.",
+    "explanation": "Explanation not written yet.",
+    "explanationWhy": "Until it is, see the sources for each member language."
   },
   "where": {
     "showOnMap": "Show on map",
@@ -292,7 +294,41 @@
     "shown": "{{shown}} of {{total}} shown"
   },
   "profile": {
-    "badge": "Profile"
+    "badge": "Profile",
+    "label": "Profile",
+    "draft": "Draft. Under review by linguists and the project owner.",
+    "reviewsPending": "Reviews pending: {{list}}.",
+    "role": {
+      "linguist": "linguist",
+      "historical": "historical linguist",
+      "owner": "project owner"
+    },
+    "unverified": "Unverified",
+    "unverifiedName": "Unverified. This claim has not been verified yet.",
+    "unverifiedTitle": "What Unverified means",
+    "unverifiedWhy_one": "Unverified marks a claim that has not yet been checked against a source. We show it so you can see what is still open. This profile has {{count, number}} such mark.",
+    "unverifiedWhy_other": "Unverified marks a claim that has not yet been checked against a source. We show it so you can see what is still open. This profile has {{count, number}} such marks.",
+    "glanceNotes": "Notes from the profile",
+    "curated": "Suggested in the profile",
+    "sourcesTitle": "Sources cited in the profile",
+    "sourcesIntro": "Numbers match the citation marks in the text. Access says whether the writer or a reviewer opened the source.",
+    "cite": "Source {{n}}",
+    "citeName": "Source {{n}}: {{title}}. Show details",
+    "author": "Author",
+    "title": "Title",
+    "published": "Published in",
+    "publisher": "Publisher",
+    "link": "Link",
+    "doi": "DOI",
+    "access": "Access",
+    "accessValue": {
+      "opened": "Opened",
+      "catalog": "Catalog only",
+      "not-opened": "Not opened",
+      "unknown": "Not recorded"
+    },
+    "noLocator": "Whole work",
+    "table": "Table in {{section}}"
   },
   "sources": {
     "intro": "Every source used on this page.",
@@ -354,5 +390,22 @@
     "description": "{{name}}, {{level}}: family path, speaker figures with sources, and where it is spoken.",
     "worldDescription": "An interactive atlas of the world's languages: a zoomable family tree, a world map and language profiles, every fact with its source.",
     "notFound": "Not found"
+  },
+  "macro": {
+    "heading": "Why linguists disagree"
+  },
+  "lump": {
+    "control": "How to show these languages",
+    "split": "Split (Glottolog)",
+    "grouped": "Grouped",
+    "grouping": "Grouping",
+    "members": "Members",
+    "thisPage": "this page",
+    "ownerPending": "Owner decision pending. The project owner has not decided this grouping yet.",
+    "later": "For now this choice changes only this panel and the link. The tree and map get grouped views in a later update.",
+    "viewSplit": "Split view: each member is its own language, as in Glottolog.",
+    "viewGrouped": "Grouped view: these languages are read as one group.",
+    "announceGrouped": "Grouped view. Only this panel changes for now.",
+    "announceSplit": "Split view."
   }
 }

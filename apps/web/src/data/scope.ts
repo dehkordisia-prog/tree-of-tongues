@@ -42,8 +42,12 @@ export interface ScopeFamily {
 
 export interface LumperGroup {
   id: string;
+  /** How the group is labeled: a Glottolog node or the atlas's own grouping, worded as the scope list says. */
   label: string | null;
+  /** glottolog_ancestor: the Glottolog node above every member. */
   ancestor: string | null;
+  /** owner_decision, for example "pending" (Persian). */
+  ownerDecision: string | null;
   members: string[];
 }
 
@@ -100,7 +104,8 @@ export function readScope(doc: YamlValue): ScopeFile {
         return {
           id,
           label: str(o.label),
-          ancestor: str(o.ancestor),
+          ancestor: str(o.glottolog_ancestor) ?? str(o.ancestor),
+          ownerDecision: str(o.owner_decision),
           members: list(o.members).map((m) => (isObj(m) ? str(m.glottocode) : str(m))).filter((m): m is string => !!m),
         };
       })

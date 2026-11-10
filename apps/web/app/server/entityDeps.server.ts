@@ -1,6 +1,7 @@
 // Build-time readers for loadEntity: the prerender reads data/build straight from disk.
 
 import type { EntityDeps } from "../../src/data/entity";
+import { loadProfile } from "../../src/data/profile/load";
 import type { ScopeIndex } from "../../src/data/scopeIndex";
 
 import { buildScopeIndex, dataIsBuilt, readBundleFromDisk, readTreeCounts } from "./scopeIndex.server";
@@ -26,5 +27,6 @@ export function serverDeps(): EntityDeps {
     async dataBuilt() {
       return dataIsBuilt();
     },
+    getProfile: loadProfile,
   };
 }

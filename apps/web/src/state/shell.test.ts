@@ -76,18 +76,18 @@ describe("history rules (spec 2.4)", () => {
   });
 
   it("lump pushes", () => {
-    t.s().setLumped("fas", true);
-    expect(t.log.at(-1)).toEqual({ href: "/?lump=fas", replace: false });
-    t.s().setLumped("ara", true);
-    expect(t.log.at(-1)?.href).toBe("/?lump=ara,fas");
+    t.s().setLumped("persian", true);
+    expect(t.log.at(-1)).toEqual({ href: "/?lump=persian", replace: false });
+    t.s().setLumped("arabic", true);
+    expect(t.log.at(-1)?.href).toBe("/?lump=arabic,persian");
   });
 
   it("new selections keep lens, lump and lang", () => {
-    t.s().setLumped("fas", true);
+    t.s().setLumped("persian", true);
     t.s().setLens("map");
     t.s().setLocale("tr");
     t.s().select({ kind: "family", glottocode: "turk1311" });
-    expect(t.log.at(-1)?.href).toBe("/family/turk1311?lens=map&lump=fas&lang=tr");
+    expect(t.log.at(-1)?.href).toBe("/family/turk1311?lens=map&lump=persian&lang=tr");
   });
 
   it("selecting the current entity again does not push", () => {

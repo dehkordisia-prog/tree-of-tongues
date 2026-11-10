@@ -208,6 +208,40 @@ canvas:focus-visible,
   .tt-tabs {
     scrollbar-width: thin;
   }
+
+  /* Inline chips in running text (profile citations, Unverified): a 24 px box (WCAG 2.5.8) that
+     keeps the line tight, and a centered 44 px hit area from ::after (spec 4.6). */
+  .tt-hit {
+    position: relative;
+    min-inline-size: 24px;
+    min-block-size: 24px;
+    justify-content: center;
+  }
+  .tt-hit::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    inline-size: max(100%, var(--tt-target-min));
+    block-size: max(100%, var(--tt-target-min));
+    translate: -50% -50%;
+  }
+
+  /* Profile prose (src/shell/inspector/profile/Profile.tsx): spacing between blocks only. */
+  .tt-prose > :where(p, ul, ol, blockquote, .tt-table-scroll, hr) + :where(*),
+  .tt-prose :where(li, blockquote) > :where(p, ul, ol) + :where(*) {
+    margin-block-start: 0.75rem;
+  }
+  .tt-prose :where(li) + :where(li) {
+    margin-block-start: 0.375rem;
+  }
+  .tt-prose :where(a) {
+    color: var(--tt-link);
+    text-decoration: underline;
+  }
+  .tt-prose :where(h3, h4, h5, h6) + :where(*) {
+    margin-block-start: 0.5rem;
+  }
 }
 
 @keyframes tt-panel-in {

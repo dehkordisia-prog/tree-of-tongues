@@ -152,10 +152,12 @@ test.describe("with data", () => {
 
     const tabs = page.getByRole("tablist").getByRole("tab");
     await expect(tabs).toHaveCount(8);
+    // Turkish has a profile: Writing and Words show its prose instead of the data empty state;
+    // Sounds keeps "No recording yet." under the prose (no cleared recording exists).
     const empties: Record<string, string> = {
-      Writing: "No script data yet.",
+      Writing: "Four letters to know",
       Sounds: "No recording yet.",
-      Words: "No word list yet.",
+      Words: "Bridges to Persian",
     };
     for (const name of ["Overview", "Speakers", "Where", "Writing", "Sounds", "Words", "Family", "Sources"]) {
       await page.getByRole("tab", { name }).click();

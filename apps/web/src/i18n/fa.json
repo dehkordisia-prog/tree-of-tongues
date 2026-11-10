@@ -1,5 +1,8 @@
 {
-  "_meta": { "status": "awaiting owner review (Siavash)" },
+  "_meta": {
+    "status": "awaiting owner review (Siavash)",
+    "todo": "profile, lump and macro keys: to be translated, owner review. English is shown with lang=en until then."
+  },
   "app": {
     "tagline": "اطلس زبان‌های جهان. فاز ۰: بنیادها."
   },
@@ -9,7 +12,9 @@
     "interfaceLanguage": "زبان رابط"
   },
   "workbench": {
-    "design": { "label": "سامانهٔ طراحی" }
+    "design": {
+      "label": "سامانهٔ طراحی"
+    }
   },
   "design": {
     "title": "سامانهٔ طراحی"

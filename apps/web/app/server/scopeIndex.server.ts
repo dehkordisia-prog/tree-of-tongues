@@ -16,12 +16,16 @@ import {
   type PrerenderTarget,
   type ScopeFile,
 } from "../../src/data/scope.ts";
-import type { IndexFamily, IndexLang, ScopeIndex } from "../../src/data/scopeIndex.ts";
+import type { IndexFamily, IndexLang, IndexLumpGroup, ScopeIndex } from "../../src/data/scopeIndex.ts";
 import { countTree, type TreeCounts, type TreeNodeRow } from "../../src/data/treeCounts.ts";
 import { parseYaml } from "../../src/data/yamlLite.ts";
 
 const REPO = path.resolve(import.meta.dirname, "../../../..");
-export const DATA_DIR = path.join(REPO, "data/build");
+// TT_DATA_DIR points the build and the dev server elsewhere, for example at an empty folder to run
+// the app as CI does (no pipeline output).
+export const DATA_DIR = process.env.TT_DATA_DIR
+  ? path.resolve(process.env.TT_DATA_DIR)
+  : path.join(REPO, "data/build");
 export const SCOPE_FILE = path.join(REPO, "content/scope/phase-1-languages.yaml");
 
 export function readScopeFile(): ScopeFile {
@@ -165,5 +169,37 @@ export function buildScopeIndex(): ScopeIndex {
   // The pilot trio (docs/ROADMAP.md). An entry still contested without a node is left out, never guessed.
   const pilots = ["Iranian Persian", "Turkish", "English"].map(pick).filter((g): g is string => !!g);
 
-  return { built, labels, langs, families, topFamilies: tree?.top.slice(0, 12) ?? [], pilots };
+  // Lumper/Splitter groups (D-023). Member names: the atlas label, else the Glottolog name the scope
+  // list records for a candidate, else the bundle name; never typed here.
+  const candidateNames = new Map<string, string>();
+  for (const e of scope.languages)
+    for (const c of e.candidates)
+      if (c.glottologName && !candidateNames.has(c.glottocode))
+        candidateNames.set(c.glottocode, c.glottologName);
+  const memberLabel = (g: string) =>
+    labels[g] ?? candidateNames.get(g) ?? readBundleFromDisk(g)?.languoid.name ?? g;
+  const lumpGroups: IndexLumpGroup[] = scope.lumperGroups.map((grp) => ({
+    id: grp.id,
+    label: grp.label,
+    ancestor: grp.ancestor,
+    ownerDecision: grp.ownerDecision,
+    members: grp.members.map((g) => ({ g, label: memberLabel(g) })),
+  }));
+  const groupIds = new Set(lumpGroups.map((x) => x.id));
+  const lumpNotes: Record<string, { group: string; note: string | null }> = {};
+  for (const e of scope.languages) {
+    if (!e.glottocode || !e.lumperGroup || !groupIds.has(e.lumperGroup)) continue;
+    lumpNotes[e.glottocode] = { group: e.lumperGroup, note: e.inspectorNote };
+  }
+
+  return {
+    built,
+    labels,
+    langs,
+    families,
+    topFamilies: tree?.top.slice(0, 12) ?? [],
+    pilots,
+    lumpGroups,
+    lumpNotes,
+  };
 }

@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 
 import { prerenderTargets, readScope, scopeLabel } from "./scope";
 import { parseYaml } from "./yamlLite";
+import { LUMP_GROUPS } from "@/state/url";
 
 const SCOPE = path.resolve(import.meta.dirname, "../../../../content/scope/phase-1-languages.yaml");
 
@@ -54,5 +55,16 @@ describe("scope list loader", () => {
   });
   it("reads the lumper groups when the scope list has them", () => {
     for (const g of scope.lumperGroups) expect(g.members.length).toBeGreaterThan(0);
+    const persian = scope.lumperGroups.find((g) => g.id === "persian");
+    expect(persian?.ownerDecision).toBe("pending");
+    expect(persian?.ancestor).toBe("fars1255");
+    expect(persian?.members).toContain("west2369");
+  });
+  it("lump ids in the URL match the scope list groups (D-023)", () => {
+    expect([...LUMP_GROUPS].sort()).toEqual(scope.lumperGroups.map((g) => g.id).sort());
+  });
+  it("every lumper_group named by an entry exists", () => {
+    const ids = new Set(scope.lumperGroups.map((g) => g.id));
+    for (const e of scope.languages) if (e.lumperGroup && e.lumperGroup !== "none") expect(ids.has(e.lumperGroup)).toBe(true);
   });
 });
