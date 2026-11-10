@@ -6,8 +6,8 @@ import "@/design/fonts.css";
 import { THEME_INIT_SCRIPT } from "@/design/theme";
 import { htmlAttributes } from "@/i18n/direction";
 import { i18n } from "@/i18n";
-import { LocaleSync } from "@/i18n/LocaleSync";
 import { useLocale } from "@/i18n/locale";
+import { UrlSync } from "@/state/UrlSync";
 
 import type { Route } from "./+types/root";
 import "./app.css";
@@ -53,7 +53,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <I18nextProvider i18n={i18n}>
           {children}
-          <LocaleSync />
+          <UrlSync />
         </I18nextProvider>
         <ScrollRestoration />
         <Scripts />

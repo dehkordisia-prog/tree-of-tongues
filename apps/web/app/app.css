@@ -119,3 +119,136 @@ canvas:focus-visible,
     scroll-behavior: auto !important;
   }
 }
+
+/* ------------------------------------------------------------ app shell (docs/specs/app-shell.md) */
+@layer components {
+  /* Pointing icons and chevrons mirror in RTL; icons that depict objects do not (DESIGN.md). */
+  [dir="rtl"] .tt-mirror {
+    transform: scaleX(-1);
+  }
+
+  .tt-icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-block-size: var(--tt-target-min);
+    min-inline-size: var(--tt-target-min);
+    border: 1.5px solid var(--tt-line-strong);
+    border-radius: 9999px;
+    color: var(--tt-ink);
+    cursor: pointer;
+  }
+  .tt-icon-button:hover {
+    background-color: var(--tt-raised);
+  }
+
+  /* Skip links: first in the tab order, visible on focus (spec 9.2). */
+  .tt-skip {
+    position: absolute;
+    inset-inline-start: 0.5rem;
+    inset-block-start: 0.5rem;
+    z-index: 60;
+    padding: 0.625rem 1rem;
+    border-radius: var(--radius-md, 8px);
+    background-color: var(--tt-raised);
+    color: var(--tt-ink);
+    box-shadow: var(--tt-shadow-overlay);
+    transform: translateY(-200%);
+  }
+  .tt-skip:focus,
+  .tt-skip:focus-visible {
+    transform: none;
+  }
+
+  /* Citation chips: small text, 44 px hit area through a transparent overlay (spec 4.6). */
+  .tt-chip::after {
+    content: "";
+    position: absolute;
+    inset-inline: -0.25rem;
+    inset-block: 50%;
+    min-block-size: var(--tt-target-min);
+    translate: 0 -50%;
+  }
+  .tt-chip {
+    min-inline-size: var(--tt-target-min);
+    min-block-size: 24px; /* WCAG 2.5.8 on the box itself; ::after extends the hit area to 44 px */
+    justify-content: center;
+  }
+
+  /* Bottom sheet stops (spec 8.4). */
+  .tt-sheet {
+    block-size: 112px;
+    transition: block-size var(--tt-dur-ui) var(--tt-ease-standard);
+  }
+  .tt-sheet[data-stop="half"] {
+    block-size: 50dvh;
+  }
+  .tt-sheet[data-stop="full"] {
+    block-size: calc(100dvh - 56px);
+  }
+
+  /* At peek, the sheet shows the name first (spec 8.3): the chip row waits for half. */
+  .tt-sheet[data-stop="peek"] .tt-inspector-header > div:first-child {
+    display: none;
+  }
+
+  .tt-side {
+    animation: tt-panel-in var(--tt-dur-ui) var(--tt-ease-enter);
+  }
+
+  .tt-panel {
+    animation: tt-fade var(--tt-dur-ui-fast) var(--tt-ease-standard);
+  }
+
+  .tt-popover,
+  .tt-dialog {
+    animation: tt-pop var(--tt-dur-ui-fast) var(--tt-ease-enter);
+  }
+
+  .tt-tabs {
+    scrollbar-width: thin;
+  }
+}
+
+@keyframes tt-panel-in {
+  from {
+    opacity: 0;
+    translate: calc(16px * var(--tt-motion-distance)) 0;
+  }
+}
+[dir="rtl"] .tt-side {
+  animation-name: tt-panel-in-rtl;
+}
+@keyframes tt-panel-in-rtl {
+  from {
+    opacity: 0;
+    translate: calc(-16px * var(--tt-motion-distance)) 0;
+  }
+}
+@keyframes tt-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes tt-pop {
+  from {
+    opacity: 0;
+    scale: calc(1 - 0.02 * var(--tt-motion-distance));
+  }
+}
+
+/* Reduced motion (OS or the Motion setting): no transform animations on panels, opacity only. */
+[data-motion="reduce"] .tt-sheet {
+  transition: none;
+}
+[data-motion="reduce"] .tt-panel {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tt-sheet {
+    transition: none;
+  }
+  .tt-panel {
+    animation: none;
+  }
+}

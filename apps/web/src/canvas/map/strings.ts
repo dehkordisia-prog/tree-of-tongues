@@ -49,7 +49,7 @@ export const S = {
   colStatus: "Status",
   unmatchedTitle: "Not drawn: no polygon with its own code at this scale",
   provenance: "Provenance",
-  noIndex: "The country to language index is not built. Run node scripts/build-territory-index.mjs.",
+  noIndex: "The country to language index is not built. Run uv run pipeline build.",
   noLanguagesForCountry: "No language rows in CLDR for this territory.",
   contestedNote:
     "Natural Earth records a claim or self-administration here. The atlas shows it without taking a position.",

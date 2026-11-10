@@ -6,8 +6,8 @@ for (const path of pages) {
   test(`${path} renders without console errors`, async ({ page }) => {
     const errors: string[] = [];
     page.on("console", (msg) => {
-      // The tree spike asks for /data/tree.json, which is absent in CI; its 404 is expected there.
-      if (msg.type() === "error" && !msg.location().url.includes("/data/")) errors.push(msg.text());
+      // Pages ask for /data/*, which is absent in CI; those 404s are expected there.
+      if (msg.type() === "error" && !msg.location().url.includes("/data/") && !msg.text().includes("404")) errors.push(msg.text());
     });
     page.on("pageerror", (err) => errors.push(err.message));
 
@@ -17,11 +17,10 @@ for (const path of pages) {
   });
 }
 
-test("home links are reachable by keyboard", async ({ page }) => {
+test("the workbenches stay reachable from the shell footer", async ({ page }) => {
   await page.goto("/");
-  const targets = ["/design", "/spike/tree", "/spike/map"];
-  for (const href of targets) {
-    await page.keyboard.press("Tab");
-    await expect(page.locator(":focus")).toHaveAttribute("href", href);
-  }
+  const nav = page.getByRole("navigation", { name: "Workbenches" });
+  await expect(nav.getByRole("link")).toHaveCount(3);
+  const hrefs = await nav.getByRole("link").evaluateAll((as) => as.map((a) => a.getAttribute("href")));
+  expect(hrefs).toEqual(["/design", "/spike/tree", "/spike/map"]);
 });

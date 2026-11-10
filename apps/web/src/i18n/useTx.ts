@@ -1,11 +1,11 @@
 import { useCallback } from "react";
-import type { ParseKeys } from "i18next";
+import type { ParseKeys, TOptions } from "i18next";
 import { useTranslation } from "react-i18next";
 
 import { DEFAULT_LOCALE, directionOf, type Direction } from "./direction";
 import { useLocale } from "./locale";
 
-type Tx = { text: string; lang?: string; dir?: Direction };
+export type Tx = { text: string; lang?: string; dir?: Direction };
 type Key = ParseKeys;
 
 /**
@@ -18,9 +18,13 @@ export function useTx() {
   const { t, i18n } = useTranslation();
   const locale = useLocale();
   return useCallback(
-    (key: Key): Tx => {
-      const text: string = t(key);
-      const translated = locale === DEFAULT_LOCALE || i18n.exists(key, { lng: locale, fallbackLng: false });
+    (key: Key, options?: TOptions): Tx => {
+      const text = String(t(key as never, options as never));
+      const base = key.replace(/_(one|other|zero|two|few|many)$/, "");
+      const translated =
+        locale === DEFAULT_LOCALE ||
+        i18n.exists(key, { lng: locale, fallbackLng: false }) ||
+        i18n.exists(`${base}_other`, { lng: locale, fallbackLng: false });
       return translated ? { text } : { text, lang: DEFAULT_LOCALE, dir: directionOf(DEFAULT_LOCALE) };
     },
     [t, i18n, locale],

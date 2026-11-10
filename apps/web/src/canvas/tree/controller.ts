@@ -52,6 +52,12 @@ export interface ControllerOptions {
   onState: (s: UiState) => void;
   onAnnounce: (message: string) => void;
   initialFocus?: number;
+  /** Initial camera (the shell restores a camera from the URL). Defaults to fitting the focus. */
+  initialCamera?: Camera;
+  /** The camera settled: pointer up after a drag or pinch, wheel idle for 150 ms, or a flight ended. */
+  onSettled?: (cam: Camera) => void;
+  /** A flight started (true) or ended (false). */
+  onFlight?: (running: boolean) => void;
 }
 
 export class TreeController {
@@ -76,6 +82,8 @@ export class TreeController {
   private dragged = false;
   private downAt = { x: 0, y: 0 };
   private pinch: { dist: number; mx: number; my: number } | null = null;
+  private paused = false;
+  private wheelTimer = 0;
   private benchState: {
     start: number;
     stamps: number[];
@@ -91,7 +99,7 @@ export class TreeController {
     this.palette = opts.palette;
     this.scene = new Scene(opts.layout);
     this.focus = opts.initialFocus ?? opts.layout.root;
-    this.cam = this.targetCamera(this.focus);
+    this.cam = opts.initialCamera ?? this.targetCamera(this.focus);
     const c = opts.canvas;
     c.addEventListener("pointerdown", this.onPointerDown);
     c.addEventListener("pointermove", this.onPointerMove);
@@ -108,6 +116,7 @@ export class TreeController {
   destroy(): void {
     this.destroyed = true;
     cancelAnimationFrame(this.raf);
+    window.clearTimeout(this.wheelTimer);
     const c = this.o.canvas;
     c.removeEventListener("pointerdown", this.onPointerDown);
     c.removeEventListener("pointermove", this.onPointerMove);
@@ -120,7 +129,7 @@ export class TreeController {
 
   /* ------------------------------------------------------------ state */
 
-  private targetCamera(v: number): Camera {
+  targetCamera(v: number): Camera {
     const L = this.layout;
     if (v === L.root) return fitCircle(0, 0, WORLD_RADIUS, this.size);
     return fitCircle(L.x[v]!, L.y[v]!, L.r[v]!, this.size);
@@ -146,8 +155,31 @@ export class TreeController {
     this.cursor = L.childStart[this.focus]! < L.childStart[this.focus + 1]! ? L.childList[L.childStart[this.focus]!]! : -1;
   }
 
+  /** Hidden lens: no animation frames until resumed (spec 1.1). */
+  setPaused(paused: boolean): void {
+    this.paused = paused;
+    if (paused) {
+      cancelAnimationFrame(this.raf);
+      this.raf = 0;
+    } else {
+      this.dirty = true;
+      this.wake();
+    }
+  }
+
+  /** Move to a camera: a flight, or a jump behind a crossfade under reduced motion. */
+  goTo(cam: Camera, animate: boolean): void {
+    if (animate) this.flyTo(cam, 1);
+    else {
+      this.flight = null;
+      this.cam = cam;
+      this.dirty = true;
+      this.wake();
+    }
+  }
+
   wake(): void {
-    if (this.raf || this.destroyed) return;
+    if (this.raf || this.destroyed || this.paused) return;
     this.raf = requestAnimationFrame(this.frame);
   }
 
@@ -167,13 +199,13 @@ export class TreeController {
 
   /* ----------------------------------------------------------- focus */
 
-  focusNode(v: number, announce = true): void {
+  focusNode(v: number, announce = true, camera?: Camera): void {
     if (v < 0 || v > this.layout.root) return;
     const levels = Math.abs(this.layout.depth[v]! - this.layout.depth[this.focus]!) + 1;
     this.focus = v;
     this.epoch++;
     this.resetCursor();
-    this.flyTo(this.targetCamera(v), levels);
+    this.flyTo(camera ?? this.targetCamera(v), levels);
     this.emit();
     if (announce) {
       const kids = this.layout.childStart[v + 1]! - this.layout.childStart[v]!;
@@ -199,9 +231,11 @@ export class TreeController {
       this.flight = null;
       this.cam = to;
       this.crossfade();
+      this.o.onSettled?.(to);
     } else {
       this.flight = new Flight(this.cam, to, this.size, levels);
       this.flightStart = performance.now();
+      this.o.onFlight?.(true);
     }
     this.dirty = true;
     this.wake();
@@ -244,6 +278,7 @@ export class TreeController {
   /* ----------------------------------------------------------- input */
 
   private cancelFlight(): void {
+    if (this.flight) this.o.onFlight?.(false);
     this.flight = null;
   }
 
@@ -268,6 +303,8 @@ export class TreeController {
     this.cam = clampCenter(zoomAt(this.cam, this.size, p.x, p.y, Math.exp(-e.deltaY * unit * k)));
     this.dirty = true;
     this.wake();
+    window.clearTimeout(this.wheelTimer);
+    this.wheelTimer = window.setTimeout(() => this.o.onSettled?.(this.cam), 150);
   };
 
   private onPointerDown = (e: PointerEvent) => {
@@ -320,6 +357,7 @@ export class TreeController {
     const wasSingle = this.pointers.size === 1;
     this.pointers.delete(e.pointerId);
     this.pinch = null;
+    if (this.pointers.size === 0 && this.dragged) this.o.onSettled?.(this.cam);
     if (wasSingle && !this.dragged && e.type === "pointerup") {
       const [wx, wy] = toWorld(this.cam, this.size, p.x, p.y);
       const hit = this.scene.pick(wx, wy);
@@ -374,13 +412,14 @@ export class TreeController {
     if (handled) e.preventDefault();
   };
 
-  private zoomCenter(factor: number): void {
+  zoomCenter(factor: number): void {
     this.cancelFlight();
     const target = clampCenter(zoomAt(this.cam, this.size, this.size.w / 2, this.size.h / 2, factor));
     if (this.o.reducedMotion()) {
       this.cam = target;
       this.dirty = true;
       this.wake();
+      this.o.onSettled?.(target);
     } else {
       this.flyTo(target, 1);
     }
@@ -412,6 +451,8 @@ export class TreeController {
       if (this.flight.done(t)) {
         this.cam = this.flight.to;
         this.flight = null;
+        this.o.onFlight?.(false);
+        this.o.onSettled?.(this.cam);
       } else keepGoing = true;
       this.dirty = true;
     }

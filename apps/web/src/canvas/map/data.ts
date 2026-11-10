@@ -10,7 +10,7 @@ export const DATA_URLS = {
   disputed: "/data/geo/disputed_areas_50m.geojson",
   languages: "/data/geo/languages.geojson",
   tree: "/data/tree.json",
-  territoryIndex: "/data/derived/territory_index.json",
+  territoryIndex: "/data/territory_index.json",
   bundle: (glottocode: string) => `/data/bundles/${glottocode}.json`,
 } as const;
 

@@ -9,9 +9,18 @@
     "interfaceLanguage": "Interface language"
   },
   "workbench": {
-    "design": { "label": "Design system", "note": "Tokens, type and scripts" },
-    "tree": { "label": "Tree spike", "note": "Every Glottolog languoid, zoomable" },
-    "map": { "label": "Map spike", "note": "Language points and countries" }
+    "design": {
+      "label": "Design system",
+      "note": "Tokens, type and scripts"
+    },
+    "tree": {
+      "label": "Tree spike",
+      "note": "Every Glottolog languoid, zoomable"
+    },
+    "map": {
+      "label": "Map spike",
+      "note": "Language points and countries"
+    }
   },
   "design": {
     "title": "Design system",
@@ -34,5 +43,316 @@
     "casingCss": "CSS text-transform with lang",
     "casingUpper": "Uppercase",
     "casingLower": "Lowercase"
+  },
+  "shell": {
+    "skipToDetails": "Skip to details",
+    "skipToCanvas": "Skip to the canvas",
+    "home": "Tree of Tongues, home",
+    "canvasRegion": "{{lens}} view"
+  },
+  "search": {
+    "button": "Search",
+    "buttonLong": "Search languages, families, countries",
+    "shortcut": "Ctrl K",
+    "shortcutMac": "⌘ K",
+    "dialog": "Search the atlas",
+    "placeholder": "Language, family, country or code",
+    "help": "Type a name in any script, an ISO 639-3 code or a Glottocode.",
+    "minChars": "Type at least two letters.",
+    "loading": "Loading the search index",
+    "loadingAll": "Searching every Glottolog languoid",
+    "none": "No match for \"{{query}}\".",
+    "noneNext": "Try another spelling, the name in its own script, or an ISO 639-3 code.",
+    "count_one": "{{count, number}} result",
+    "count_other": "{{count, number}} results",
+    "groupLanguages": "Languages",
+    "groupMacro": "Macrolanguages",
+    "groupFamilies": "Families",
+    "groupCountries": "Countries and territories",
+    "groupDialects": "Dialects",
+    "showAll": "Show all {{count, number}}",
+    "matchAlias": "Alias: {{alias}}",
+    "matchIso": "ISO 639-3: {{code}}",
+    "matchGlottocode": "Glottocode: {{code}}",
+    "matchName": "Also called {{name}}",
+    "notInTree": "Not drawn in the tree yet",
+    "keys": "Up and Down to move. Enter to open. Esc to close.",
+    "error": "Search could not load.",
+    "retry": "Try again",
+    "close": "Close search"
+  },
+  "lens": {
+    "label": "View",
+    "tree": "Tree",
+    "map": "Map",
+    "announceTree": "Tree view.",
+    "announceMap": "Map view."
+  },
+  "crumbs": {
+    "label": "Path",
+    "world": "World",
+    "more": "Show the full path",
+    "grouped": "{{name}} (grouped)"
+  },
+  "time": {
+    "label": "Year",
+    "today": "Today",
+    "later": "Time travel comes in a later update. Everything shows today's data.",
+    "laterShort": "Year: Today. Time travel comes later."
+  },
+  "settings": {
+    "button": "Settings",
+    "theme": "Theme",
+    "language": "Interface language",
+    "motion": "Motion",
+    "motionSystem": "Follow system",
+    "motionReduced": "Reduced",
+    "shortcuts": "Keyboard shortcuts"
+  },
+  "help": {
+    "title": "Keyboard shortcuts",
+    "canvasOnly": "Single keys work while the canvas has focus.",
+    "close": "Close",
+    "anywhere": "Anywhere",
+    "canvasTree": "Tree canvas",
+    "canvasMap": "Map canvas",
+    "canvasBoth": "Either canvas",
+    "kSearch": "Open search",
+    "kEsc": "Close the topmost layer, or go to the parent on the canvas",
+    "kArrowsTree": "Show the cursor, then move among the children",
+    "kEnter": "Select the item under the cursor and fly in",
+    "kBack": "Select the parent and fly out",
+    "kHome": "World view",
+    "kZoom": "Zoom in and out",
+    "kArrowsMap": "Pan",
+    "kLens": "Tree view, Map view",
+    "kInspector": "Move focus to the details",
+    "kHelp": "Open this list"
+  },
+  "footer": {
+    "credits": "Sources and credits",
+    "classification": "Classification: Glottolog 5.3"
+  },
+  "inspector": {
+    "label": "Details",
+    "collapse": "Hide details",
+    "expand": "Show details",
+    "copyLink": "Copy link",
+    "copied": "Link copied.",
+    "loading": "Loading details",
+    "close": "Close"
+  },
+  "sheet": {
+    "handle": "Resize the details panel",
+    "peek": "Details, small",
+    "half": "Details, half screen",
+    "full": "Details, full screen"
+  },
+  "level": {
+    "language": "Language",
+    "dialect": "Dialect",
+    "family": "Family",
+    "macrolanguage": "Macrolanguage",
+    "country": "Country or territory",
+    "world": "World"
+  },
+  "levelLower": {
+    "language": "language",
+    "dialect": "dialect",
+    "family": "family"
+  },
+  "tab": {
+    "label": "Sections",
+    "overview": "Overview",
+    "speakers": "Speakers",
+    "where": "Where",
+    "writing": "Writing",
+    "sounds": "Sounds",
+    "words": "Words",
+    "family": "Family",
+    "sources": "Sources",
+    "members": "Members",
+    "languages": "Languages"
+  },
+  "welcome": {
+    "title": "Explore the world's languages",
+    "body": "Click a circle to fly into a family. Search finds any language by name, code or script.",
+    "bodyTouch": "Tap a circle, or search.",
+    "keyboard": "Keyboard: Tab to the canvas, then use the arrow keys."
+  },
+  "glance": {
+    "title": "At a glance",
+    "ownName": "Own name",
+    "ipa": "Name in IPA",
+    "family": "Family",
+    "speakers": "Speakers",
+    "spokenIn": "Spoken in",
+    "more": "and {{count, number}} more",
+    "scripts": "Scripts",
+    "status": "Status",
+    "codes": "Codes",
+    "noData": "No data yet",
+    "languagesCount_one": "{{count, number}} language",
+    "languagesCount_other": "{{count, number}} languages",
+    "dialectsCount_one": "{{count, number}} dialect",
+    "dialectsCount_other": "{{count, number}} dialects",
+    "inAtlas_one": "{{count, number}} of its languages has a profile.",
+    "inAtlas_other": "{{count, number}} of its languages have profiles.",
+    "macroareas": "Macroareas",
+    "languages": "Languages",
+    "level": "Level",
+    "path": "Path",
+    "countsNote": "Counts of Glottolog languoids, not speakers.",
+    "official": "official",
+    "point": "Glottolog location"
+  },
+  "cite": {
+    "sourcesCount_one": "{{count, number}} source",
+    "sourcesCount_other": "{{count, number}} sources",
+    "years": "{{from}} to {{to}}",
+    "noYear": "no year given",
+    "source": "Source",
+    "year": "Year",
+    "kind": "Kind",
+    "method": "Method",
+    "statedIn": "Stated in",
+    "noReference": "No reference given in Wikidata",
+    "locator": "Locator",
+    "retrieved": "Retrieved",
+    "license": "License",
+    "confidence": "Confidence",
+    "notes": "Notes",
+    "open": "Open the source",
+    "close": "Close",
+    "details": "Source details: {{what}}",
+    "value": "Value",
+    "version": "Version",
+    "rank": "Wikidata rank"
+  },
+  "confidence": {
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low",
+    "contested": "Contested"
+  },
+  "speakers": {
+    "l1": "First language (L1)",
+    "l2": "Second language (L2)",
+    "total": "Total",
+    "unstated": "Kind not stated",
+    "range": "{{low}} to {{high}}",
+    "deprecated": "Deprecated in Wikidata ({{count, number}})",
+    "preferred": "Preferred in Wikidata",
+    "neverAveraged": "Sources disagree. We show each one and never average them.",
+    "differ": "Figures differ by more than 25 percent.",
+    "mixed": "These figures come from different sources and years.",
+    "familyNote": "We do not add up speaker figures across languages. Each language shows its own sources.",
+    "macroNote": "These figures are stated for {{name}} as a whole. We never add up its member languages.",
+    "srBubble": "L1: {{l1}}. Total: {{total}}.",
+    "srNone": "No speaker figure yet.",
+    "noFigure": "No figure yet",
+    "colValue": "Figure",
+    "colYear": "Year",
+    "colSource": "Source",
+    "colConfidence": "Confidence",
+    "colDetails": "Details"
+  },
+  "empty": {
+    "speakers": "No speaker figure yet.",
+    "speakersWhy": "We show only estimates with a source. Wikidata has none for this language.",
+    "where": "No territory data yet.",
+    "whereWhy": "CLDR lists no countries for this language. The map shows its Glottolog location.",
+    "writing": "No script data yet.",
+    "writingWhy": "We have no sourced script list for this language. Scripts get their own pages in a later update.",
+    "sounds": "No recording yet.",
+    "soundsWhy": "We play only real recordings with a clear license. None is cleared for this language yet.",
+    "words": "No word list yet.",
+    "wordsWhy": "Word lists come from ASJP, which has no list for this language.",
+    "dialects": "Glottolog lists no dialects for this language.",
+    "members": "Nothing deeper in this tree.",
+    "membersWhy": "Glottolog lists no members under this node.",
+    "familyWhere": "No member has a location yet.",
+    "familyWhereWhy": "Glottolog gives no coordinates for these languoids."
+  },
+  "where": {
+    "showOnMap": "Show on map",
+    "spokenHere": "Languages spoken here",
+    "territory": "Territory",
+    "share": "Share of population",
+    "status": "Official status",
+    "source": "Source",
+    "point": "Glottolog places it at latitude {{lat}}, longitude {{lon}}.",
+    "noPoint": "Glottolog gives no coordinates for this languoid."
+  },
+  "family": {
+    "openInTree": "Open in tree",
+    "sisters": "Sister languages",
+    "lineage": "Lineage",
+    "dialects": "Dialects",
+    "shown": "{{shown}} of {{total}} shown"
+  },
+  "profile": {
+    "badge": "Profile"
+  },
+  "sources": {
+    "intro": "Every source used on this page.",
+    "used": "Used for",
+    "version": "Version",
+    "license": "License",
+    "retrieved": "Retrieved",
+    "link": "Source link"
+  },
+  "error": {
+    "bundle": "Could not load the details.",
+    "retry": "Try again",
+    "notFound": "No language or family has the code {{code}}.",
+    "search": "Search the atlas",
+    "world": "Go to the world view",
+    "canvas": "The {{lens}} could not start in this browser.",
+    "canvasNext": "Use the list beside it, or switch to the {{other}}.",
+    "noData": "The data is not built here, so there is nothing to draw yet."
+  },
+  "loading": {
+    "tree": "Loading the tree",
+    "map": "Loading the map"
+  },
+  "tree": {
+    "notDrawn": "{{name}} is not drawn in the tree yet. Showing {{ancestor}}.",
+    "label": "Language family tree. Circles inside circles.",
+    "help": "Drag to pan, scroll or pinch to zoom, click a circle to select it. Keyboard: arrow keys move among the children, Enter selects, Escape goes to the parent, Home shows the whole tree, plus and minus zoom.",
+    "inside": "Inside {{name}} ({{count, number}})",
+    "andMore": "and {{count, number}} more. Zoom in to reach them."
+  },
+  "map": {
+    "inView": "In view ({{count, number}})",
+    "borders": "Borders are approximate and do not imply any position on disputed territory."
+  },
+  "zoom": {
+    "in": "Zoom in",
+    "out": "Zoom out",
+    "all": "Show everything"
+  },
+  "deeper": {
+    "title": "Go deeper",
+    "related": "Related",
+    "contrast": "Contrast",
+    "surprise": "Surprise",
+    "start": "Start here",
+    "sameBranch": "Same branch: {{group}}",
+    "parent": "The family it belongs to",
+    "sharesPlace": "Also spoken in {{place}}, from another family",
+    "sameArea": "Another family in {{macroarea}}",
+    "member": "A member of this family",
+    "pilot": "A full profile with sources",
+    "bigFamily_one": "{{count, number}} language in Glottolog",
+    "bigFamily_other": "{{count, number}} languages in Glottolog",
+    "otherLens": "See it on the {{lens}}",
+    "worldName": "The whole world",
+    "world": "Every family at once"
+  },
+  "meta": {
+    "description": "{{name}}, {{level}}: family path, speaker figures with sources, and where it is spoken.",
+    "worldDescription": "An interactive atlas of the world's languages: a zoomable family tree, a world map and language profiles, every fact with its source.",
+    "notFound": "Not found"
   }
 }
