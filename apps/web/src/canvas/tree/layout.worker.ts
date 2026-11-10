@@ -58,6 +58,10 @@ self.onmessage = async (e: MessageEvent<WorkerRequest>) => {
       layout.x.buffer,
       layout.y.buffer,
       layout.r.buffer,
+      layout.l1Max.buffer,
+      layout.anyMax.buffer,
+      layout.selfX.buffer,
+      layout.selfY.buffer,
     ];
     (self as unknown as Worker).postMessage(reply, transfer);
   } catch {

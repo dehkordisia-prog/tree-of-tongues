@@ -7,13 +7,14 @@ import { Deck, OrthographicView } from "@deck.gl/core";
 import { ScatterplotLayer, TextLayer } from "@deck.gl/layers";
 
 import type { Camera } from "./camera";
-import { LABEL_KIND_TOP, LOD, type Palette, type Scene } from "./lod";
+import { LABEL_KIND_BELOW, LABEL_KIND_TOP, LOD, type Palette, type Scene } from "./lod";
 import type { RendererInit, TreeRenderer } from "./renderer";
 
 interface LabelDatum {
   text: string;
   position: [number, number];
   top: boolean;
+  below: boolean;
   alpha: number;
 }
 
@@ -76,7 +77,7 @@ export class DeckRenderer implements TreeRenderer {
       return;
     }
     this.lastVersion = scene.version;
-    const n = scene.count;
+    const n = scene.count; // nodes and glyph parts (dashed and dotted rings draw solid in deck)
     if (this.positions.length < scene.cap * 2) this.positions = new Float32Array(scene.cap * 2);
     const pos = this.positions;
     for (let i = 0; i < n; i++) {
@@ -108,10 +109,12 @@ export class DeckRenderer implements TreeRenderer {
     for (let k = 0; k < scene.labelCount; k++) {
       const v = scene.labelId[k]!;
       const top = scene.labelKind[k] === LABEL_KIND_TOP;
+      const below = scene.labelKind[k] === LABEL_KIND_BELOW;
       labels.push({
         text: layout.name[v]!,
-        position: [layout.x[v]!, layout.y[v]! - (top ? layout.r[v]! : 0)],
+        position: [layout.x[v]!, layout.y[v]! + (top ? -layout.r[v]! : below ? layout.r[v]! : 0)],
         top,
+        below,
         alpha: scene.labelAlpha[k]!,
       });
     }
@@ -128,7 +131,7 @@ export class DeckRenderer implements TreeRenderer {
       sizeUnits: "pixels",
       getTextAnchor: "middle",
       getAlignmentBaseline: "center",
-      getPixelOffset: (d) => [0, d.top ? LOD.LABEL_FONT_PX : 0],
+      getPixelOffset: (d) => [0, d.top ? LOD.LABEL_FONT_PX : d.below ? LOD.LABEL_FONT_PX * 0.8 : 0],
       fontFamily: this.opts.fontFamily,
       fontWeight: 600,
       characterSet: this.charset,

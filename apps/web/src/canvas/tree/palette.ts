@@ -17,5 +17,6 @@ export function makePalette(theme: ThemeName): Palette {
     }),
     ink: rgb(ui[theme].ink),
     canvas: rgb(ui[theme].canvas),
+    lineStrong: rgb(ui[theme].lineStrong),
   };
 }

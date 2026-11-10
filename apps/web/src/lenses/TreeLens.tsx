@@ -10,6 +10,8 @@ import { useEffect, useId, useRef, useState } from "react";
 import type { Camera } from "@/canvas/tree/camera";
 import { TreeController, type UiState } from "@/canvas/tree/controller";
 import { describeNode } from "@/canvas/tree/describe";
+import { SpeakerStore } from "@/canvas/tree/glyph";
+import { TreeLegend, useLegend } from "@/canvas/tree/Legend";
 import { LEVEL_FAMILY, LEVEL_LANGUAGE, WORLD_RADIUS, type TreeLayout } from "@/canvas/tree/layout";
 import { loadTree } from "@/canvas/tree/loadTree";
 import { LOD, setLodMode } from "@/canvas/tree/lod";
@@ -67,6 +69,9 @@ export default function TreeLens({ active }: { active: boolean }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const ctl = useRef<TreeController | null>(null);
   const byCode = useRef(new Map<string, number>());
+  /** 1 for the scope languages: their labels win collisions. */
+  const scopeMark = useRef<Uint8Array | null>(null);
+  const [legendOpen, toggleLegend] = useLegend();
   const reduced = usePrefersReducedMotion();
   const reducedRef = useRef(reduced);
   useEffect(() => {
@@ -104,6 +109,12 @@ export default function TreeLens({ active }: { active: boolean }) {
         L.name[i] = labelFor(L.glottocode[i]!, L.name[i]!, index.labels);
         byCode.current.set(L.glottocode[i]!, i);
       }
+      const mark = new Uint8Array(L.n + 1);
+      for (const lang of index.langs) {
+        const i = byCode.current.get(lang.g);
+        if (i !== undefined && lang.decided) mark[i] = 1;
+      }
+      scopeMark.current = mark;
       setLayout(L);
     });
     return () => {
@@ -161,6 +172,8 @@ export default function TreeLens({ active }: { active: boolean }) {
           size,
           reducedMotion: () => reducedRef.current,
           initialFocus: focus,
+          speakers: new SpeakerStore(layout),
+          priority: scopeMark.current ?? undefined,
           onState: (s) => {
             setUi(s);
             const cur = shellStore.getState();
@@ -352,6 +365,7 @@ export default function TreeLens({ active }: { active: boolean }) {
           {ui.kidsTotal === 0 && <T as="p" k="empty.members" className="px-3 pb-3 text-ink-muted" />}
         </details>
       )}
+      <TreeLegend open={legendOpen} onToggle={toggleLegend} />
       <div className="absolute bottom-4 end-4 flex gap-2">
         <button
           type="button"

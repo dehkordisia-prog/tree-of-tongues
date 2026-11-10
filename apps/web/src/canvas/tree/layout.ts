@@ -3,8 +3,9 @@
 // Size rule (shown in the UI): circle AREA is the number of entries below a node.
 //   A language counts 1, a dialect counts 0.25, a family with nothing below counts 1.
 // A language that has dialects also keeps a hidden slot of 1 for itself, so a language with
-// dialects is never drawn smaller than one without. Speaker numbers are NOT used: only 384 of
-// 27,177 languoids have an L1 figure.
+// dialects is never drawn smaller than one without. Speaker numbers are NOT used for packing: only
+// 364 of 27,177 languoids have an L1 figure. The speaker glyph (glyph.ts) is drawn inside the one-entry
+// slot of each language (unitR, selfX, selfY), so the layout never implies a figure.
 //
 // The same function runs in a Web Worker (layout.worker.ts) and in tests.
 
@@ -64,12 +65,27 @@ export interface TreeStructure {
   languages: Uint32Array;
   /** Index into FAMILY_ORDER. */
   family: Uint8Array;
+  /**
+   * Largest non-deprecated speaker figure of kind L1 and of any kind, from tree.json (NaN = none).
+   * Rows that reached a node only through attached_via are already left out by the pipeline.
+   * Used to decide whether a language has any figure at all; never summed, never averaged.
+   */
+  l1Max: Float64Array;
+  anyMax: Float64Array;
 }
 
 export interface TreeLayout extends TreeStructure {
   x: Float32Array;
   y: Float32Array;
   r: Float32Array;
+  /**
+   * Radius of the one-entry slot that every language gets (leaf language, or the hidden self slot of
+   * a language with dialects). The speaker glyph is drawn inside it. 0 when the tree has no language.
+   */
+  unitR: number;
+  /** Center of that slot, per node (meaningful for languages only). */
+  selfX: Float32Array;
+  selfY: Float32Array;
   /** Wall time spent packing, ms (excludes JSON parse). */
   packMs: number;
 }
@@ -136,6 +152,14 @@ export function buildStructure(file: TreeFile): TreeStructure {
     if (p >= 0) languages[p] = languages[p]! + languages[v]!;
   }
 
+  const l1Max = new Float64Array(n + 1).fill(NaN);
+  const anyMax = new Float64Array(n + 1).fill(NaN);
+  for (let i = 0; i < n; i++) {
+    const row = rows[i]!;
+    if (typeof row[5] === "number") l1Max[i] = row[5];
+    if (typeof row[7] === "number") anyMax[i] = row[7];
+  }
+
   const family = new Uint8Array(n + 1).fill(OTHER_INDEX);
   for (let k = childStart[root]!; k < childStart[root + 1]!; k++) {
     const top = childList[k]!;
@@ -146,7 +170,7 @@ export function buildStructure(file: TreeFile): TreeStructure {
     if (parent[v] !== root) family[v] = family[parent[v]!]!;
   }
 
-  return { n, root, glottocode, name, parent, level, depth, childStart, childList, languages, family };
+  return { n, root, glottocode, name, parent, level, depth, childStart, childList, languages, family, l1Max, anyMax };
 }
 
 export function computeLayout(file: TreeFile): TreeLayout {
@@ -184,18 +208,34 @@ export function computeLayout(file: TreeFile): TreeLayout {
   const x = new Float32Array(n + 1);
   const y = new Float32Array(n + 1);
   const r = new Float32Array(n + 1);
+  const selfX = new Float32Array(n + 1);
+  const selfY = new Float32Array(n + 1);
+  let unitR = 0;
   // Copy geometry and reorder each CSR child list to the packed order (largest first).
   packed.each((node) => {
     const id = node.data.id;
-    if (id < 0) return;
+    if (id < 0) {
+      const owner = node.parent?.data.id;
+      if (owner !== undefined && owner >= 0) {
+        selfX[owner] = node.x - WORLD_RADIUS;
+        selfY[owner] = node.y - WORLD_RADIUS;
+        if (unitR === 0) unitR = node.r;
+      }
+      return;
+    }
     x[id] = node.x - WORLD_RADIUS;
     y[id] = node.y - WORLD_RADIUS;
     r[id] = node.r;
+    if (level[id] === LEVEL_LANGUAGE && !node.children) {
+      selfX[id] = x[id]!;
+      selfY[id] = y[id]!;
+      if (unitR === 0) unitR = node.r;
+    }
     if (node.children) {
       let k = childStart[id]!;
       for (const c of node.children) if (c.data.id >= 0) childList[k++] = c.data.id;
     }
   });
 
-  return { ...s, x, y, r, packMs: now() - t0 };
+  return { ...s, x, y, r, unitR, selfX, selfY, packMs: now() - t0 };
 }

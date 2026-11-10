@@ -11,7 +11,7 @@
 import { Application, BitmapFont, BitmapText, Buffer, BufferUsage, Container, Geometry, Mesh, Rectangle, Shader, UniformGroup } from "pixi.js";
 
 import type { Camera, Size } from "./camera";
-import { LOD, LABEL_KIND_TOP, type Palette, type Scene } from "./lod";
+import { LOD, LABEL_KIND_BELOW, LABEL_KIND_TOP, type Palette, type Scene } from "./lod";
 import { rgbHex, type RendererInit, type TreeRenderer } from "./renderer";
 
 const VERTEX = `
@@ -20,11 +20,13 @@ in vec3 aCircle;
 in vec4 aFill;
 in vec4 aLine;
 in float aLineW;
+in float aStyle;
 uniform vec2 uRes;
 uniform vec3 uCam;
 out vec2 vOff;
 out float vR;
 out float vLW;
+out float vStyle;
 out vec4 vFill;
 out vec4 vLine;
 void main() {
@@ -35,6 +37,7 @@ void main() {
   vOff = aPosition * pad;
   vR = rpx;
   vLW = aLineW;
+  vStyle = aStyle;
   vFill = aFill;
   vLine = aLine;
   gl_Position = vec4(p.x / uRes.x * 2.0 - 1.0, 1.0 - p.y / uRes.y * 2.0, 0.0, 1.0);
@@ -45,6 +48,7 @@ precision highp float;
 in vec2 vOff;
 in float vR;
 in float vLW;
+in float vStyle;
 in vec4 vFill;
 in vec4 vLine;
 out vec4 finalColor;
@@ -54,6 +58,14 @@ void main() {
   float fa = vFill.a * inside;
   vec4 f = vec4(vFill.rgb * fa, fa);
   float ring = vLW > 0.0 ? clamp(0.5 - abs(d + vLW * 0.5) + vLW * 0.5, 0.0, 1.0) : 0.0;
+  // Style 1 (dashed) and 2 (dotted): a whole number of marks around the ring, so the seam is clean.
+  if (vStyle > 0.5 && vR > 0.5) {
+    float per = vStyle < 1.5 ? 8.0 : 3.5;
+    float on = vStyle < 1.5 ? 0.62 : 0.4;
+    float n = max(vStyle < 1.5 ? 4.0 : 6.0, floor(6.2831853 * vR / per + 0.5));
+    float ph = fract(atan(vOff.y, vOff.x) / 6.2831853 * n);
+    ring *= ph < on ? 1.0 : 0.0;
+  }
   float la = ring * vLine.a;
   vec4 l = vec4(vLine.rgb * la, la);
   finalColor = l + f * (1.0 - l.a);
@@ -72,6 +84,7 @@ export class PixiRenderer implements TreeRenderer {
   private fillBuf!: Buffer;
   private lineBuf!: Buffer;
   private lineWBuf!: Buffer;
+  private styleBuf!: Buffer;
   private circleData = new Float32Array(0);
   private uniforms!: UniformGroup;
   private uni!: { uRes: Float32Array; uCam: Float32Array };
@@ -132,6 +145,7 @@ export class PixiRenderer implements TreeRenderer {
     this.fillBuf = new Buffer({ data: new Uint8Array(cap * 4), usage: BufferUsage.VERTEX | BufferUsage.COPY_DST });
     this.lineBuf = new Buffer({ data: new Uint8Array(cap * 4), usage: BufferUsage.VERTEX | BufferUsage.COPY_DST });
     this.lineWBuf = new Buffer({ data: new Float32Array(cap), usage: BufferUsage.VERTEX | BufferUsage.COPY_DST });
+    this.styleBuf = new Buffer({ data: new Float32Array(cap), usage: BufferUsage.VERTEX | BufferUsage.COPY_DST });
     const geometry = new Geometry({
       attributes: {
         aPosition: { buffer: new Float32Array([-1, -1, 1, -1, 1, 1, -1, 1]), format: "float32x2", stride: 8, offset: 0 },
@@ -139,6 +153,7 @@ export class PixiRenderer implements TreeRenderer {
         aFill: { buffer: this.fillBuf, format: "unorm8x4", stride: 4, offset: 0, instance: true },
         aLine: { buffer: this.lineBuf, format: "unorm8x4", stride: 4, offset: 0, instance: true },
         aLineW: { buffer: this.lineWBuf, format: "float32", stride: 4, offset: 0, instance: true },
+        aStyle: { buffer: this.styleBuf, format: "float32", stride: 4, offset: 0, instance: true },
       },
       indexBuffer: new Uint16Array([0, 1, 2, 0, 2, 3]),
       instanceCount: 0,
@@ -217,6 +232,9 @@ export class PixiRenderer implements TreeRenderer {
       this.lineBuf.update(n * 4);
       this.lineWBuf.data = scene.lineW;
       this.lineWBuf.update(n * 4);
+      const st = this.styleBuf.data as Float32Array;
+      for (let i = 0; i < n; i++) st[i] = scene.style[i]!;
+      this.styleBuf.update(n * 4);
       this.geometry.instanceCount = n;
       this.lastVersion = scene.version;
       this.syncLabelPool(scene);
@@ -260,7 +278,9 @@ export class PixiRenderer implements TreeRenderer {
       const v = scene.labelId[k]!;
       const sx = (x[v]! - cam.cx) * cam.scale + size.w / 2;
       let sy = (y[v]! - cam.cy) * cam.scale + size.h / 2;
-      if (scene.labelKind[k] === LABEL_KIND_TOP) sy += -r[v]! * cam.scale + LOD.LABEL_FONT_PX;
+      const kind = scene.labelKind[k];
+      if (kind === LABEL_KIND_TOP) sy += -r[v]! * cam.scale + LOD.LABEL_FONT_PX;
+      else if (kind === LABEL_KIND_BELOW) sy += r[v]! * cam.scale + LOD.LABEL_FONT_PX * 0.8;
       const t = this.pool[k]!;
       t.position.set(Math.round(sx * dpr) / dpr, Math.round(sy * dpr) / dpr);
       t.visible = true;

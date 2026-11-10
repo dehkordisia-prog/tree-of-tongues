@@ -14,8 +14,9 @@ import {
   zoomAt,
 } from "./camera";
 import { BENCH_MS, benchCamera, type BenchResult, frameStats, pickBenchTarget } from "./bench";
-import { describeNode } from "./describe";
-import { WORLD_RADIUS, type TreeLayout } from "./layout";
+import { describeNode, describeSpeakers } from "./describe";
+import type { SpeakerStore } from "./glyph";
+import { LEVEL_LANGUAGE, WORLD_RADIUS, type TreeLayout } from "./layout";
 import { type Palette, Scene } from "./lod";
 import type { TreeRenderer } from "./renderer";
 
@@ -56,6 +57,10 @@ export interface ControllerOptions {
   initialCamera?: Camera;
   /** The camera settled: pointer up after a drag or pinch, wheel idle for 150 ms, or a flight ended. */
   onSettled?: (cam: Camera) => void;
+  /** Speaker figures for the glyphs. Without it no glyph is drawn and no speaker text is announced (the spike). */
+  speakers?: SpeakerStore;
+  /** Per node: 1 for scope languages (label priority). */
+  priority?: Uint8Array;
   /** A flight started (true) or ended (false). */
   onFlight?: (running: boolean) => void;
 }
@@ -83,6 +88,7 @@ export class TreeController {
   private downAt = { x: 0, y: 0 };
   private pinch: { dist: number; mx: number; my: number } | null = null;
   private paused = false;
+  private announceToken = 0;
   private wheelTimer = 0;
   private benchState: {
     start: number;
@@ -98,6 +104,14 @@ export class TreeController {
     this.size = opts.size;
     this.palette = opts.palette;
     this.scene = new Scene(opts.layout);
+    if (opts.speakers) {
+      this.scene.store = opts.speakers;
+      opts.speakers.onChange = () => {
+        this.dirty = true;
+        this.wake();
+      };
+    }
+    if (opts.priority) this.scene.priority = opts.priority;
     this.focus = opts.initialFocus ?? opts.layout.root;
     this.cam = opts.initialCamera ?? this.targetCamera(this.focus);
     const c = opts.canvas;
@@ -115,6 +129,7 @@ export class TreeController {
 
   destroy(): void {
     this.destroyed = true;
+    if (this.o.speakers) this.o.speakers.onChange = null;
     cancelAnimationFrame(this.raf);
     window.clearTimeout(this.wheelTimer);
     const c = this.o.canvas;
@@ -153,6 +168,34 @@ export class TreeController {
   private resetCursor(): void {
     const L = this.layout;
     this.cursor = L.childStart[this.focus]! < L.childStart[this.focus + 1]! ? L.childList[L.childStart[this.focus]!]! : -1;
+  }
+
+  /**
+   * Screen-reader text for a node: the structural description, plus for a language the speaker
+   * sentence built from data. The result ends with a period.
+   */
+  describeFull(v: number): string {
+    const base = describeNode(this.layout, v);
+    const store = this.o.speakers;
+    if (!store || this.layout.level[v] !== LEVEL_LANGUAGE) return `${base}.`;
+    const st = store.state(v);
+    if (st === "none") return `${base}. ${describeSpeakers(null)}`;
+    if (st === "ready") return `${base}. ${describeSpeakers(store.figures(v))}`;
+    if (st === "pending") return `${base}. Speaker figures are loading.`;
+    return `${base}. Speaker figures could not be loaded.`;
+  }
+
+  /** Announce a node. A language whose figures are still loading waits for them (at most 1.5 s). */
+  private announceAbout(v: number, compose: (described: string) => string): void {
+    const token = ++this.announceToken;
+    const store = this.o.speakers;
+    if (!store || this.layout.level[v] !== LEVEL_LANGUAGE || store.state(v) !== "pending") {
+      this.o.onAnnounce(compose(this.describeFull(v)));
+      return;
+    }
+    void store.ensure(v).then(() => {
+      if (token === this.announceToken && !this.destroyed) this.o.onAnnounce(compose(this.describeFull(v)));
+    });
   }
 
   /** Hidden lens: no animation frames until resumed (spec 1.1). */
@@ -209,7 +252,7 @@ export class TreeController {
     this.emit();
     if (announce) {
       const kids = this.layout.childStart[v + 1]! - this.layout.childStart[v]!;
-      this.o.onAnnounce(`Focused ${describeNode(this.layout, v)}.${kids > 0 ? ` ${kids.toLocaleString("en")} inside.` : " Nothing deeper in this tree."}`);
+      this.announceAbout(v, (d) => `Focused ${d}${kids > 0 ? ` ${kids.toLocaleString("en")} inside.` : " Nothing deeper in this tree."}`);
     }
   }
 
@@ -223,7 +266,7 @@ export class TreeController {
     this.focusNode(L.parent[from]!, false);
     this.cursor = from;
     this.emit();
-    this.o.onAnnounce(`Zoomed out to ${describeNode(L, this.focus)}.`);
+    this.announceAbout(this.focus, (d) => `Zoomed out to ${d}`);
   }
 
   private flyTo(to: Camera, levels: number): void {
@@ -263,7 +306,7 @@ export class TreeController {
     this.emit();
     this.dirty = true;
     this.wake();
-    this.o.onAnnounce(`${describeNode(L, this.cursor)}. ${idx + 1} of ${n.toLocaleString("en")}.`);
+    this.announceAbout(this.cursor, (d) => `${d} ${idx + 1} of ${n.toLocaleString("en")}.`);
   }
 
   private keepCursorVisible(): void {
@@ -461,12 +504,13 @@ export class TreeController {
       this.dirty = false;
       const t0 = performance.now();
       this.scene.build(this.cam, this.size, this.focus, this.palette, this.epoch);
+      if (this.o.speakers && !this.benchState) this.o.speakers.request(this.scene.wanted);
       const t1 = performance.now();
       this.o.renderer.render(this.scene, this.cam, this.size);
       const t2 = performance.now();
       const k = 0.1;
       this.stats = {
-        circles: this.scene.count,
+        circles: this.scene.nodeCount,
         labels: this.o.renderer.labelsDrawn(),
         visited: this.scene.visited,
         buildMs: this.stats.buildMs ? this.stats.buildMs * (1 - k) + (t1 - t0) * k : t1 - t0,
