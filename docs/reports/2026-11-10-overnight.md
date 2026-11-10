@@ -106,6 +106,9 @@ What to look at:
    - Traditional classification lens (Niger-Congo with Mande): Phase 1 or later?
    - Persian and Turkish pages: prerendered under /fa/ and /tr/ later, or English HTML with a client switch?
 
+7. **ISO 639-3 code tables (needs a person):** SIL's site refused automated access, so rights-auditor could not read its terms. A 2020 quote of those terms says a product must not "provide a means to redistribute the code set". Until you read https://iso639-3.sil.org/code_tables/download_tables in a browser (or we write to iso639-3@sil.org), the atlas takes ISO codes only from Glottolog, Wikidata and ASJP, and macrolanguage links from CLDR, Wikidata and our reviewed scope list. We do not ship SIL's tables.
+8. **Speaker figures that Wikidata cites to Ethnologue:** rights-auditor's rule, provisional: show them one at a time as "Wikidata, stated in Ethnologue (edition, year)", link only to the Wikidata statement, keep them in their own build file, and never include them in downloads or exports. Re-review past 1,000 such rows. Please confirm you are comfortable with this.
+
 ## Blocked
 1. **Renderer benchmark (D-006): needs you.** `scripts/bench.mjs` opens a visible Chromium with the GPU for each of 10 runs (tree in PixiJS and deck.gl, normal and stress, plus the map; desktop and a 4x-throttled phone proxy). Claude Code stopped it before the first run finished because memory ran critically low. I must not restart it unattended. To run it, close other apps and run:
    ```powershell

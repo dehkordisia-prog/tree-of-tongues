@@ -25,6 +25,22 @@ Data from [Wikidata](https://www.wikidata.org).
 
 License: [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/). Images and audio linked from Wikidata have their own licenses. We credit them file by file.
 
+Some speaker figures in Wikidata cite Ethnologue as their reference. We show them as Wikidata statements and name the Ethnologue edition they cite. We do not use Ethnologue itself.
+
+### ASJP Database, version 21
+The 40-item word lists in the Words tab.
+
+The ASJP Database (version 21), edited by Søren Wichmann, Eric W. Holman, Cecil H. Brown, Matthew S. Dryer and Qibin Ran, 2025. https://asjp.clld.org. We use the CLDF release v21.1 by lexibank, DOI: [10.5281/zenodo.22957986](https://doi.org/10.5281/zenodo.22957986).
+
+License: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). We convert the data into our own formats. ASJP writes words in its own transcription, ASJPcode. It is not IPA, and we label it ASJPcode.
+
+### Language codes
+ISO 639-3 codes appear as cross-references. They come from Glottolog, Wikidata and CLDR, as listed for each language.
+
+## Recordings
+
+Recordings in the Sounds tab come from [Wikimedia Commons](https://commons.wikimedia.org), many of them made with [Lingua Libre](https://lingualibre.org). Each clip keeps its own license. Its speaker, license and file page appear next to the clip. We convert clips to Opus for the web. A clip under a share-alike license stays under that license.
+
 ### Natural Earth
 Modern country outlines at 1:110m and 1:50m scale, version 5.1.1.
 

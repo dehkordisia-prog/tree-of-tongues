@@ -11,13 +11,13 @@ Open, versioned datasets cover the backbone; audio and historical maps are the h
 | WALS Online, https://github.com/cldf-datasets/wals | Typological features for about 2,600 languages | CC BY 4.0 | Grammar maps, DNA glyph |
 | Grambank, https://github.com/grambank/grambank | 195 grammatical features for 2,400+ languages | CC BY 4.0 | Grammar module |
 | PHOIBLE 2.0, https://phoible.org/ | 3,020 phoneme inventories for 2,186 languages | CC BY-SA 3.0 | Sound inventories, "where is this sound" |
-| ASJP v21, https://asjp.clld.org | 40-item wordlists for 11,540 doculects | CC BY 4.0 | Concept maps, lexical distance |
+| ASJP v21, https://asjp.clld.org (CLDF v21.1, DOI 10.5281/zenodo.22957986) | 40-item wordlists for 11,540 doculects, written in ASJPcode (a simplified transcription, not IPA) | CC BY 4.0 | Concept maps, lexical distance; forms always labeled "ASJPcode", never shown as IPA |
 | WOLD, https://github.com/lexibank/wold | Loanword status in 41 languages | CC BY 4.0 (CLDF release) | Loan flows |
 | NorthEuraLex | 1,016 concepts across 107 Eurasian languages, in IPA | Verify before use | Deep cognate views for Eurasia |
 | Lexibank and Concepticon | Standardized wordlists and concept IDs | Per dataset, mostly CC BY 4.0 | Words module backbone |
 | kaikki.org (Wiktextract), https://kaikki.org/dictionary/rawdata.html | Machine-readable Wiktionary: etymologies, IPA, translations | CC BY-SA and GFDL, as Wiktionary | Word journeys, etymology graph |
 | Common Voice, https://datacollective.mozillafoundation.org | Read-sentence recordings in 100+ languages | CC0; since October 2025 downloaded through a Mozilla Data Collective account | Sentence audio |
-| Lingua Libre (https://lingualibre.org) and Wikimedia Commons | 1.4 million+ word recordings in 315+ languages | CC BY-SA 4.0 (Commons files vary) | Word audio |
+| Lingua Libre (https://lingualibre.org) and Wikimedia Commons | 1.4 million+ word recordings in 315+ languages | Varies per file (CC0, CC BY or CC BY-SA); recorded per clip under the rule in data/LICENSES.yaml (`audio-wikimedia-commons`) | Word audio |
 | Speech Accent Archive, https://accent.gmu.edu | One English paragraph read by speakers of many native languages | CC BY-NC-SA 4.0 | Accent explorer; usable because the project is non-commercial, and clips we cut stay CC BY-NC-SA |
 | Meta MMS-TTS, https://huggingface.co/facebook/mms-tts | Speech synthesis for 1,100+ languages | CC BY-NC 4.0 | Synthetic audio for languages with no recording, always badged |
 | Seeing Speech, https://www.seeingspeech.ac.uk/ | MRI, ultrasound and animations of IPA sounds | CC BY-NC-ND 4.0; no AI training or automated transformation | Show unmodified with credit, or link; no editing, re-encoding or AI processing |
