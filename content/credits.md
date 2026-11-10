@@ -12,7 +12,7 @@ Glottolog 5.3, edited by Harald Hammarström, Robert Forkel, Martin Haspelmath a
 License: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). We convert the data into our own formats.
 
 ### Unicode CLDR 49
-Where languages are spoken, official status and language names in English, Persian and Turkish.
+Where languages are spoken, official status, and language and country names in English, Persian and Turkish.
 
 Unicode CLDR 49. Copyright © 2015-2024 Unicode, Inc. Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the United States and other countries.
 

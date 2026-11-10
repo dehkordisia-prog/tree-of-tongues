@@ -87,6 +87,7 @@ sources:
     components:
       - "cldr-core: supplemental/territoryInfo.json (language population shares, official status)"
       - "cldr-localenames-full: main/{en,fa,tr}/languages.json (localized language names)"
+      - "cldr-localenames-full: main/{en,fa,tr}/territories.json (localized country and territory names; verified present at tag 49.0.0 on 2026-11-10, same repo LICENSE)"
     share_alike: false
     non_commercial: false
     no_derivatives: false
