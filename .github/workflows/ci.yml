@@ -26,6 +26,6 @@ jobs:
       - run: pnpm test
       - name: Pipeline build and validate (fixture)
         run: |
-          uv run pipeline build --raw-dir tests/pipeline/fixtures/raw --build-dir "$RUNNER_TEMP/fixture-build"
+          uv run pipeline build --raw-dir tests/pipeline/fixtures/raw --scope tests/pipeline/fixtures/scope.yaml --build-dir "$RUNNER_TEMP/fixture-build"
           uv run pipeline validate --build-dir "$RUNNER_TEMP/fixture-build"
       - run: pnpm build

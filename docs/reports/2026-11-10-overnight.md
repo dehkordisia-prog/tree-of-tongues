@@ -8,6 +8,7 @@ Owner: Siavash. Written by Claude (orchestrator). Updated as work lands; newest 
 | Phase 0 branch | `phase-0`, pushed; not merged into main (your call in the morning) |
 | Phase 0 gate | ready for your review, with one item open: the renderer benchmark (see Blocked). qa-gatekeeper found 0 blocking, 2 must-fix and 3 minor issues; all fixed or noted below |
 | Phase 1 branch | `phase-1`, based on `phase-0` |
+| CI on phase-1 | Red for five pushes (17b3ddc to caf9bb1): the pipeline gained a `--scope` option defaulting to the real scope list, and CI's fixture build did not pass the fixture's scope file. I did not check CI after those pushes; I caught it at caf9bb1 and fixed the workflow in the next commit. Earlier red run: 840d51d (content lint), fixed by the next commit. |
 | CI on phase-0 | green, except one run (41f41c6, a lint error in the screenshot script) fixed by the next commit |
 | Spikes | tree (PixiJS vs deck.gl) and map being built; measured one after the other by `scripts/bench.mjs` |
 
