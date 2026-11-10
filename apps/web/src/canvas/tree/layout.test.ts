@@ -83,15 +83,19 @@ describe("family mapping", () => {
 
 // Real data is gitignored and absent in CI.
 const dataPath = path.resolve(import.meta.dirname, "../../../../../data/build/tree.json");
+// describe.skipIf still runs this callback while collecting, so the file is read lazily.
 describe.skipIf(!fs.existsSync(dataPath))("with data/build/tree.json", () => {
-  const file = JSON.parse(fs.readFileSync(dataPath, "utf8")) as TreeFile;
+  let cached: TreeFile | null = null;
+  const load = () => (cached ??= JSON.parse(fs.readFileSync(dataPath, "utf8")) as TreeFile);
 
   it("maps all 11 named families without mismatches", () => {
+    const file = load();
     const nodes = file.nodes.map((r) => ({ glottocode: r[0], name: r[3] }));
     expect(familyMismatches(nodes)).toEqual([]);
   });
 
   it("packs every languoid and reports the timing", () => {
+    const file = load();
     const L = computeLayout(file);
     console.info(`pack ${L.n} nodes in ${L.packMs.toFixed(0)} ms, world r=${L.r[L.root]}`);
     expect(L.n).toBe(file.nodes.length);
